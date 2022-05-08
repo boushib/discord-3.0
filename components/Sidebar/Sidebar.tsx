@@ -46,7 +46,7 @@ const Sidebar = () => (
     {SERVERS.map(s => (
       <SidebarIcon
         image={s.image}
-        isActive={s.id === 1}
+        isActive={s.id === 3}
         isPrimary={s.id === 1}
         key={s.id}
       />
