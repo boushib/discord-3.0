@@ -1,0 +1,28 @@
+.member
+  display: flex
+  align-items: center
+  border-radius: 4px
+  gap: 8px
+  padding: 8px
+  user-select: none
+  border-radius: 6px
+  transition: all .4s ease-in-out
+  cursor: pointer
+
+  &:hover
+    background-color: rgba(79, 84, 92, 0.4)
+
+  &__avatar
+    width: 32px
+    height: 32px
+    flex-shrink: 0
+    background-size: cover
+    background-position: center
+    border-radius: 50%
+    background-color: rgba(#fff, 0.05)
+
+  &__username
+    color: #95a5a6
+    font-size: 15px
+    overflow: hidden
+    text-overflow: ellipsis

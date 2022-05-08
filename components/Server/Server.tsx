@@ -2,6 +2,7 @@ import classNames from 'classnames'
 import ChannelIcon from '../../icons/Channel'
 import VerifiedIcon from '../../icons/Verified'
 import Channel from '../Channel'
+import Members from '../Members'
 import styles from './Server.module.sass'
 
 const CHANNELS = [
@@ -35,9 +36,8 @@ const Server = () => (
         </div>
       ))}
     </div>
-    <div className={styles.server__main}>
-      <Channel />
-    </div>
+    <Channel />
+    <Members />
   </div>
 )
 

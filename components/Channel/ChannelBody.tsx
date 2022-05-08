@@ -1,5 +1,6 @@
 import ChatItem from '../ChatItem/ChatItem'
 import styles from './Channel.module.sass'
+import MemberList from '../Members/Members'
 
 const CHAT_MESSAGES = [
   { id: 1 },
@@ -16,9 +17,11 @@ const CHAT_MESSAGES = [
 
 const ChannelBody = () => (
   <div className={styles.channel__body}>
-    {CHAT_MESSAGES.map(m => (
-      <ChatItem key={m.id} />
-    ))}
+    <div className={styles.channel__chat}>
+      {CHAT_MESSAGES.map(m => (
+        <ChatItem key={m.id} />
+      ))}
+    </div>
   </div>
 )
 
