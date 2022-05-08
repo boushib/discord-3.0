@@ -1,0 +1,48 @@
+.user__status
+  padding: 3px
+  border-radius: 50%
+  position: absolute
+  bottom: -3px
+  right: -3px
+  background-color: var(--color-grey)
+
+  &::before , &::after
+    content: ''
+    display: block
+
+  &::before
+    width: 10px
+    height: 10px
+    border-radius: 50%
+
+  &--online
+    &::before
+      background-color: #359755
+  &--idle
+    &::before
+      background-color: #EEA01A
+  &--dnd
+    &::before
+      background-color: #D53F42
+
+  &--idle
+    &::after
+      width: 8px
+      height: 8px
+      background-color: var(--color-grey)
+      border-radius: 50%
+      position: absolute
+      top: 2px
+      left: 1px
+
+  &--dnd
+    &::after
+      width: 6px
+      height: 2px
+      background-color: var(--color-grey)
+      border-radius: 2px
+      position: absolute
+      top: 50%
+      left: 50%
+      transform: translate(-50%, -50%)
+      z-index: 2
