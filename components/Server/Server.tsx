@@ -19,9 +19,11 @@ const Server = () => (
         <VerifiedIcon /> NBA Top Shot
       </div>
       {CHANNELS.map(c => (
-        <div className={styles.server__sidebar__channel} key={c}>
-          <ChannelIcon />
-          {c}
+        <div className={styles.server__sidebar__channel__wrapper} key={c}>
+          <div className={styles.server__sidebar__channel} key={c}>
+            <ChannelIcon />
+            {c}
+          </div>
         </div>
       ))}
     </div>

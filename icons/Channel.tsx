@@ -4,7 +4,7 @@ interface Props {
   color?: string
 }
 
-const ChannelIcon = ({ width = 18, height = 18, color = '#777' }: Props) => (
+const ChannelIcon = ({ width = 20, height = 20, color = '#777' }: Props) => (
   <svg style={{ width, height }} viewBox="0 0 24 24">
     <path
       // fill="currentColor"

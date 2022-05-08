@@ -5,7 +5,7 @@
   &__sidebar
     width: 240px
     background-color: var(--color-grey)
-    padding: 16px 12px
+    padding-bottom: 16px
 
     &__name
       display: flex
@@ -13,7 +13,7 @@
       gap: 4px
       font-size: 16px
       font-weight: 500
-      padding-bottom: 16px
+      padding: 16px 12px
       border-bottom: 1px solid rgb(#fff, 0.05)
       margin-bottom: 20px
 
@@ -22,9 +22,17 @@
       align-items: center
       gap: 4px
       font-size: 15px
-      padding: 7px 0
+      padding: 8px 4px
       user-select: none
+      border-radius: 6px
+      transition: all .4s ease-in-out
       cursor: pointer
+
+      &__wrapper
+        padding: 0 8px
+
+      &:hover
+        background-color: rgba(79, 84, 92, 0.4)
 
   &__main
     padding: 32px
