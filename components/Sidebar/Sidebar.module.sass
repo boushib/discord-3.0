@@ -13,14 +13,25 @@
     justify-content: center
     background-size: cover
     background-position: center
-    transition: border-radius .4s
+    transition: all .4s
     cursor: pointer
+
+    &:hover, &--active
+      border-radius: 16px
 
     &--primary
       background-color: var(--color-primary)
 
-    &:hover, &--active
-      border-radius: 16px
+    &--secondary
+      svg
+        color: var(--color-green)
+        transition: color 0.4s
+
+      &:hover
+        background-color: var(--color-green)
+
+        svg
+          color: #fff
 
     &__wrapper
       width: 100%
