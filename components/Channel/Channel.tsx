@@ -1,4 +1,4 @@
-import MessageBox from '../MessageBox/MessageBox'
+import MessageBox from '../MessageBox'
 import ChannelBody from './ChannelBody'
 import ChannelHeader from './ChannelHeader'
 import styles from './Channel.module.sass'

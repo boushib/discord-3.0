@@ -1,4 +1,4 @@
-import ChatItem from '../ChatItem/ChatItem'
+import ChatItem from '../ChatItem'
 import styles from './Channel.module.sass'
 import MemberList from '../Members/Members'
 
