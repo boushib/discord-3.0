@@ -71,6 +71,7 @@ const Sidebar = () => {
           icon={s.icon}
           isActive={s.id === currentTab}
           isPrimary={s.isPrimary}
+          onClick={() => setCurrentTab(s.id)}
           key={s.id}
         />
       ))}

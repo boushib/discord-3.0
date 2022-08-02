@@ -10,6 +10,7 @@ interface Props {
   icon?: string
   isPrimary?: boolean
   isActive?: boolean
+  onClick: () => void
 }
 
 const getSidebarIcon = (key: string): React.ReactNode => {
@@ -30,12 +31,14 @@ const SidebarIcon = ({
   icon,
   isPrimary = false,
   isActive = false,
+  onClick,
 }: Props) => (
   <div
     className={classNames({
       [styles.sidebar__icon__wrapper]: true,
       [styles['sidebar__icon__wrapper--active']]: isActive,
     })}
+    onClick={onClick}
   >
     <div
       className={classNames({
