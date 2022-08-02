@@ -1,3 +1,4 @@
+import { DEFAULT_AVATAR } from '../../constants'
 import styles from './Member.module.sass'
 import UserStatus from './UserStatus'
 
@@ -12,7 +13,7 @@ const Member = ({ avatar, username }: Props) => (
   <div className={styles.member}>
     <div
       className={styles.member__avatar}
-      style={{ backgroundImage: `url('${avatar}')` }}
+      style={{ backgroundImage: `url('${avatar || DEFAULT_AVATAR}')` }}
     >
       <UserStatus status={STATUS[Math.floor(Math.random() * 3)]} />
     </div>

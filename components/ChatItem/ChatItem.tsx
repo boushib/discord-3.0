@@ -1,14 +1,11 @@
-import DEFAULT_AVATAR from '../../assets/img/discord.png'
+import { DEFAULT_AVATAR } from '../../constants'
 import styles from './ChatItem.module.sass'
-
-// const DEFAULT_AVATAR =
-//   'https://discord.com/assets/1f0bfc0865d324c2587920a7d80c609b.png'
 
 const ChatItem = () => (
   <div className={styles['chat-item']}>
     <div
       className={styles['chat-item__avatar']}
-      style={{ backgroundImage: `url('${DEFAULT_AVATAR.src}')` }}
+      style={{ backgroundImage: `url('${DEFAULT_AVATAR}')` }}
     ></div>
     <div>
       <div className={styles['chat-item__header']}>

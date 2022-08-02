@@ -11,14 +11,12 @@ const TEAM = [
   {
     id: 101,
     username: 'Luke',
-    avatar:
-      'https://cdn.discordapp.com/avatars/478649485048676383/9052050eaf681946581107dbdf357ffc.webp?size=64',
+    avatar: '',
   },
   {
     id: 102,
     username: 'John',
-    avatar:
-      'https://cdn.discordapp.com/avatars/466047931070414858/a_11918b9d11826815818d2480d90a4b59.webp?size=64',
+    avatar: '',
   },
 ]
 
@@ -32,44 +30,37 @@ const ONLINE_MEMBERS = [
   {
     id: 201,
     username: 'chutneesNonpsychiatric',
-    avatar:
-      'https://cdn.discordapp.com/avatars/729657918189994004/d0f34bbe089c033d7984beb92468b886.webp?size=64',
+    avatar: '',
   },
   {
     id: 202,
     username: 'snortierFlamboyancies',
-    avatar:
-      'https://cdn.discordapp.com/avatars/729657918189994004/d0f34bbe089c033d7984beb92468b886.webp?size=64',
+    avatar: '',
   },
   {
     id: 203,
     username: 'coalshedDictier',
-    avatar:
-      'https://cdn.discordapp.com/avatars/729657918189994004/d0f34bbe089c033d7984beb92468b886.webp?size=64',
+    avatar: '',
   },
   {
     id: 204,
     username: 'doitkinPictorializing',
-    avatar:
-      'https://cdn.discordapp.com/avatars/729657918189994004/d0f34bbe089c033d7984beb92468b886.webp?size=64',
+    avatar: '',
   },
   {
     id: 205,
     username: 'distressfulnessesResumable',
-    avatar:
-      'https://cdn.discordapp.com/avatars/729657918189994004/d0f34bbe089c033d7984beb92468b886.webp?size=64',
+    avatar: '',
   },
   {
     id: 206,
     username: 'agreeabilityCleanup',
-    avatar:
-      'https://cdn.discordapp.com/avatars/729657918189994004/d0f34bbe089c033d7984beb92468b886.webp?size=64',
+    avatar: '',
   },
   {
     id: 207,
     username: 'dolldomsPredischarges',
-    avatar:
-      'https://cdn.discordapp.com/avatars/729657918189994004/d0f34bbe089c033d7984beb92468b886.webp?size=64',
+    avatar: '',
   },
 ]
 
