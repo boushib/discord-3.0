@@ -1,4 +1,5 @@
 import classNames from 'classnames'
+import { useSelector } from '../../hooks'
 import ChannelIcon from '../../icons/Channel'
 import VerifiedIcon from '../../icons/Verified'
 import Channel from '../Channel'
@@ -15,30 +16,33 @@ const CHANNELS = [
   '💎 WNBA',
 ]
 
-const Server = () => (
-  <div className={styles.server}>
-    <div className={styles.server__sidebar}>
-      <div className={styles.server__sidebar__name}>
-        <VerifiedIcon /> NBA Top Shot
-      </div>
-      {CHANNELS.map((c, i) => (
-        <div className={styles.server__sidebar__channel__wrapper} key={c}>
-          <div
-            className={classNames({
-              [styles.server__sidebar__channel]: true,
-              [styles['server__sidebar__channel--active']]: i === 3,
-            })}
-            key={c}
-          >
-            <ChannelIcon />
-            {c}
-          </div>
+const Server = () => {
+  const { currentServer } = useSelector(s => s.servers)
+  return (
+    <div className={styles.server}>
+      <div className={styles.server__sidebar}>
+        <div className={styles.server__sidebar__name}>
+          <VerifiedIcon /> {currentServer.name}
         </div>
-      ))}
+        {CHANNELS.map((c, i) => (
+          <div className={styles.server__sidebar__channel__wrapper} key={c}>
+            <div
+              className={classNames({
+                [styles.server__sidebar__channel]: true,
+                [styles['server__sidebar__channel--active']]: i === 3,
+              })}
+              key={c}
+            >
+              <ChannelIcon />
+              {c}
+            </div>
+          </div>
+        ))}
+      </div>
+      <Channel />
+      <Members />
     </div>
-    <Channel />
-    <Members />
-  </div>
-)
+  )
+}
 
 export default Server
