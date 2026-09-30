@@ -1,34 +1,71 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Discord 3.0
 
-## Getting Started
+A Discord clone built with **Next.js 16** (App Router), **React 19** and **Redux Toolkit**. It runs entirely in the browser: all data lives in a Redux store that's saved to `localStorage`, and other users are simulated, so they type, reply and react to your messages.
 
-First, run the development server:
+## Features
+
+**Servers & channels**
+- Server rail with unread pills, mention badges, tooltips and drag-to-reorder
+- Create servers (from scratch or a template), join servers from the Discovery page, invite friends, leave
+- Collapsible categories; text, announcement and voice channels
+- Create, rename and delete channels, set topics, per-channel mute and notification levels
+
+**Messaging**
+- Markdown: bold, italic, underline, strike, inline and block code, spoilers, quotes, headings, lists, links, @mentions
+- Grouped messages, date dividers, a "NEW" line at your first unread message
+- Reactions, replies, inline editing, pins, delete (Shift+click skips the confirmation), mark unread
+- Composer autocomplete for `@mentions`, `:emoji:` and `/commands` (`/shrug`, `/tableflip`, `/me`, …)
+- File uploads by picker, paste or drag-and-drop; GIFs, stickers and Nitro gifts
+- Typing indicators and simulated replies from other members
+
+**Voice & video**
+- Voice channels with a call view: participant tiles, speaking indicators, spotlight
+- Your camera (`getUserMedia`) and screen share (`getDisplayMedia`) are real; other participants are simulated
+- One-to-one voice and video calls in DMs
+
+**Social**
+- Friends page: online, all, pending and blocked; add friends by username
+- DMs, profile cards, custom status, presence (online, idle, do not disturb, invisible)
+- Member list grouped by hoisted roles with role colors
+
+**Everything else**
+- Inbox with your @mentions and unread channels, pinned messages, channel search
+- Ctrl/⌘+K quick switcher, Ctrl/⌘+/ keyboard shortcuts
+- User settings: profile editor with live preview, account details, dark/light theme, cozy/compact display
+- Nitro and Shop demo pages (avatar decorations)
+- Mobile layout with a navigation drawer
+
+## Getting started
+
+Requires Node.js 20.9+ and pnpm.
 
 ```bash
-npm run dev
-# or
-yarn dev
+pnpm install
+pnpm dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000). To start over with fresh demo data, go to **User Settings → Reset Demo Data**.
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+| Script | What it does |
+| --- | --- |
+| `pnpm dev` | Dev server with Turbopack |
+| `pnpm build` / `pnpm start` | Production build and server |
+| `pnpm lint` | ESLint (flat config) |
+| `pnpm typecheck` | TypeScript, no emit |
+| `pnpm dev:agent` / `pnpm build:agent` | Same as dev/build on port 3100 with a separate `.next-agent` output, so a second server doesn't clash with yours |
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+## Project structure
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+```
+app/                     Routes (App Router)
+  channels/[serverId]/[channelId]   Channel, DM, Nitro and Shop pages
+  channels/discovery                Discovery page
+components/              UI, one folder per component, with Sass modules
+constants/               Seed data, emoji, GIFs, stickers, shop items
+store/                   Redux slices, selectors, persistence, reply simulation
+lib/                     Formatting, routes, file helpers
+```
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- `/channels/@me` is Home (Friends and DMs). `@me` goes through the dynamic `[serverId]` segment because a folder starting with `@` would be a parallel route slot.
+- The UI renders only on the client (after a Discord-style loading screen), because every piece of data comes from `localStorage`.
+- Media streams live in a React context above the router, so a call keeps going while you browse other channels.
