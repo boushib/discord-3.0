@@ -17,6 +17,7 @@ import { ProfileTrigger } from '../Profile'
 import Tooltip from '../Tooltip'
 import { MessageMenu, MessageToolbar } from './MessageActions'
 import MessageEditor from './MessageEditor'
+import { GiftEmbed, ImageEmbed, isImageLink, StickerView } from './RichContent'
 import styles from './Message.module.sass'
 
 interface Props {
@@ -124,7 +125,14 @@ const Message = ({ message, server, grouped: groupedProp, preview }: Props) => {
             <MessageEditor message={message} />
           ) : (
             <div className={styles.body}>
-              {message.content && <Markdown content={message.content} />}
+              {message.content &&
+                (isImageLink(message.content) ? (
+                  <ImageEmbed url={message.content.trim()} />
+                ) : (
+                  <Markdown content={message.content} />
+                ))}
+              {message.sticker && <StickerView sticker={message.sticker} />}
+              {message.gift && <GiftEmbed message={message} />}
               {message.editedAt && (
                 <Tooltip label={formatFull(message.editedAt)}>
                   <span className={styles.edited}>(edited)</span>

@@ -5,16 +5,17 @@ import { CirclePlus, FileText, Trash, X } from 'lucide-react'
 import { useMemo, useRef, useState } from 'react'
 import { CURRENT_USER_ID } from '../../constants'
 import { replaceShortcodes, searchEmojis } from '../../constants/emojis'
+import { gifUrl, type Gif, type Sticker } from '../../constants/expressions'
 import { useAppDispatch, useFileUploads, usePopover, useSelector } from '../../hooks'
 import EmojiIcon from '../../icons/Emoji'
 import GIFIcon from '../../icons/GIF'
 import GiftIcon from '../../icons/Gift'
 import StickerIcon from '../../icons/Sticker'
-import { clearUploads, removeUpload, sendMessage, setEditing, setReplyTo } from '../../store'
+import { clearUploads, openModal, removeUpload, sendMessage, setEditing, setReplyTo } from '../../store'
 import { simulateReply } from '../../store/simulate'
 import { ChannelContext, displayNameIn, selectMessages } from '../../store/selectors'
 import Avatar from '../Avatar'
-import EmojiPicker from '../EmojiPicker'
+import ExpressionPicker, { type ExpressionTab } from '../ExpressionPicker'
 import Popover from '../Popover'
 import Tooltip from '../Tooltip'
 import TypingIndicator from './TypingIndicator'
@@ -54,7 +55,8 @@ const MessageBox = ({ channelId, context }: Props) => {
   const [dismissed, setDismissed] = useState(false)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const fileRef = useRef<HTMLInputElement>(null)
-  const emoji = usePopover()
+  const expressions = usePopover()
+  const [expressionTab, setExpressionTab] = useState<ExpressionTab>('emoji')
   const upload = useFileUploads(channelId)
   const uploads = useSelector(s => s.ui.uploads[channelId])
 
@@ -146,6 +148,32 @@ const MessageBox = ({ channelId, context }: Props) => {
       textareaRef.current?.focus()
       textareaRef.current?.setSelectionRange(caret + text.length, caret + text.length)
     })
+  }
+
+  /** GIF/sticker/emoji buttons share one picker; switching buttons switches tabs */
+  const pickerButton = (tab: ExpressionTab) => ({
+    'aria-expanded': expressions.anchor !== null && expressionTab === tab,
+    onMouseDown: (e: React.MouseEvent) => e.stopPropagation(),
+    onClick: (e: React.MouseEvent<HTMLElement>) => {
+      if (expressions.anchor && expressionTab === tab) return expressions.close()
+      setExpressionTab(tab)
+      expressions.openAt(e.currentTarget.closest('[data-composer]') ?? e.currentTarget)
+    },
+  })
+
+  const sendRich = (extra: { content?: string; sticker?: Sticker }) => {
+    expressions.close()
+    const action = dispatch(
+      sendMessage({
+        channelId,
+        authorId: CURRENT_USER_ID,
+        content: extra.content ?? '',
+        replyToId: replyTo?.id,
+        sticker: extra.sticker,
+      })
+    )
+    dispatch(setReplyTo({ channelId, messageId: null }))
+    dispatch(simulateReply(channelId, action.payload.id, extra.content ?? ''))
   }
 
   const submit = () => {
@@ -277,6 +305,7 @@ const MessageBox = ({ channelId, context }: Props) => {
       )}
 
       <div
+        data-composer
         className={classNames(
           styles.box,
           (replyTo || uploads?.length) && styles.boxReplying
@@ -324,17 +353,22 @@ const MessageBox = ({ channelId, context }: Props) => {
         />
         <div className={styles.buttons}>
           <Tooltip label="Send a gift">
-            <button type="button" className={styles.button} aria-label="Send a gift">
+            <button
+              type="button"
+              className={styles.button}
+              aria-label="Send a gift"
+              onClick={() => dispatch(openModal({ type: 'gift', channelId }))}
+            >
               <GiftIcon />
             </button>
           </Tooltip>
           <Tooltip label="Open GIF picker">
-            <button type="button" className={styles.button} aria-label="Open GIF picker">
+            <button type="button" className={styles.button} aria-label="Open GIF picker" {...pickerButton('gif')}>
               <GIFIcon />
             </button>
           </Tooltip>
           <Tooltip label="Open sticker picker">
-            <button type="button" className={styles.button} aria-label="Open sticker picker">
+            <button type="button" className={styles.button} aria-label="Open sticker picker" {...pickerButton('sticker')}>
               <StickerIcon />
             </button>
           </Tooltip>
@@ -343,7 +377,7 @@ const MessageBox = ({ channelId, context }: Props) => {
               type="button"
               className={classNames(styles.button, styles.emojiButton)}
               aria-label="Select emoji"
-              {...emoji.triggerProps}
+              {...pickerButton('emoji')}
             >
               <EmojiIcon />
             </button>
@@ -354,13 +388,17 @@ const MessageBox = ({ channelId, context }: Props) => {
         )}
       </div>
 
-      {emoji.anchor && (
-        <Popover anchor={emoji.anchor} placement="top-end" offset={16} onClose={emoji.close}>
-          <EmojiPicker
-            onSelect={char => {
+      {expressions.anchor && (
+        <Popover anchor={expressions.anchor} placement="top-end" offset={8} onClose={expressions.close}>
+          <ExpressionPicker
+            key={expressionTab}
+            initialTab={expressionTab}
+            onEmoji={char => {
               insertAtCaret(char)
-              emoji.close()
+              expressions.close()
             }}
+            onGif={(gif: Gif) => sendRich({ content: gifUrl(gif.id) })}
+            onSticker={sticker => sendRich({ sticker })}
           />
         </Popover>
       )}

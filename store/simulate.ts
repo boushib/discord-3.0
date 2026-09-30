@@ -1,7 +1,7 @@
 import type { ThunkAction, UnknownAction } from '@reduxjs/toolkit'
 import { CURRENT_USER_ID } from '../constants'
 import type { RootState } from '.'
-import { sendMessage, toggleReaction } from './messages'
+import { claimGift, sendMessage, toggleReaction } from './messages'
 import { findChannel } from './selectors'
 import { startTyping, stopTyping } from './ui'
 
@@ -75,4 +75,28 @@ export const simulateReply =
       dispatch(stopTyping({ channelId, userId: authorId }))
       dispatch(sendMessage({ channelId, authorId, content: replyFor(content) }))
     }, typingDelay + typingDuration)
+  }
+
+/** Someone in the conversation grabs a gift the current user sent */
+export const simulateGiftClaim =
+  (channelId: string, messageId: string): AppThunk =>
+  (dispatch, getState) => {
+    const state = getState()
+    const context = findChannel(state, channelId)
+    if (!context) return
+    const candidates =
+      context.kind === 'dm'
+        ? context.recipient.status !== 'offline'
+          ? [context.recipient.id]
+          : []
+        : context.server.members
+            .map(m => state.users.byId[m.userId])
+            .filter(u => u && u.id !== CURRENT_USER_ID && !u.bot && u.status === 'online')
+            .map(u => u.id)
+    if (!candidates.length) return
+    const userId = pick(candidates)
+    setTimeout(() => {
+      dispatch(claimGift({ channelId, messageId, userId }))
+      dispatch(sendMessage({ channelId, authorId: userId, content: pick(['omg thank you!! 🎁', 'ty!! 💖', 'no way, thanks!']) }))
+    }, 3000 + Math.random() * 2000)
   }

@@ -18,6 +18,8 @@ const messagesSlice = createSlice({
         content: string
         replyToId?: string
         attachments?: Attachment[]
+        sticker?: Message['sticker']
+        gift?: Message['gift']
       }) {
         return {
           payload: {
@@ -68,6 +70,10 @@ const messagesSlice = createSlice({
         reaction.userIds.push(userId)
       }
     },
+    claimGift(state, action: PayloadAction<{ channelId: string; messageId: string; userId: string }>) {
+      const message = state[action.payload.channelId]?.find(m => m.id === action.payload.messageId)
+      if (message?.gift && !message.gift.claimedBy) message.gift.claimedBy = action.payload.userId
+    },
     togglePin(state, action: PayloadAction<{ channelId: string; messageId: string }>) {
       const message = state[action.payload.channelId]?.find(m => m.id === action.payload.messageId)
       if (message) message.pinned = !message.pinned
@@ -75,6 +81,6 @@ const messagesSlice = createSlice({
   },
 })
 
-export const { sendMessage, editMessage, deleteMessage, toggleReaction, togglePin } =
+export const { sendMessage, editMessage, deleteMessage, toggleReaction, togglePin, claimGift } =
   messagesSlice.actions
 export const messagesReducer = messagesSlice.reducer

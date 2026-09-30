@@ -6,6 +6,7 @@ import CreateChannelModal from './CreateChannelModal'
 import CreateServerModal from './CreateServerModal'
 import DeleteMessageModal from './DeleteMessageModal'
 import EditChannelModal from './EditChannelModal'
+import GiftModal from './GiftModal'
 import InviteModal from './InviteModal'
 import LeaveServerModal from './LeaveServerModal'
 import QuickSwitcher from './QuickSwitcher'
@@ -21,6 +22,8 @@ const ModalRoot = () => {
       return <CreateChannelModal serverId={modal.serverId} categoryId={modal.categoryId} />
     case 'editChannel':
       return <EditChannelModal serverId={modal.serverId} channelId={modal.channelId} />
+    case 'gift':
+      return <GiftModal channelId={modal.channelId} />
     case 'invite':
       return <InviteModal serverId={modal.serverId} />
     case 'leaveServer':

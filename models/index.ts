@@ -92,6 +92,8 @@ export interface Message {
   reactions: Reaction[]
   pinned?: boolean
   attachments?: Attachment[]
+  sticker?: { id: string; name: string; emoji: string }
+  gift?: { plan: 'Nitro' | 'Nitro Basic'; months: number; claimedBy?: string }
 }
 
 export type RelationshipType = 'friend' | 'incoming' | 'outgoing' | 'blocked'
