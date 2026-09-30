@@ -1,6 +1,10 @@
 'use client'
 
-import { useGlobalShortcuts, useIsClient } from '../../hooks'
+import classNames from 'classnames'
+import { usePathname } from 'next/navigation'
+import { useEffect } from 'react'
+import { useAppDispatch, useGlobalShortcuts, useIsClient, useSelector } from '../../hooks'
+import { setMobileNav } from '../../store'
 import ModalRoot from '../Modals'
 import ServerRail from '../ServerRail'
 import LoadingScreen from './LoadingScreen'
@@ -11,11 +15,20 @@ import LoadingScreen from './LoadingScreen'
  */
 const AppShell = ({ children }: { children: React.ReactNode }) => {
   const isClient = useIsClient()
+  const dispatch = useAppDispatch()
+  const pathname = usePathname()
+  const mobileNavOpen = useSelector(s => s.ui.mobileNavOpen)
   useGlobalShortcuts()
+
+  // On phones, picking a destination closes the navigation drawer
+  useEffect(() => {
+    dispatch(setMobileNav(false))
+  }, [dispatch, pathname])
+
   if (!isClient) return <LoadingScreen />
 
   return (
-    <div className="app">
+    <div className={classNames('app', mobileNavOpen && 'app--nav-open')}>
       <ServerRail />
       {children}
       <ModalRoot />

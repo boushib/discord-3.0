@@ -59,7 +59,7 @@ const DMSidebar = () => {
   const openSwitcher = () => dispatch(openModal({ type: 'quickSwitcher' }))
 
   return (
-    <aside className={styles.sidebar} aria-label="Direct messages">
+    <aside className={styles.sidebar} aria-label="Direct messages" data-panel="nav">
       <div className={styles.searchBar}>
         <button type="button" className={styles.search} onClick={openSwitcher}>
           Find or start a conversation

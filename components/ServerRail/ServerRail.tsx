@@ -133,7 +133,7 @@ const ServerRail = () => {
   const [drag, setDrag] = useState<{ from: number | null; over: number | null }>({ from: null, over: null })
 
   return (
-    <nav className={styles.rail} aria-label="Servers sidebar">
+    <nav className={styles.rail} aria-label="Servers sidebar" data-panel="nav">
       <RailItem label="Direct Messages" href="/channels/@me" active={home} variant="home">
         <DiscordIcon width={30} height={22} />
       </RailItem>

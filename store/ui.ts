@@ -17,6 +17,7 @@ export interface UIState {
   typing: Record<string, string[]>
   voice: { serverId: string; channelId: string } | null
   search: string
+  mobileNavOpen: boolean
 }
 
 const initialState: UIState = {
@@ -26,6 +27,7 @@ const initialState: UIState = {
   typing: {},
   voice: null,
   search: '',
+  mobileNavOpen: false,
 }
 
 const uiSlice = createSlice({
@@ -60,6 +62,9 @@ const uiSlice = createSlice({
     setSearch(state, action: PayloadAction<string>) {
       state.search = action.payload
     },
+    setMobileNav(state, action: PayloadAction<boolean>) {
+      state.mobileNavOpen = action.payload
+    },
   },
 })
 
@@ -72,5 +77,6 @@ export const {
   stopTyping,
   setVoice,
   setSearch,
+  setMobileNav,
 } = uiSlice.actions
 export const uiReducer = uiSlice.reducer

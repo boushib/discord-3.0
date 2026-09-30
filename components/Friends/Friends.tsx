@@ -10,6 +10,7 @@ import { dmHref } from '../../lib/routes'
 import type { Relationship, User } from '../../models'
 import { acceptFriend, blockUser, dmIdFor, openDM, removeRelationship } from '../../store'
 import Avatar from '../Avatar'
+import MobileNavButton from '../MobileNavButton'
 import Popover, { Menu, MenuItem } from '../Popover'
 import Tooltip from '../Tooltip'
 import ActiveNow from './ActiveNow'
@@ -178,6 +179,7 @@ const Friends = () => {
   return (
     <div className={styles.page}>
       <header className={styles.header}>
+        <MobileNavButton />
         <div className={styles.title}>
           <UsersRound size={22} />
           <h1>Friends</h1>

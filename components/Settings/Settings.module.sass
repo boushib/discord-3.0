@@ -363,3 +363,43 @@
 .radioDescription
   color: var(--header-secondary)
   font-size: 14px
+
+@media (max-width: 768px)
+  .settings
+    flex-direction: column
+
+  .sidebar
+    flex: none
+    justify-content: flex-start
+    overflow-x: auto
+
+  .sidebarInner
+    width: auto
+    display: flex
+    align-items: center
+    gap: 4px
+    padding: 12px 64px 12px 12px
+
+    > div
+      display: flex
+      gap: 4px
+
+  .navHeading, .navSeparator, .version
+    display: none
+
+  .navItem
+    width: auto
+    white-space: nowrap
+
+  .contentInner
+    padding: 24px 16px 96px
+
+  .closeColumn
+    position: fixed
+    top: 8px
+    right: 8px
+    padding: 0
+    width: auto
+
+  .closeHint
+    display: none

@@ -16,7 +16,7 @@ const ChannelSidebar = ({ serverId }: { serverId: string }) => {
   const collapsed = useSelector(s => s.prefs.collapsedCategories)
   const { channelId } = useParams<{ channelId?: string }>()
 
-  if (!server) return <aside className={styles.sidebar} />
+  if (!server) return <aside className={styles.sidebar} data-panel="nav" />
 
   const sections = [
     { category: null, channels: server.channels.filter(c => c.categoryId === null) },
@@ -27,7 +27,7 @@ const ChannelSidebar = ({ serverId }: { serverId: string }) => {
   ]
 
   return (
-    <aside className={styles.sidebar} aria-label={`${server.name} channels`}>
+    <aside className={styles.sidebar} aria-label={`${server.name} channels`} data-panel="nav">
       <ServerHeader server={server} />
       <div className={`${styles.scroller} scroller`}>
         {sections.map(({ category, channels }) => {

@@ -110,3 +110,31 @@
 
 svg
   flex-shrink: 0
+
+.mobile-nav-button
+  display: none
+  color: var(--interactive-normal)
+  margin-right: 4px
+
+  &:hover
+    color: var(--interactive-hover)
+
+// Phones: chat is full screen, servers + channels live in a drawer
+@media (max-width: 768px)
+  .mobile-nav-button
+    display: flex
+
+  .app [data-panel=nav]
+    display: none
+
+  .app--nav-open
+    [data-panel=nav]
+      display: flex
+
+    aside[data-panel=nav]
+      flex: 1
+      width: auto
+      border-top-left-radius: 0
+
+    .content
+      display: none

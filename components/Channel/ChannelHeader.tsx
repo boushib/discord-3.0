@@ -7,6 +7,7 @@ import { setSearch, toggleMemberList } from '../../store'
 import type { ChannelContext } from '../../store/selectors'
 import Avatar from '../Avatar'
 import ChannelTypeIcon from '../ChannelTypeIcon'
+import MobileNavButton from '../MobileNavButton'
 import Popover from '../Popover'
 import Tooltip from '../Tooltip'
 import PinnedMessages from './PinnedMessages'
@@ -39,6 +40,7 @@ const ChannelHeader = ({ channelId, context }: { channelId: string; context: Cha
   return (
     <header className={styles.header}>
       <div className={styles.headerTitle}>
+        <MobileNavButton />
         {context.kind === 'server' ? (
           <>
             <ChannelTypeIcon type={context.channel.type} size={24} className={styles.headerIcon} />
