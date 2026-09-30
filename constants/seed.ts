@@ -88,47 +88,6 @@ const ALL_IDS = SEED_USERS.map(x => x.id)
 
 export const SEED_SERVERS: Server[] = [
   {
-    id: 's-dapper',
-    name: 'Dapper Community',
-    icon: 'https://cdn.discordapp.com/icons/943191925727567882/a_33c85fdf14a13b79a5bcb51e4ff78a63.webp?size=240',
-    bannerColor: '#7c3aed',
-    verified: true,
-    ownerId: 'u-mustapha',
-    categories: [
-      { id: 'cat-dapper-info', name: 'Information' },
-      { id: 'cat-dapper-chat', name: 'Community' },
-      { id: 'cat-dapper-voice', name: 'Voice Channels' },
-    ],
-    channels: [
-      ch('c-dapper-announcements', 'announcements', 'cat-dapper-info', 'announcement', 'Official news from the Dapper team'),
-      ch('c-dapper-rules', 'rules', 'cat-dapper-info', 'text', 'Read before posting'),
-      ch('c-dapper-general', 'general', 'cat-dapper-chat', 'text', 'Chat about anything Dapper related 🌵'),
-      ch('c-dapper-challenges', 'challenges', 'cat-dapper-chat', 'text', 'Weekly challenges and leaderboards'),
-      ch('c-dapper-office-hours', 'office-hours', 'cat-dapper-chat', 'text', 'Ask the team anything, Thursdays 5pm PT'),
-      ch('c-dapper-nba', 'nba', 'cat-dapper-chat'),
-      ch('c-dapper-wnba', 'wnba', 'cat-dapper-chat'),
-      ch('c-dapper-lounge', 'Lounge', 'cat-dapper-voice', 'voice'),
-      ch('c-dapper-stage', 'Office Hours Stage', 'cat-dapper-voice', 'voice'),
-    ],
-    roles: [
-      { id: 'r-dapper-team', name: 'Team', color: '#f47b67', hoist: true },
-      { id: 'r-dapper-mod', name: 'Moderator', color: '#3ba55c', hoist: true },
-      { id: 'r-dapper-collector', name: 'Collector', color: '#faa61a', hoist: false },
-    ],
-    members: members(ALL_IDS, {
-      'u-mustapha': ['r-dapper-team'],
-      'u-luke': ['r-dapper-team'],
-      'u-john': ['r-dapper-team'],
-      'u-sarah': ['r-dapper-mod'],
-      'u-mod': ['r-dapper-mod'],
-      'u-ironman': ['r-dapper-collector'],
-      [CURRENT_USER_ID]: ['r-dapper-collector'],
-    }),
-    voiceStates: {
-      'c-dapper-lounge': ['u-kai', 'u-omar'],
-    },
-  },
-  {
     id: 's-minecraft',
     name: 'Minecraft',
     icon: '/servers/minecraft.svg',
@@ -331,56 +290,89 @@ export const SEED_SERVERS: Server[] = [
     voiceStates: { 'c-hal-pairing': ['u-sarah'] },
   },
   {
-    id: 's-ac',
-    name: "Assassin's Creed",
-    icon: '/servers/assassins-creed.svg',
-    bannerColor: '#7f1d1d',
+    id: 's-acshadows',
+    name: "Assassin's Creed Shadows",
+    icon: '/servers/ac-shadows.svg',
+    bannerColor: '#8b0f1f',
     verified: true,
     ownerId: 'u-leo',
     categories: [
-      { id: 'cat-ac-info', name: 'The Bureau' },
-      { id: 'cat-ac', name: 'Brotherhood' },
-      { id: 'cat-ac-games', name: 'Games' },
-      { id: 'cat-ac-voice', name: 'Voice' },
+      { id: 'cat-acs-info', name: 'The Brotherhood' },
+      { id: 'cat-acs-chat', name: 'Feudal Japan' },
+      { id: 'cat-acs-play', name: 'Gameplay' },
+      { id: 'cat-acs-voice', name: 'Voice' },
     ],
     channels: [
-      ch('c-ac-announcements', 'announcements', 'cat-ac-info', 'announcement', 'News from the Brotherhood'),
-      ch('c-ac-general', 'general', 'cat-ac', 'text', 'Nothing is true, everything is permitted'),
-      ch('c-ac-lore', 'lore-discussion', 'cat-ac', 'text', 'Isu, Templars and the modern day story'),
-      ch('c-ac-screenshots', 'screenshots', 'cat-ac', 'text', 'Photo mode masterpieces'),
-      ch('c-ac-shadows', 'shadows', 'cat-ac-games', 'text', 'Feudal Japan: Naoe & Yasuke'),
-      ch('c-ac-mirage', 'mirage', 'cat-ac-games', 'text', 'Basim in Baghdad'),
-      ch('c-ac-valhalla', 'valhalla', 'cat-ac-games', 'text', 'Raids, settlements and Eivor'),
-      ch('c-ac-classics', 'classics', 'cat-ac-games', 'text', 'Ezio, Altaïr, Edward and friends'),
-      ch('c-ac-hideout', 'Hideout', 'cat-ac-voice', 'voice'),
+      ch('c-acs-announcements', 'announcements', 'cat-acs-info', 'announcement', 'Patch notes, DLC and events'),
+      ch('c-acs-rules', 'rules', 'cat-acs-info'),
+      ch('c-acs-general', 'general', 'cat-acs-chat', 'text', 'Nothing is true, everything is permitted ⛩️'),
+      ch('c-acs-naoe', 'naoe-shinobi', 'cat-acs-chat', 'text', 'Stealth builds, kusarigama and kunai'),
+      ch('c-acs-yasuke', 'yasuke-samurai', 'cat-acs-chat', 'text', 'Kanabo, teppo and parry timing'),
+      ch('c-acs-lore', 'lore-and-history', 'cat-acs-chat', 'text', 'Sengoku period, the Shinbakufu and the Animus'),
+      ch('c-acs-photo', 'photo-mode', 'cat-acs-play', 'text', 'Seasons, sakura and sunsets'),
+      ch('c-acs-hideout', 'hideout-builds', 'cat-acs-play', 'text', 'Show off your hideout layouts'),
+      ch('c-acs-help', 'help-and-tips', 'cat-acs-play'),
+      ch('c-acs-voice', 'Hideout', 'cat-acs-voice', 'voice'),
+      ch('c-acs-coop', 'Photo Mode Session', 'cat-acs-voice', 'voice'),
     ],
     roles: [
-      { id: 'r-ac-mentor', name: 'Mentor', color: '#b91c1c', hoist: true },
-      { id: 'r-ac-master', name: 'Master Assassin', color: '#d9d4c7', hoist: true },
-      { id: 'r-ac-novice', name: 'Novice', color: '#94a3b8', hoist: false },
+      { id: 'r-acs-mentor', name: 'Mentor', color: '#c8102e', hoist: true },
+      { id: 'r-acs-shinobi', name: 'Shinobi', color: '#9b8ec4', hoist: true },
+      { id: 'r-acs-samurai', name: 'Samurai', color: '#d4a54a', hoist: true },
+      { id: 'r-acs-novice', name: 'Novice', color: '#94a3b8', hoist: false },
     ],
-    members: members([CURRENT_USER_ID, 'u-leo', 'u-mia', 'u-luke', 'u-john', 'u-ironman', 'u-kai', 'u-ella', 'u-noah', 'u-mod'], {
-      'u-leo': ['r-ac-mentor'],
-      'u-mia': ['r-ac-master'],
-      'u-ironman': ['r-ac-master'],
-      [CURRENT_USER_ID]: ['r-ac-novice'],
-    }),
-    voiceStates: { 'c-ac-hideout': ['u-mia', 'u-ella'] },
+    members: members(
+      [CURRENT_USER_ID, 'u-leo', 'u-mia', 'u-luke', 'u-john', 'u-ironman', 'u-kai', 'u-ella', 'u-noah', 'u-sarah', 'u-mod'],
+      {
+        'u-leo': ['r-acs-mentor'],
+        'u-mia': ['r-acs-shinobi'],
+        'u-ella': ['r-acs-shinobi'],
+        'u-ironman': ['r-acs-samurai'],
+        'u-kai': ['r-acs-samurai'],
+        'u-mod': ['r-acs-mentor'],
+        [CURRENT_USER_ID]: ['r-acs-novice'],
+      }
+    ),
+    voiceStates: { 'c-acs-voice': ['u-mia', 'u-ella'] },
   },
   {
-    id: 's-rl',
-    name: 'Rocket League',
-    icon: 'https://external-preview.redd.it/fF3j2lwIwYWKKJJhyvdl_Oa_iYJtgVNV4jilcYrQiBE.jpg?auto=webp&s=e2b17d9eb8c59afc8c65b01dc0138f9fb4ae41ea',
-    ownerId: 'u-kai',
-    categories: [{ id: 'cat-rl', name: 'Text Channels' }, { id: 'cat-rl-v', name: 'Voice Channels' }],
-    channels: [
-      ch('c-rl-general', 'general', 'cat-rl'),
-      ch('c-rl-lfg', 'looking-for-group', 'cat-rl', 'text', 'Find teammates. Include rank + region.'),
-      ch('c-rl-voice', 'Ranked 2v2', 'cat-rl-v', 'voice'),
+    id: 's-bf6',
+    name: 'Battlefield 6',
+    icon: '/servers/bf6.svg',
+    bannerColor: '#ff6a13',
+    verified: true,
+    ownerId: 'u-john',
+    categories: [
+      { id: 'cat-bf-info', name: 'HQ' },
+      { id: 'cat-bf-chat', name: 'Battlefield' },
+      { id: 'cat-bf-voice', name: 'Squads' },
     ],
-    roles: [],
-    members: members([CURRENT_USER_ID, 'u-kai', 'u-omar', 'u-ava', 'u-zed']),
-    voiceStates: {},
+    channels: [
+      ch('c-bf-announcements', 'announcements', 'cat-bf-info', 'announcement', 'Updates, seasons and events'),
+      ch('c-bf-general', 'general', 'cat-bf-chat', 'text', 'All things Battlefield 6'),
+      ch('c-bf-lfs', 'looking-for-squad', 'cat-bf-chat', 'text', 'Platform, region, class and playstyle'),
+      ch('c-bf-classes', 'classes-and-loadouts', 'cat-bf-chat', 'text', 'Assault, Engineer, Support and Recon'),
+      ch('c-bf-vehicles', 'vehicles', 'cat-bf-chat', 'text', 'Tanks, jets and helicopters'),
+      ch('c-bf-clips', 'clips', 'cat-bf-chat', 'text', 'Only in Battlefield moments'),
+      ch('c-bf-portal', 'portal-experiences', 'cat-bf-chat', 'text', 'Share your Portal codes'),
+      ch('c-bf-alpha', 'Alpha Squad', 'cat-bf-voice', 'voice'),
+      ch('c-bf-bravo', 'Bravo Squad', 'cat-bf-voice', 'voice'),
+      ch('c-bf-conquest', 'Conquest 64p', 'cat-bf-voice', 'voice'),
+    ],
+    roles: [
+      { id: 'r-bf-command', name: 'Commander', color: '#ff6a13', hoist: true },
+      { id: 'r-bf-pilot', name: 'Pilot', color: '#5dade2', hoist: true },
+      { id: 'r-bf-medic', name: 'Medic', color: '#58d68d', hoist: false },
+    ],
+    members: members(ALL_IDS, {
+      'u-john': ['r-bf-command'],
+      'u-mustapha': ['r-bf-command'],
+      'u-omar': ['r-bf-pilot'],
+      'u-zed': ['r-bf-pilot'],
+      'u-sarah': ['r-bf-medic'],
+      [CURRENT_USER_ID]: ['r-bf-medic'],
+    }),
+    voiceStates: { 'c-bf-alpha': ['u-john', 'u-omar', 'u-zed'], 'c-bf-conquest': ['u-mustapha'] },
   },
 ]
 
@@ -408,43 +400,6 @@ export const SEED_RELATIONSHIPS: Relationship[] = [
 type SeedLine = [authorId: string, content: string, minutesAgo: number, extra?: Partial<Message>]
 
 const SEED_CONVERSATIONS: Record<string, SeedLine[]> = {
-  'c-dapper-general': [
-    ['u-luke', 'Morning everyone ☀️', 26 * 60 + 12],
-    ['u-kai', 'gm gm', 26 * 60 + 10],
-    ['u-mustapha', 'Reminder: office hours are moving to **Thursday 5pm PT** this week. See #office-hours for details.', 26 * 60, { pinned: true, reactions: [{ emoji: '👍', userIds: ['u-kai', 'u-luke', 'u-sarah'] }] }],
-    ['u-ironman', 'Does anyone remember if they are postponing the Legendary Rookie Revelation drop, or did they scrap it all together?', 95, { threadId: 't-rookie-drop' }],
-    ['u-sarah', 'Postponed afaik. They said it would be back "soon™"', 93],
-    ['u-ironman', 'soon™ is doing a lot of heavy lifting there 😂', 92, { reactions: [{ emoji: '😂', userIds: ['u-sarah', 'u-kai', CURRENT_USER_ID] }] }],
-    ['u-ironman', 'guess I’ll hold on to my budget then', 91],
-    ['u-omar', 'Just pulled a *Common* but it’s a serial under 100 so I’m happy', 60],
-    ['u-mustapha', 'Nice pull! Low serials are always worth holding', 58],
-    ['u-nina', 'is anyone else getting stuck in the queue? spinner has been going for 10 min', 30],
-    ['u-mod', 'Heads up: the queue is currently experiencing high traffic. Please do not refresh — you will lose your place.', 29],
-    ['u-nina', 'ah ok ty', 28],
-    ['u-kai', 'Pro tip: `Ctrl+K` lets you jump between channels fast in this clone 👀', 12, { reactions: [{ emoji: '🔥', userIds: ['u-omar'] }] }],
-    ['u-sarah', 'Who’s joining the Lounge voice channel later?', 4],
-  ],
-  't-rookie-drop': [
-    ['u-mustapha', 'Starting a thread so this doesn’t get buried 🧵', 94],
-    ['u-luke', 'Officially postponed, not cancelled. New date should drop with next week’s announcement.', 90],
-    ['u-ironman', 'Perfect, thanks Luke 🙏', 88],
-  ],
-  'c-dapper-announcements': [
-    ['u-mustapha', '## Season 3 is here 🎉\nNew challenges, new rewards, and a revamped leaderboard. Check #challenges for the full breakdown.', 3 * 24 * 60, { reactions: [{ emoji: '🎉', userIds: ['u-kai', 'u-sarah', 'u-ironman', 'u-omar'] }, { emoji: '❤️', userIds: ['u-luke'] }] }],
-    ['u-mustapha', 'Maintenance window tonight from **11pm–1am PT**. The marketplace will be read-only during that time.', 20 * 60],
-  ],
-  'c-dapper-rules': [
-    ['u-mod', '**1.** Be respectful. No harassment, hate speech or personal attacks.\n**2.** No spam or self-promotion.\n**3.** Keep discussions in the relevant channel.\n**4.** Never share your seed phrase or password. Staff will __never__ DM you first.\n**5.** Have fun ✨', 30 * 24 * 60, { pinned: true }],
-  ],
-  'c-dapper-challenges': [
-    ['u-luke', 'This week’s challenge: collect any 3 moments from the **2024 Playoffs** set. Reward: exclusive badge 🏅', 2 * 24 * 60],
-    ['u-omar', 'done ✅ that was quick', 2 * 24 * 60 - 30],
-    ['u-kai', 'still need one more… prices went up fast', 24 * 60],
-  ],
-  'c-dapper-office-hours': [
-    ['u-john', 'Drop your questions here ahead of Thursday and we’ll go through them live.', 4 * 24 * 60],
-    ['u-ava', 'Will there be a mobile app for the marketplace?', 3 * 24 * 60],
-  ],
   'c-mc-general': [
     ['u-omar', 'Finally finished my mountain castle in survival, only took 3 weeks 😅', 200],
     ['u-ava', 'screenshots or it didn’t happen', 198],
@@ -553,38 +508,69 @@ const SEED_CONVERSATIONS: Record<string, SeedLine[]> = {
     ['u-mod', '✅ Deploy `v2.14.0` to production succeeded (4m 12s)', 90],
     ['u-mod', '✅ All health checks passing', 89],
   ],
-  'c-ac-general': [
-    ['u-leo', 'Just finished Shadows. Naoe’s stealth kit is the best since Unity imo', 300],
-    ['u-mia', 'agreed, the grappling hook changes everything', 295],
-    ['u-ironman', 'Yasuke just walking through the front gate is also a vibe 😂', 290, { reactions: [{ emoji: '😂', userIds: ['u-leo', 'u-mia', 'u-kai'] }] }],
-    ['u-kai', 'Hot take: Black Flag is still the best one', 120],
-    ['u-luke', 'not a hot take, that’s just a fact 🏴‍☠️', 118, { reactions: [{ emoji: '🏴‍☠️', userIds: ['u-kai', 'u-john'] }] }],
-    ['u-ella', 'anyone doing a leap of faith photo contest this month?', 30],
-    ['u-mia', 'yes! post entries in #screenshots, voting on Sunday', 28],
+  'c-acs-general': [
+    ['u-leo', 'Just rolled credits on Shadows. The dual-protagonist thing works way better than I expected', 300],
+    ['u-mia', 'Naoe’s grappling hook + hiding in shadows is the best stealth since Unity imo', 295],
+    ['u-ironman', 'Meanwhile Yasuke just walking through the front gate of every castle 😂', 290, { reactions: [{ emoji: '😂', userIds: ['u-leo', 'u-mia', 'u-kai'] }] }],
+    ['u-kai', 'The seasons system is so underrated. Winter infiltrations hit different ❄️', 200],
+    ['u-ella', 'Is the Claws of Awaji expansion worth it?', 120, { threadId: 't-awaji' }],
+    ['u-luke', 'Photo mode contest starts this weekend, check #announcements 📸', 30],
+    ['u-mia', 'Who’s hopping in the Hideout voice tonight?', 8],
   ],
-  'c-ac-announcements': [
-    ['u-leo', '## Photo mode contest 📸\nTheme: **Leap of Faith**. Post your best shot in #screenshots before Sunday. Winner gets the Master Assassin role!', 2 * 24 * 60, { pinned: true, reactions: [{ emoji: '🦅', userIds: ['u-mia', 'u-ella', 'u-kai', 'u-ironman'] }] }],
+  't-awaji': [
+    ['u-leo', 'Starting a thread so this doesn’t get buried 🧵', 118],
+    ['u-mia', 'Yes! New island, new gear and a boss fight that actually tests your parries.', 114],
+    ['u-kai', 'Took me ~12 hours with side content. Great value if you liked the base game.', 110],
+    ['u-ella', 'Sold, grabbing it tonight 🙏', 105],
   ],
-  'c-ac-lore': [
-    ['u-mia', 'Can we talk about how the modern-day story basically disappeared after Valhalla?', 3 * 24 * 60],
-    ['u-leo', 'The Animus Hub is supposed to tie it together. We’ll see…', 3 * 24 * 60 - 20],
-    ['u-noah', 'I just want more Isu stuff honestly, Those Who Came Before are the most interesting part', 2 * 24 * 60],
-    ['u-mia', '> Those Who Came Before are the most interesting part\nthis. Juno arc deserved a real ending', 2 * 24 * 60 - 10],
+  'c-acs-announcements': [
+    ['u-leo', '## Photo Mode Contest 📸\nTheme: **Cherry Blossom Season**. Post your best shot in #photo-mode before Sunday. Winner gets the Shinobi role!', 2 * 24 * 60, { pinned: true, reactions: [{ emoji: '🌸', userIds: ['u-mia', 'u-ella', 'u-kai', 'u-ironman'] }] }],
+    ['u-mod', '**Title update is live**\n- New Assassination and Stealth difficulty options\n- Hideout layout slots increased\n- Fixes for rooftop traversal and ally AI', 20 * 60],
   ],
-  'c-ac-screenshots': [
-    ['u-ella', 'Leap of faith off the Kyoto pagoda at sunset 🌅 (contest entry)', 20 * 60, { reactions: [{ emoji: '😍', userIds: ['u-mia', 'u-leo'] }, { emoji: '🦅', userIds: ['u-kai'] }] }],
-    ['u-kai', 'Florence rooftops, still gorgeous after all these years', 10 * 60],
+  'c-acs-rules': [
+    ['u-mod', '**1.** Be respectful.\n**2.** Spoiler-tag story details with ||spoilers||.\n**3.** Keep builds in #naoe-shinobi and #yasuke-samurai.\n**4.** No piracy talk.', 30 * 24 * 60, { pinned: true }],
   ],
-  'c-ac-shadows': [
+  'c-acs-naoe': [
+    ['u-mia', '**Early-game Naoe build**\n- Shadow Blend + Silent Assassination first\n- Kusarigama for crowd control\n- Kunai for quiet takedowns from range\nNight missions are way easier.', 3 * 24 * 60, { pinned: true, reactions: [{ emoji: '🥷', userIds: ['u-ella', 'u-kai', CURRENT_USER_ID] }] }],
     ['u-ironman', 'Best skill tree for Naoe early game? I keep getting spotted', 8 * 60],
-    ['u-leo', 'Rush the shadow blend + tanto assassination upgrades, then kunai. Night missions are way easier too.', 8 * 60 - 15],
+    ['u-mia', 'Crouch in tall grass and use the eagle… I mean the observe mode more. Also prone under buildings!', 8 * 60 - 15],
   ],
-  'c-ac-classics': [
-    ['u-luke', '“Requiescat in pace.” Still gives me chills 🥲', 4 * 24 * 60, { reactions: [{ emoji: '🥲', userIds: ['u-kai', 'u-leo', 'u-mia'] }] }],
+  'c-acs-yasuke': [
+    ['u-kai', 'Kanabo + perfect parries = nothing survives', 6 * 60, { reactions: [{ emoji: '💪', userIds: ['u-ironman', 'u-luke'] }] }],
+    ['u-ironman', 'Teppo headshots from across the courtyard are so satisfying', 5 * 60],
   ],
-  'c-rl-lfg': [
-    ['u-kai', 'Diamond 2, NA East, looking for a 2s partner tonight', 120],
-    ['u-omar', 'I’m down, add me', 110],
+  'c-acs-lore': [
+    ['u-noah', 'Love that it’s set during Oda Nobunaga’s campaign in the Sengoku period', 3 * 24 * 60],
+    ['u-mia', '||The Shinbakufu masks reveal was such a good twist||', 3 * 24 * 60 - 20],
+    ['u-leo', 'And the Animus Hub framing ties it all back to the modern-day story', 2 * 24 * 60],
+  ],
+  'c-acs-photo': [
+    ['u-ella', 'Naoe on a pagoda roof at sunset 🌅 (contest entry)', 20 * 60, { reactions: [{ emoji: '😍', userIds: ['u-mia', 'u-leo'] }, { emoji: '🌸', userIds: ['u-kai'] }] }],
+    ['u-kai', 'Winter in the mountains near Kyoto, the snow effects are unreal', 10 * 60],
+  ],
+  'c-acs-hideout': [
+    ['u-luke', 'Went full zen garden with the hideout, koi pond + dojo in the middle', 26 * 60, { reactions: [{ emoji: '🎋', userIds: ['u-mia', 'u-ella'] }] }],
+  ],
+  'c-bf-general': [
+    ['u-john', 'Conquest on the new city map is absolute chaos (complimentary)', 180],
+    ['u-omar', 'Watching a whole building collapse on a squad camping the objective never gets old', 175, { reactions: [{ emoji: '💥', userIds: ['u-john', 'u-zed', 'u-sarah'] }] }],
+    ['u-sarah', 'Please revive me before you run off to cap the flag 😭', 120],
+    ['u-zed', 'jets feel great this time, finally some proper dogfights', 60],
+    ['u-mustapha', 'Squad up in Alpha, we need an engineer for the tank', 12],
+  ],
+  'c-bf-announcements': [
+    ['u-john', '## Season 1 is live 🎖️\nNew maps, weapons and a Battle Pass. Double XP weekend starts Friday!', 2 * 24 * 60, { pinned: true, reactions: [{ emoji: '🔥', userIds: ['u-omar', 'u-zed', 'u-sarah', 'u-mustapha'] }] }],
+  ],
+  'c-bf-lfs': [
+    ['u-omar', 'PC, EU, pilot main, need 3 for Breakthrough tonight', 90],
+    ['u-kai', 'I can play recon, add me', 85],
+  ],
+  'c-bf-classes': [
+    ['u-sarah', 'Support with the defib + ammo crate is the most underrated class. Revive everyone 🩹', 5 * 60, { reactions: [{ emoji: '🩹', userIds: ['u-john', 'u-omar'] }] }],
+    ['u-zed', 'Recon with the spawn beacon on a rooftop wins more games than any sniper shot', 4 * 60],
+  ],
+  'c-bf-clips': [
+    ['u-omar', 'C4 on a quad bike into a tank. Only in Battlefield 😂', 20 * 60, { reactions: [{ emoji: '😂', userIds: ['u-john', 'u-zed', 'u-kai'] }] }],
   ],
   'dm-sarah': [
     ['u-sarah', 'hey! did you see the PR comments?', 26 * 60],
@@ -621,15 +607,15 @@ export const createSeedMessages = (now: number): Record<string, Message[]> =>
 
 export const SEED_THREADS = (now: number): Thread[] => [
   {
-    id: 't-rookie-drop',
-    name: 'Legendary Rookie Revelation drop',
-    serverId: 's-dapper',
-    parentChannelId: 'c-dapper-general',
-    parentMessageId: 'm-c-dapper-general-3',
-    ownerId: 'u-mustapha',
-    createdAt: now - 94 * MINUTE,
+    id: 't-awaji',
+    name: 'Is the Claws of Awaji expansion worth it?',
+    serverId: 's-acshadows',
+    parentChannelId: 'c-acs-general',
+    parentMessageId: 'm-c-acs-general-4',
+    ownerId: 'u-leo',
+    createdAt: now - 118 * MINUTE,
   },
 ]
 
 /** Channels that start with unread messages */
-export const SEED_UNREAD = ['c-val-general', 'c-dapper-announcements', 'dm-sarah', 'c-ac-general', 'c-hal-general']
+export const SEED_UNREAD = ['c-val-general', 'c-acs-announcements', 'dm-sarah', 'c-bf-general', 'c-hal-general']
