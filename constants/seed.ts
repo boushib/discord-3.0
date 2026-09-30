@@ -168,7 +168,7 @@ export const SEED_SERVERS: Server[] = [
   {
     id: 's-fortnite',
     name: 'Fortnite',
-    icon: '/servers/fortnite.svg',
+    icon: '/servers/fortnite.jpg',
     bannerColor: '#5b2bd6',
     verified: true,
     ownerId: 'u-luke',

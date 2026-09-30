@@ -51,6 +51,7 @@ const migrateSeed = (state: PersistedState, fromVersion: number): PersistedState
     ['s-bf6', '/servers/bf6.svg', { icon: BF6_ICON }], // v6
     ['s-wukong', '/servers/wukong.svg', { icon: '/servers/wukong.jpg' }], // v7
     ['s-league', '/servers/league.svg', { icon: '/servers/league.jpg' }], // v8
+    ['s-fortnite', '/servers/fortnite.svg', { icon: '/servers/fortnite.jpg' }], // v9
   ]
   for (const [id, oldIcon, changes] of ICON_UPDATES) {
     if (byId[id]?.icon === oldIcon) byId[id] = { ...byId[id], ...changes }
