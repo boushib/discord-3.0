@@ -1,0 +1,96 @@
+.panel
+  width: 420px
+  max-height: 70vh
+  display: flex
+  flex-direction: column
+  overflow: hidden
+  border-radius: 8px
+  background-color: var(--bg-secondary)
+  box-shadow: var(--elevation-high), 0 0 0 1px rgba(0, 0, 0, .15)
+
+.header
+  display: flex
+  align-items: center
+  gap: 8px
+  padding: 16px
+  background-color: var(--bg-tertiary)
+  color: var(--header-primary)
+
+  h2
+    font-size: 16px
+    font-weight: 600
+
+.list
+  padding: 8px
+
+.empty
+  padding: 32px 16px
+  color: var(--text-muted)
+  text-align: center
+
+.emptyIcon
+  font-size: 48px
+  margin-bottom: 12px
+
+.item
+  position: relative
+  display: flex
+  gap: 12px
+  margin-bottom: 8px
+  padding: 12px
+  border-radius: 4px
+  background-color: var(--bg-primary)
+
+  &:hover .actions
+    display: flex
+
+.content
+  flex: 1
+  min-width: 0
+
+.meta
+  display: flex
+  align-items: baseline
+  gap: 8px
+
+.name
+  color: var(--header-primary)
+  font-weight: 500
+
+.time
+  color: var(--text-muted)
+  font-size: 12px
+
+.body
+  color: var(--text-normal)
+  font-size: 15px
+  white-space: pre-wrap
+  word-wrap: break-word
+
+.actions
+  position: absolute
+  top: 8px
+  right: 8px
+  display: none
+  gap: 4px
+
+.jump
+  padding: 2px 8px
+  border-radius: 3px
+  background-color: var(--bg-secondary-alt)
+  color: var(--text-normal)
+  font-size: 12px
+  font-weight: 600
+
+  &:hover
+    background-color: var(--bg-accent)
+
+.unpin
+  display: flex
+  padding: 2px
+  border-radius: 50%
+  background-color: var(--bg-secondary-alt)
+  color: var(--interactive-normal)
+
+  &:hover
+    color: var(--interactive-hover)

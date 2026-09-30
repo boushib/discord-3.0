@@ -1,3 +1,4 @@
+import { createSelector } from '@reduxjs/toolkit'
 import { CURRENT_USER_ID } from '../constants'
 import type { Message, Server, User } from '../models'
 import type { RootState } from '.'
@@ -13,19 +14,27 @@ export type ChannelContext =
   | { kind: 'server'; server: Server; channel: Server['channels'][number] }
   | { kind: 'dm'; dmId: string; recipient: User }
 
-export const findChannel = (s: RootState, channelId: string): ChannelContext | null => {
-  const dm = s.dms.find(d => d.id === channelId)
-  if (dm) {
-    const recipient = s.users.byId[dm.recipientId]
-    return recipient ? { kind: 'dm', dmId: dm.id, recipient } : null
+export const findChannel = createSelector(
+  [
+    (s: RootState) => s.dms,
+    (s: RootState) => s.servers,
+    (s: RootState) => s.users.byId,
+    (_: RootState, channelId: string) => channelId,
+  ],
+  (dms, servers, users, channelId): ChannelContext | null => {
+    const dm = dms.find(d => d.id === channelId)
+    if (dm) {
+      const recipient = users[dm.recipientId]
+      return recipient ? { kind: 'dm', dmId: dm.id, recipient } : null
+    }
+    for (const serverId of servers.order) {
+      const server = servers.byId[serverId]
+      const channel = server.channels.find(c => c.id === channelId)
+      if (channel) return { kind: 'server', server, channel }
+    }
+    return null
   }
-  for (const serverId of s.servers.order) {
-    const server = s.servers.byId[serverId]
-    const channel = server.channels.find(c => c.id === channelId)
-    if (channel) return { kind: 'server', server, channel }
-  }
-  return null
-}
+)
 
 const lastReadAt = (s: RootState, channelId: string) =>
   s.readState.lastReadAt[channelId] ?? s.readState.baseline

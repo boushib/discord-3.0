@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react'
 import { useAppDispatch, useSelector } from '../../hooks'
-import { markRead, rememberChannel } from '../../store'
+import { markRead, rememberChannel, setSearch } from '../../store'
 import { findChannel, selectMessages } from '../../store/selectors'
 import Members from '../Members'
 import MessageBox from '../MessageBox'
@@ -22,17 +22,19 @@ const Channel = ({ channelId }: { channelId: string }) => {
   }, [dispatch, channelId, messageCount])
 
   useEffect(() => {
+    dispatch(setSearch(''))
+  }, [dispatch, channelId])
+
+  useEffect(() => {
     if (serverId) dispatch(rememberChannel({ serverId, channelId }))
   }, [dispatch, serverId, channelId])
 
   if (!context) return <div className={styles.empty}>This channel doesn’t exist.</div>
 
-  const name = context.kind === 'server' ? context.channel.name : context.recipient.displayName
-
   return (
     <>
       <div className={styles.channel}>
-        <ChannelHeader name={name} />
+        <ChannelHeader channelId={channelId} context={context} />
         <MessageList key={`list-${channelId}`} channelId={channelId} context={context} />
         <MessageBox key={`box-${channelId}`} channelId={channelId} context={context} />
       </div>
