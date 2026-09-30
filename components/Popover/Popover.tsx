@@ -67,18 +67,16 @@ const Popover = ({ anchor, placement = 'bottom-start', offset = 8, onClose, clas
     ref.current = el
     if (!el) return
     const rect = el.getBoundingClientRect()
-    if (rect.bottom > window.innerHeight - MARGIN) {
-      el.style.top = `${parseFloat(el.style.top) - (rect.bottom - window.innerHeight + MARGIN)}px`
+    const shift = (start: number, size: number, viewport: number) => {
+      if (size > viewport - MARGIN * 2) return MARGIN - start // too big: pin to the start edge
+      if (start + size > viewport - MARGIN) return viewport - MARGIN - (start + size)
+      if (start < MARGIN) return MARGIN - start
+      return 0
     }
-    if (rect.top < MARGIN) {
-      el.style.top = `${parseFloat(el.style.top) + (MARGIN - rect.top)}px`
-    }
-    if (rect.right > window.innerWidth - MARGIN) {
-      el.style.left = `${parseFloat(el.style.left) - (rect.right - window.innerWidth + MARGIN)}px`
-    }
-    if (rect.left < MARGIN) {
-      el.style.left = `${parseFloat(el.style.left) + (MARGIN - rect.left)}px`
-    }
+    const dx = shift(rect.left, rect.width, window.innerWidth)
+    const dy = shift(rect.top, rect.height, window.innerHeight)
+    if (dx) el.style.left = `${parseFloat(el.style.left) + dx}px`
+    if (dy) el.style.top = `${parseFloat(el.style.top) + dy}px`
   }, [])
 
   return createPortal(
