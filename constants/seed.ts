@@ -200,7 +200,7 @@ export const SEED_SERVERS: Server[] = [
   {
     id: 's-league',
     name: 'League of Legends',
-    icon: '/servers/league.svg',
+    icon: '/servers/league.jpg',
     bannerColor: '#0a1428',
     verified: true,
     ownerId: 'u-john',
