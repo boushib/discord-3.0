@@ -435,3 +435,60 @@
   button
     min-width: 64px
     height: 36px
+
+.toggleRow
+  display: flex
+  align-items: center
+  justify-content: space-between
+  gap: 24px
+  padding: 16px 0
+  border-bottom: 1px solid var(--divider)
+  cursor: pointer
+
+.toggleLabel
+  display: block
+  margin-bottom: 4px
+  color: var(--header-primary)
+  font-weight: 500
+
+.toggleDescription
+  display: block
+  margin-top: 16px
+  color: var(--header-secondary)
+  font-size: 14px
+
+  .toggleRow &
+    margin-top: 0
+
+.toggle
+  appearance: none
+  width: 40px
+  height: 24px
+  flex-shrink: 0
+  border-radius: 12px
+  background-color: var(--bg-accent)
+  position: relative
+  cursor: pointer
+  transition: background-color .15s
+
+  &::after
+    content: ''
+    position: absolute
+    top: 3px
+    left: 3px
+    width: 18px
+    height: 18px
+    border-radius: 50%
+    background-color: #fff
+    transition: transform .15s
+
+  &:checked
+    background-color: var(--green)
+
+    &::after
+      transform: translateX(16px)
+
+.warning
+  margin-top: 8px
+  color: var(--red)
+  font-size: 14px

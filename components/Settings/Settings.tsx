@@ -10,10 +10,11 @@ import { closeModal } from '../../store'
 import Modal, { Button } from '../Modal'
 import AccountSection from './AccountSection'
 import AppearanceSection from './AppearanceSection'
+import NotificationsSection from './NotificationsSection'
 import ProfileSection from './ProfileSection'
 import styles from './Settings.module.sass'
 
-type Section = 'account' | 'profile' | 'appearance'
+type Section = 'account' | 'profile' | 'appearance' | 'notifications'
 
 const NAV: { heading: string; items: { id: Section; label: string }[] }[] = [
   {
@@ -23,7 +24,13 @@ const NAV: { heading: string; items: { id: Section; label: string }[] }[] = [
       { id: 'profile', label: 'Profiles' },
     ],
   },
-  { heading: 'App Settings', items: [{ id: 'appearance', label: 'Appearance' }] },
+  {
+    heading: 'App Settings',
+    items: [
+      { id: 'appearance', label: 'Appearance' },
+      { id: 'notifications', label: 'Notifications' },
+    ],
+  },
 ]
 
 const Settings = () => {
@@ -71,6 +78,7 @@ const Settings = () => {
           {section === 'account' && <AccountSection onEditProfile={() => setSection('profile')} />}
           {section === 'profile' && <ProfileSection />}
           {section === 'appearance' && <AppearanceSection />}
+          {section === 'notifications' && <NotificationsSection />}
         </div>
         <div className={styles.closeColumn}>
           <button type="button" className={styles.close} onClick={close} aria-label="Close settings">

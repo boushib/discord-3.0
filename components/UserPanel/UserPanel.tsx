@@ -5,7 +5,7 @@ import { Copy, Headphones, HeadphoneOff, Mic, MicOff, Pencil, Settings } from 'l
 import { STATUS_LABELS } from '../../constants'
 import { useAppDispatch, usePopover, useSelector } from '../../hooks'
 import type { PresenceStatus } from '../../models'
-import { openModal, setStatus, toggleDeafen, toggleMute } from '../../store'
+import { openModal, setAutoIdle, setStatus, toggleDeafen, toggleMute } from '../../store'
 import { selectCurrentUser } from '../../store/selectors'
 import Avatar from '../Avatar'
 import Popover, { Menu, MenuItem, MenuSeparator } from '../Popover'
@@ -89,6 +89,7 @@ const UserPanel = () => {
                     icon={<span className={classNames(styles.dot, styles[status])} />}
                     onClick={() => {
                       dispatch(setStatus(status))
+                      dispatch(setAutoIdle(false))
                       close()
                     }}
                   />

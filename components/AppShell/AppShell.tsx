@@ -3,7 +3,14 @@
 import classNames from 'classnames'
 import { usePathname } from 'next/navigation'
 import { useEffect } from 'react'
-import { useAppDispatch, useGlobalShortcuts, useIsClient, useSelector } from '../../hooks'
+import {
+  useAppDispatch,
+  useAutoIdle,
+  useGlobalShortcuts,
+  useIsClient,
+  useNotifications,
+  useSelector,
+} from '../../hooks'
 import { setMobileNav } from '../../store'
 import ModalRoot from '../Modals'
 import ServerRail from '../ServerRail'
@@ -21,6 +28,8 @@ const AppShell = ({ children }: { children: React.ReactNode }) => {
   const mobileNavOpen = useSelector(s => s.ui.mobileNavOpen)
   const theme = useSelector(s => s.prefs.theme)
   useGlobalShortcuts()
+  useAutoIdle()
+  useNotifications()
 
   // On phones, picking a destination closes the navigation drawer
   useEffect(() => {

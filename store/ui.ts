@@ -26,6 +26,8 @@ export interface UIState {
   mobileNavOpen: boolean
   /** Thread open in the side panel */
   openThreadId: string | null
+  /** Status was switched to idle automatically (and should flip back on activity) */
+  autoIdle: boolean
   /** Files attached in the composer but not sent yet, per channel */
   uploads: Record<string, Attachment[]>
 }
@@ -39,6 +41,7 @@ const initialState: UIState = {
   search: '',
   mobileNavOpen: false,
   openThreadId: null,
+  autoIdle: false,
   uploads: {},
 }
 
@@ -74,6 +77,9 @@ const uiSlice = createSlice({
     setSearch(state, action: PayloadAction<string>) {
       state.search = action.payload
     },
+    setAutoIdle(state, action: PayloadAction<boolean>) {
+      state.autoIdle = action.payload
+    },
     setOpenThread(state, action: PayloadAction<string | null>) {
       state.openThreadId = action.payload
     },
@@ -105,6 +111,7 @@ export const {
   setSearch,
   setMobileNav,
   setOpenThread,
+  setAutoIdle,
   addUploads,
   removeUpload,
   clearUploads,
