@@ -45,14 +45,14 @@
 
 .spoiler
   border-radius: 3px
-  background-color: #1e1f22
+  background-color: var(--spoiler-bg)
   cursor: pointer
 
   .spoilerText
     opacity: 0
 
   &:hover:not(.revealed)
-    background-color: #111214
+    background-color: var(--spoiler-hover)
 
 .revealed
   background-color: rgba(255, 255, 255, .1)

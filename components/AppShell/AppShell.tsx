@@ -19,12 +19,17 @@ const AppShell = ({ children }: { children: React.ReactNode }) => {
   const dispatch = useAppDispatch()
   const pathname = usePathname()
   const mobileNavOpen = useSelector(s => s.ui.mobileNavOpen)
+  const theme = useSelector(s => s.prefs.theme)
   useGlobalShortcuts()
 
   // On phones, picking a destination closes the navigation drawer
   useEffect(() => {
     dispatch(setMobileNav(false))
   }, [dispatch, pathname])
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme
+  }, [theme])
 
   if (!isClient) return <LoadingScreen />
 

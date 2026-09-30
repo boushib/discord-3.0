@@ -10,6 +10,7 @@ export interface PrefsState {
   lastChannelByServer: Record<string, string>
   memberListOpen: boolean
   compactMode: boolean
+  theme: 'dark' | 'light'
   muted: boolean
   deafened: boolean
 }
@@ -21,6 +22,7 @@ export const initialPrefs: PrefsState = {
   lastChannelByServer: {},
   memberListOpen: true,
   compactMode: false,
+  theme: 'dark',
   muted: false,
   deafened: false,
 }
@@ -51,6 +53,9 @@ const prefsSlice = createSlice({
     toggleMemberList(state) {
       state.memberListOpen = !state.memberListOpen
     },
+    setTheme(state, action: PayloadAction<PrefsState['theme']>) {
+      state.theme = action.payload
+    },
     setCompactMode(state, action: PayloadAction<boolean>) {
       state.compactMode = action.payload
     },
@@ -71,6 +76,7 @@ export const {
   setNotificationLevel,
   toggleChannelMute,
   toggleMemberList,
+  setTheme,
   setCompactMode,
   toggleMute,
   toggleDeafen,

@@ -12,6 +12,7 @@ import type { Channel, Server } from '../../models'
 import { markRead, openModal, toggleChannelMute } from '../../store'
 import { displayNameIn, selectIsUnread, selectMentionCount } from '../../store/selectors'
 import Avatar from '../Avatar'
+import { ProfileTrigger } from '../Profile'
 import Popover, { Menu, MenuItem, MenuSeparator } from '../Popover'
 import ChannelTypeIcon from '../ChannelTypeIcon'
 import Tooltip from '../Tooltip'
@@ -31,12 +32,14 @@ const VoiceUsers = ({ server, userIds }: { server: Server; userIds: string[] }) 
   return (
     <ul className={styles.voiceUsers}>
       {userIds.map(id => (
-        <li key={id} className={styles.voiceUser}>
-          <Avatar user={users[id]} size={24} />
-          <span className={styles.voiceUserName}>{displayNameIn(server, users[id])}</span>
-          {id === CURRENT_USER_ID && media.screen && <span className={styles.liveBadge}>LIVE</span>}
-          {id === CURRENT_USER_ID && media.camera && <Video size={16} className={styles.voiceUserIcon} />}
-          {id === CURRENT_USER_ID && muted && <MicOff size={16} className={styles.voiceUserIcon} />}
+        <li key={id}>
+          <ProfileTrigger userId={id} server={server} className={styles.voiceUser}>
+            <Avatar user={users[id]} size={24} />
+            <span className={styles.voiceUserName}>{displayNameIn(server, users[id])}</span>
+            {id === CURRENT_USER_ID && media.screen && <span className={styles.liveBadge}>LIVE</span>}
+            {id === CURRENT_USER_ID && media.camera && <Video size={16} className={styles.voiceUserIcon} />}
+            {id === CURRENT_USER_ID && muted && <MicOff size={16} className={styles.voiceUserIcon} />}
+          </ProfileTrigger>
         </li>
       ))}
     </ul>

@@ -2,12 +2,13 @@
 
 import classNames from 'classnames'
 import { useAppDispatch, useSelector } from '../../hooks'
-import { setCompactMode } from '../../store'
+import { setCompactMode, setTheme } from '../../store'
 import styles from './Settings.module.sass'
 
 const AppearanceSection = () => {
   const dispatch = useAppDispatch()
   const compact = useSelector(s => s.prefs.compactMode)
+  const theme = useSelector(s => s.prefs.theme)
 
   const options = [
     { value: false, label: 'Cozy', description: 'Modern, beautiful, and easy on your eyes.' },
@@ -18,9 +19,20 @@ const AppearanceSection = () => {
     <>
       <h1 className={styles.title}>Appearance</h1>
       <h2 className={styles.subtitle}>Theme</h2>
-      <div className={styles.themes}>
-        <div className={classNames(styles.theme, styles.themeActive)} style={{ background: '#313338' }} title="Dark" />
-        <div className={styles.theme} style={{ background: '#fff', opacity: 0.4, cursor: 'not-allowed' }} title="Light (coming soon)" />
+      <div className={styles.themes} role="radiogroup" aria-label="Theme">
+        {(['dark', 'light'] as const).map(t => (
+          <button
+            key={t}
+            type="button"
+            role="radio"
+            aria-checked={theme === t}
+            aria-label={t === 'dark' ? 'Dark' : 'Light'}
+            title={t === 'dark' ? 'Dark' : 'Light'}
+            className={classNames(styles.theme, theme === t && styles.themeActive)}
+            style={{ background: t === 'dark' ? '#313338' : '#ffffff' }}
+            onClick={() => dispatch(setTheme(t))}
+          />
+        ))}
       </div>
       <div className={styles.divider} />
       <h2 className={styles.subtitle}>Message Display</h2>

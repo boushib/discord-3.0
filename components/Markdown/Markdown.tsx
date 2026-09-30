@@ -3,6 +3,7 @@
 import classNames from 'classnames'
 import { Fragment, useState } from 'react'
 import { useSelector } from '../../hooks'
+import { ProfileTrigger } from '../Profile'
 import styles from './Markdown.module.sass'
 
 const INLINE =
@@ -31,7 +32,11 @@ const Mention = ({ name }: { name: string }) => {
   )
   if (name === 'everyone' || name === 'here') return <span className={styles.mention}>@{name}</span>
   if (!user) return <>@{name}</>
-  return <span className={styles.mention}>@{user.displayName}</span>
+  return (
+    <ProfileTrigger userId={user.id} className={styles.mention}>
+      @{user.displayName}
+    </ProfileTrigger>
+  )
 }
 
 const parseInline = (text: string, keyPrefix = ''): React.ReactNode[] => {
