@@ -1,0 +1,65 @@
+.tooltip
+  position: fixed
+  z-index: 1000
+  pointer-events: none
+  max-width: 190px
+  padding: 6px 10px
+  border-radius: 5px
+  background-color: var(--bg-floating)
+  color: var(--text-normal)
+  font-size: 14px
+  font-weight: 500
+  line-height: 1.2
+  box-shadow: var(--elevation-high)
+  animation: pop .1s ease-out
+
+  &::before
+    content: ''
+    position: absolute
+    border: 5px solid transparent
+
+.large
+  padding: 8px 12px
+  font-size: 16px
+  font-weight: 600
+  max-width: 220px
+
+.top
+  transform: translate(-50%, -100%)
+
+  &::before
+    top: 100%
+    left: 50%
+    margin-left: -5px
+    border-top-color: var(--bg-floating)
+
+.bottom
+  transform: translate(-50%, 0)
+
+  &::before
+    bottom: 100%
+    left: 50%
+    margin-left: -5px
+    border-bottom-color: var(--bg-floating)
+
+.right
+  transform: translate(0, -50%)
+
+  &::before
+    right: 100%
+    top: 50%
+    margin-top: -5px
+    border-right-color: var(--bg-floating)
+
+.left
+  transform: translate(-100%, -50%)
+
+  &::before
+    left: 100%
+    top: 50%
+    margin-top: -5px
+    border-left-color: var(--bg-floating)
+
+@keyframes pop
+  from
+    opacity: 0

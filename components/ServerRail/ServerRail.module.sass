@@ -1,0 +1,118 @@
+.rail
+  width: 72px
+  flex-shrink: 0
+  display: flex
+  flex-direction: column
+  align-items: center
+  gap: 8px
+  padding: 12px 0
+  overflow-y: auto
+  scrollbar-width: none
+  background-color: var(--bg-tertiary)
+
+  &::-webkit-scrollbar
+    display: none
+
+.separator
+  width: 32px
+  height: 2px
+  border-radius: 1px
+  background-color: var(--bg-modifier-selected)
+  flex-shrink: 0
+
+.item
+  position: relative
+  width: 100%
+  display: flex
+  justify-content: center
+  flex-shrink: 0
+
+  &:hover .pill
+    height: 20px
+    transform: translateY(-50%) scale(1)
+
+.pill
+  position: absolute
+  left: 0
+  top: 50%
+  width: 4px
+  height: 8px
+  border-radius: 0 4px 4px 0
+  background-color: var(--header-primary)
+  transform: translateY(-50%) scale(0)
+  transition: height .2s ease, transform .2s ease
+
+.itemUnread .pill
+  transform: translateY(-50%) scale(1)
+
+.itemActive .pill,
+.itemActive:hover .pill
+  height: 40px
+  transform: translateY(-50%) scale(1)
+
+.button
+  display: block
+  border-radius: 50%
+
+  &:focus-visible
+    outline: 2px solid var(--text-link)
+    outline-offset: 2px
+
+.icon
+  width: 48px
+  height: 48px
+  display: flex
+  align-items: center
+  justify-content: center
+  overflow: hidden
+  border-radius: 24px
+  background-color: var(--bg-primary)
+  color: var(--text-normal)
+  transition: border-radius .2s ease, background-color .2s ease, color .2s ease
+
+  .button:hover &, &.active
+    border-radius: 16px
+
+.home
+  .button:hover &, &.active
+    background-color: var(--brand)
+    color: #fff
+
+.server
+  .button:hover &, &.active
+    background-color: var(--brand)
+    color: #fff
+
+.action
+  color: var(--green)
+
+  .button:hover &
+    background-color: var(--green)
+    color: #fff
+
+.image
+  width: 100%
+  height: 100%
+  object-fit: cover
+
+.initials
+  font-weight: 500
+  white-space: nowrap
+  letter-spacing: -0.02em
+
+.badge
+  position: absolute
+  right: 10px
+  bottom: -2px
+  min-width: 16px
+  height: 16px
+  padding: 0 4px
+  border-radius: 8px
+  box-shadow: 0 0 0 4px var(--bg-tertiary)
+  background-color: var(--red)
+  color: #fff
+  font-size: 12px
+  font-weight: 700
+  line-height: 16px
+  text-align: center
+  pointer-events: none

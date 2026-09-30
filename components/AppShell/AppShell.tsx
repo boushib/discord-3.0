@@ -1,7 +1,7 @@
 'use client'
 
 import { useIsClient } from '../../hooks'
-import Sidebar from '../Sidebar'
+import ServerRail from '../ServerRail'
 import LoadingScreen from './LoadingScreen'
 
 /**
@@ -14,7 +14,7 @@ const AppShell = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <div className="app">
-      <Sidebar />
+      <ServerRail />
       {children}
     </div>
   )
