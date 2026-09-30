@@ -7,7 +7,7 @@ import { createPortal } from 'react-dom'
 import { CURRENT_USER_ID } from '../../constants'
 import { useAppDispatch, useSelector } from '../../hooks'
 import { channelHref, dmHref, serverHref } from '../../lib/routes'
-import { closeModal, dmIdFor, openDM } from '../../store'
+import { closeModal, dmIdFor, groupName, openDM } from '../../store'
 import { selectIsUnread } from '../../store/selectors'
 import Avatar from '../Avatar'
 import ChannelTypeIcon from '../ChannelTypeIcon'
@@ -18,6 +18,7 @@ type Result =
   | { kind: 'channel'; id: string; label: string; hint: string; serverId: string; type: 'text' | 'announcement' | 'voice'; unread: boolean }
   | { kind: 'user'; id: string; label: string; hint: string }
   | { kind: 'server'; id: string; label: string; hint: string }
+  | { kind: 'group'; id: string; label: string; hint: string }
 
 /** Lower is better; -1 means no match */
 const score = (label: string, query: string) => {
@@ -72,6 +73,16 @@ const QuickSwitcher = () => {
         all.push({ kind: 'user', id: user.id, label: user.displayName, hint: user.username })
       }
     }
+    if (!prefix || prefix === '@') {
+      for (const group of state.groups) {
+        all.push({
+          kind: 'group',
+          id: group.id,
+          label: groupName(group, id => state.users.byId[id]?.displayName ?? 'Unknown'),
+          hint: `${group.memberIds.length + 1} members`,
+        })
+      }
+    }
     if (!prefix || prefix === '*') {
       for (const serverId of state.servers.order) {
         const server = state.servers.byId[serverId]
@@ -99,6 +110,7 @@ const QuickSwitcher = () => {
     close()
     if (r.kind === 'channel') router.push(channelHref(r.serverId, r.id))
     else if (r.kind === 'server') router.push(serverHref(r.id))
+    else if (r.kind === 'group') router.push(dmHref(r.id))
     else {
       dispatch(openDM(r.id))
       router.push(dmHref(dmIdFor(r.id)))
@@ -145,6 +157,9 @@ const QuickSwitcher = () => {
                 {r.kind === 'channel' && <ChannelTypeIcon type={r.type} size={20} />}
                 {r.kind === 'user' && (
                   <Avatar user={state.users.byId[r.id]} size={20} />
+                )}
+                {r.kind === 'group' && (
+                  <Avatar user={state.users.byId[state.groups.find(g => g.id === r.id)!.memberIds[0]]} size={20} />
                 )}
                 {r.kind === 'server' && (
                   <span className={styles.serverIcon}>

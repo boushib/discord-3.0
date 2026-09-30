@@ -1,6 +1,7 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import { CURRENT_USER_ID } from '../constants'
 import { dmsReducer } from './dms'
+import { groupsReducer } from './groups'
 import { messagesReducer } from './messages'
 import { loadState, saveState } from './persist'
 import { prefsReducer } from './prefs'
@@ -13,6 +14,7 @@ import { usersReducer } from './users'
 const rootReducer = combineReducers({
   servers: serversReducer,
   dms: dmsReducer,
+  groups: groupsReducer,
   messages: messagesReducer,
   threads: threadsReducer,
   users: usersReducer,
@@ -48,6 +50,7 @@ export type AppStore = ReturnType<typeof makeStore>
 export type AppDispatch = AppStore['dispatch']
 
 export * from './dms'
+export * from './groups'
 export * from './messages'
 export * from './prefs'
 export * from './readState'

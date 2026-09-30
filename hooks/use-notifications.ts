@@ -4,7 +4,7 @@ import { useStore } from 'react-redux'
 import { CURRENT_USER_ID } from '../constants'
 import { playPing } from '../lib/sounds'
 import type { RootState } from '../store'
-import { findChannel, isMention } from '../store/selectors'
+import { contextLabel, findChannel, isMention } from '../store/selectors'
 
 /**
  * Pings for DMs and @mentions that arrive outside the channel you're looking
@@ -42,7 +42,7 @@ export const useNotifications = () => {
 
         for (const message of list.slice(old.length)) {
           if (message.authorId === CURRENT_USER_ID) continue
-          const important = context.kind === 'dm' || isMention(state, message)
+          const important = context.kind !== 'server' || isMention(state, message)
           if (!important) continue
           const viewing = pathRef.current.endsWith(`/${channelId}`) || state.ui.openThreadId === channelId
           if (viewing && document.visibilityState === 'visible') continue
@@ -55,7 +55,7 @@ export const useNotifications = () => {
             Notification.permission === 'granted'
           ) {
             const author = state.users.byId[message.authorId]
-            const where = context.kind === 'dm' ? '' : ` (#${context.channel.name}, ${context.server.name})`
+            const where = context.kind === 'dm' ? '' : ` (${contextLabel(context)})`
             new Notification(`${author?.displayName ?? 'Someone'}${where}`, {
               body: message.content || 'Sent an attachment',
               tag: message.id,

@@ -81,3 +81,20 @@
 @keyframes spin
   to
     transform: rotate(360deg)
+
+.group
+  position: relative
+  display: inline-block
+  flex-shrink: 0
+
+.groupBack
+  position: absolute
+  top: 0
+  left: 0
+
+.groupFront
+  position: absolute
+  right: 0
+  bottom: 0
+  border-radius: 50%
+  box-shadow: 0 0 0 2px var(--bg-secondary)

@@ -11,9 +11,9 @@ import DiscordIcon from '../../icons/Discord'
 import DownloadIcon from '../../icons/Download'
 import ExploreIcon from '../../icons/Explore'
 import { dmHref, isMe, serverHref } from '../../lib/routes'
-import { markRead, moveServer, openModal } from '../../store'
+import { groupName, markRead, moveServer, openModal } from '../../store'
 import { selectMentionCount, selectServerUnread } from '../../store/selectors'
-import Avatar from '../Avatar'
+import Avatar, { GroupAvatar } from '../Avatar'
 import Popover, { Menu, MenuItem, MenuSeparator } from '../Popover'
 import RailItem from './RailItem'
 import ServerIcon from './ServerIcon'
@@ -130,6 +130,13 @@ const ServerRail = () => {
         .filter(({ dm, mentions }) => mentions > 0 && dm.id !== params.channelId),
     (a, b) => a.length === b.length && a.every((x, i) => x.dm === b[i].dm && x.mentions === b[i].mentions)
   )
+  const unreadGroups = useSelector(
+    s =>
+      s.groups
+        .map(group => ({ group, mentions: selectMentionCount(s, group.id) }))
+        .filter(({ group, mentions }) => mentions > 0 && group.id !== params.channelId),
+    (a, b) => a.length === b.length && a.every((x, i) => x.group === b[i].group && x.mentions === b[i].mentions)
+  )
   const home = params.serverId !== undefined && isMe(params.serverId)
   const [drag, setDrag] = useState<{ from: number | null; over: number | null }>({ from: null, over: null })
 
@@ -147,6 +154,17 @@ const ServerRail = () => {
           mentions={mentions}
         >
           <Avatar user={users[dm.recipientId]} size={48} />
+        </RailItem>
+      ))}
+
+      {unreadGroups.map(({ group, mentions }) => (
+        <RailItem
+          key={group.id}
+          label={groupName(group, id => users[id]?.displayName ?? 'Unknown')}
+          href={dmHref(group.id)}
+          mentions={mentions}
+        >
+          <GroupAvatar members={group.memberIds.map(id => users[id]).filter(Boolean)} size={48} />
         </RailItem>
       ))}
 

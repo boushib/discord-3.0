@@ -1,6 +1,7 @@
 import { createSelector } from '@reduxjs/toolkit'
 import { CURRENT_USER_ID } from '../constants'
-import type { Message, Server, Thread, User } from '../models'
+import type { GroupDM, Message, Server, Thread, User } from '../models'
+import { groupName } from './groups'
 import type { RootState } from '.'
 
 const EMPTY: Message[] = []
@@ -13,6 +14,7 @@ export const selectMessages = (s: RootState, channelId: string) =>
 export type ChannelContext =
   | { kind: 'server'; server: Server; channel: Server['channels'][number]; thread?: Thread }
   | { kind: 'dm'; dmId: string; recipient: User }
+  | { kind: 'group'; groupId: string; group: GroupDM; members: User[]; name: string }
 
 export const findChannel = createSelector(
   [
@@ -20,9 +22,15 @@ export const findChannel = createSelector(
     (s: RootState) => s.servers,
     (s: RootState) => s.users.byId,
     (s: RootState) => s.threads,
+    (s: RootState) => s.groups,
     (_: RootState, channelId: string) => channelId,
   ],
-  (dms, servers, users, threads, channelId): ChannelContext | null => {
+  (dms, servers, users, threads, groups, channelId): ChannelContext | null => {
+    const group = groups.find(g => g.id === channelId)
+    if (group) {
+      const members = group.memberIds.map(id => users[id]).filter(Boolean)
+      return { kind: 'group', groupId: group.id, group, members, name: groupName(group, id => users[id]?.displayName ?? 'Unknown') }
+    }
     const thread = threads[channelId]
     if (thread) {
       const server = servers.byId[thread.serverId]
@@ -88,8 +96,10 @@ export const selectIsUnread = (s: RootState, channelId: string) =>
 
 export const selectMentionCount = (s: RootState, channelId: string) => {
   if (levelOf(s, channelId) === 'none') return 0
-  // Every unread DM message counts as a mention, like on Discord
-  if (s.dms.some(d => d.id === channelId)) return unreadMessages(s, channelId).length
+  // Every unread DM or group DM message counts as a mention, like on Discord
+  if (s.dms.some(d => d.id === channelId) || s.groups.some(g => g.id === channelId)) {
+    return unreadMessages(s, channelId).length
+  }
   return unreadMessages(s, channelId).filter(m => isMention(s, m)).length
 }
 
@@ -141,3 +151,18 @@ export const selectChannelThreads = createSelector(
       .filter(t => t.parentChannelId === channelId)
       .sort((a, b) => b.createdAt - a.createdAt)
 )
+
+/** Everyone in a conversation except the current user */
+export const otherParticipants = (context: ChannelContext, users: Record<string, User>): User[] => {
+  if (context.kind === 'dm') return [context.recipient]
+  if (context.kind === 'group') return context.members
+  return context.server.members.map(m => users[m.userId]).filter(u => u && u.id !== CURRENT_USER_ID)
+}
+
+/** "@Sarah", "Kai, Omar" or "#general · Valorant" */
+export const contextLabel = (context: ChannelContext) =>
+  context.kind === 'dm'
+    ? `@${context.recipient.displayName}`
+    : context.kind === 'group'
+      ? context.name
+      : `#${context.channel.name} · ${context.server.name}`

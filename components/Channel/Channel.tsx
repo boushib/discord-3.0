@@ -6,6 +6,7 @@ import { useAppDispatch, useFileUploads, useSelector } from '../../hooks'
 import { markRead, rememberChannel, setSearch, type RootState } from '../../store'
 import { findChannel, selectMessages } from '../../store/selectors'
 import Members from '../Members'
+import GroupMembers from '../Members/GroupMembers'
 import MessageBox from '../MessageBox'
 import MessageList from './MessageList'
 import ChannelHeader from './ChannelHeader'
@@ -73,7 +74,7 @@ const Channel = ({ channelId }: { channelId: string }) => {
           <div className={styles.dropOverlay}>
             <div className={styles.dropCard}>
               <div className={styles.dropTitle}>
-                Upload to {context.kind === 'server' ? `#${context.channel.name}` : context.recipient.displayName}
+                Upload to {context.kind === 'server' ? `#${context.channel.name}` : context.kind === 'dm' ? context.recipient.displayName : context.name}
               </div>
               <p>You can add comments before sending.</p>
             </div>
@@ -89,7 +90,12 @@ const Channel = ({ channelId }: { channelId: string }) => {
       ) : openThreadId ? (
         <ThreadPanel threadId={openThreadId} />
       ) : (
-        context.kind === 'server' && memberListOpen && <Members server={context.server} />
+        memberListOpen &&
+        (context.kind === 'server' ? (
+          <Members server={context.server} />
+        ) : context.kind === 'group' ? (
+          <GroupMembers group={context.group} />
+        ) : null)
       )}
     </>
   )

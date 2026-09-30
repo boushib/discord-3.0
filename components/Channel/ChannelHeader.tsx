@@ -4,11 +4,11 @@ import classNames from 'classnames'
 import { AtSign, Bell, BellOff, CircleHelp, Inbox as InboxIcon, MessagesSquare, Phone, Pin, Search, Users, Video, X } from 'lucide-react'
 import { useState } from 'react'
 import { useAppDispatch, usePopover, useSelector } from '../../hooks'
-import { openModal, setOpenThread, setSearch, setSearchOpen, toggleMemberList } from '../../store'
+import { openModal, renameGroup, setOpenThread, setSearch, setSearchOpen, toggleMemberList } from '../../store'
 import { SEARCH_FILTERS } from '../../lib/search'
 import { selectChannelThreads, selectRecentMentions } from '../../store/selectors'
 import type { ChannelContext } from '../../store/selectors'
-import Avatar from '../Avatar'
+import Avatar, { GroupAvatar } from '../Avatar'
 import ChannelTypeIcon from '../ChannelTypeIcon'
 import MobileNavButton from '../MobileNavButton'
 import Popover, { Menu, MenuItem } from '../Popover'
@@ -74,17 +74,30 @@ const ChannelHeader = ({ channelId, context }: { channelId: string; context: Cha
               </>
             )}
           </>
-        ) : (
+        ) : context.kind === 'dm' ? (
           <>
             <AtSign size={24} className={styles.headerIcon} />
             <Avatar user={context.recipient} size={24} status={context.recipient.status} ringColor="var(--bg-primary)" />
             <h1 className={styles.headerName}>{context.recipient.displayName}</h1>
           </>
+        ) : (
+          <>
+            <GroupAvatar members={context.members} size={24} />
+            <input
+              key={context.name}
+              className={styles.groupName}
+              defaultValue={context.name}
+              aria-label="Group name"
+              maxLength={100}
+              onBlur={e => dispatch(renameGroup({ groupId: context.groupId, name: e.target.value }))}
+              onKeyDown={e => e.key === 'Enter' && e.currentTarget.blur()}
+            />
+          </>
         )}
       </div>
 
       <div className={styles.headerTools}>
-        {context.kind === 'dm' ? (
+        {context.kind === 'group' ? null : context.kind === 'dm' ? (
           <>
             <IconButton label="Start Voice Call" active={inCall} onClick={() => startCall(false)}>
               <Phone size={20} />
@@ -106,7 +119,7 @@ const ChannelHeader = ({ channelId, context }: { channelId: string; context: Cha
         <IconButton label="Pinned Messages" active={!!pins.anchor} {...pins.triggerProps}>
           <Pin size={20} />
         </IconButton>
-        {context.kind === 'server' && (
+        {context.kind !== 'dm' && (
           <IconButton
             label={memberListOpen ? 'Hide Member List' : 'Show Member List'}
             active={memberListOpen}

@@ -1,8 +1,7 @@
 import type { ThunkAction, UnknownAction } from '@reduxjs/toolkit'
-import { CURRENT_USER_ID } from '../constants'
 import type { RootState } from '.'
 import { claimGift, sendMessage, toggleReaction, votePoll } from './messages'
-import { findChannel } from './selectors'
+import { findChannel, otherParticipants } from './selectors'
 import { startTyping, stopTyping } from './ui'
 
 type AppThunk = ThunkAction<void, RootState, unknown, UnknownAction>
@@ -42,19 +41,11 @@ export const simulateReply =
     const context = findChannel(state, channelId)
     if (!context) return
 
-    let candidates: string[]
-    if (context.kind === 'dm') {
-      const blocked = state.users.relationships.some(
-        r => r.userId === context.recipient.id && r.type === 'blocked'
-      )
-      candidates = !blocked && context.recipient.status !== 'offline' ? [context.recipient.id] : []
-    } else {
-      candidates = context.server.members
-        .map(m => state.users.byId[m.userId])
-        .filter(u => u && u.id !== CURRENT_USER_ID && !u.bot && u.status === 'online')
-        .map(u => u.id)
-    }
-    if (!candidates.length || Math.random() > (context.kind === 'dm' ? 0.95 : 0.7)) return
+    const blocked = new Set(state.users.relationships.filter(r => r.type === 'blocked').map(r => r.userId))
+    const candidates = otherParticipants(context, state.users.byId)
+      .filter(u => !u.bot && !blocked.has(u.id) && (context.kind === 'server' ? u.status === 'online' : u.status !== 'offline'))
+      .map(u => u.id)
+    if (!candidates.length || Math.random() > (context.kind === 'server' ? 0.7 : 0.95)) return
 
     const authorId = pick(candidates)
     const typingDelay = 700 + Math.random() * 1500
@@ -84,15 +75,9 @@ export const simulateGiftClaim =
     const state = getState()
     const context = findChannel(state, channelId)
     if (!context) return
-    const candidates =
-      context.kind === 'dm'
-        ? context.recipient.status !== 'offline'
-          ? [context.recipient.id]
-          : []
-        : context.server.members
-            .map(m => state.users.byId[m.userId])
-            .filter(u => u && u.id !== CURRENT_USER_ID && !u.bot && u.status === 'online')
-            .map(u => u.id)
+    const candidates = otherParticipants(context, state.users.byId)
+      .filter(u => !u.bot && u.status !== 'offline')
+      .map(u => u.id)
     if (!candidates.length) return
     const userId = pick(candidates)
     setTimeout(() => {
@@ -109,13 +94,9 @@ export const simulatePollVotes =
     const context = findChannel(state, channelId)
     const poll = state.messages[channelId]?.find(m => m.id === messageId)?.poll
     if (!context || !poll) return
-    const voters =
-      context.kind === 'dm'
-        ? [context.recipient.id]
-        : context.server.members
-            .map(m => state.users.byId[m.userId])
-            .filter(u => u && u.id !== CURRENT_USER_ID && !u.bot && u.status !== 'offline')
-            .map(u => u.id)
+    const voters = otherParticipants(context, state.users.byId)
+      .filter(u => !u.bot && u.status !== 'offline')
+      .map(u => u.id)
     voters
       .sort(() => Math.random() - 0.5)
       .slice(0, 8)

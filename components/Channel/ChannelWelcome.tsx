@@ -1,7 +1,7 @@
 import { useSelector } from '../../hooks'
 import ChannelIcon from '../../icons/Channel'
 import type { ChannelContext } from '../../store/selectors'
-import Avatar from '../Avatar'
+import Avatar, { GroupAvatar } from '../Avatar'
 import styles from './Channel.module.sass'
 
 const ChannelWelcome = ({ context }: { context: ChannelContext }) => {
@@ -20,6 +20,18 @@ const ChannelWelcome = ({ context }: { context: ChannelContext }) => {
           This is the beginning of your direct message history with <strong>{recipient.displayName}</strong>.
         </p>
         {relationship?.type === 'friend' && <div className={styles.welcomeTag}>You’re friends</div>}
+      </div>
+    )
+  }
+
+  if (context.kind === 'group') {
+    return (
+      <div className={styles.welcome}>
+        <GroupAvatar members={context.members} size={80} />
+        <h1 className={styles.welcomeTitle}>{context.name}</h1>
+        <p className={styles.welcomeText}>
+          Welcome to the beginning of the <strong>{context.name}</strong> group.
+        </p>
       </div>
     )
   }

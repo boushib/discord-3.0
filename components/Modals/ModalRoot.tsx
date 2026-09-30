@@ -4,6 +4,7 @@ import { useSelector } from '../../hooks'
 import ServerSettings from '../ServerSettings'
 import Settings from '../Settings'
 import CreateChannelModal from './CreateChannelModal'
+import CreateDMModal from './CreateDMModal'
 import CreateServerModal from './CreateServerModal'
 import DeleteMessageModal from './DeleteMessageModal'
 import DownloadModal from './DownloadModal'
@@ -34,6 +35,8 @@ const ModalRoot = () => {
       return <InviteModal serverId={modal.serverId} />
     case 'leaveServer':
       return <LeaveServerModal serverId={modal.serverId} />
+    case 'createDM':
+      return <CreateDMModal />
     case 'quickSwitcher':
       return <QuickSwitcher />
     case 'download':

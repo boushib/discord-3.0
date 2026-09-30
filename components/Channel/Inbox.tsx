@@ -8,7 +8,7 @@ import { useAppDispatch, useSelector } from '../../hooks'
 import { formatTimestamp } from '../../lib/format'
 import { channelHref, dmHref } from '../../lib/routes'
 import { markRead } from '../../store'
-import { findChannel, selectIsUnread, selectMentionCount, selectRecentMentions } from '../../store/selectors'
+import { contextLabel, findChannel, selectIsUnread, selectMentionCount, selectRecentMentions } from '../../store/selectors'
 import Avatar from '../Avatar'
 import Markdown from '../Markdown'
 import styles from './Inbox.module.sass'
@@ -21,6 +21,7 @@ const Inbox = ({ onClose }: { onClose: () => void }) => {
   const mentions = selectRecentMentions(state)
 
   const unreads = [
+    ...state.groups.map(g => g.id),
     ...state.dms.map(d => d.id),
     ...state.servers.order.flatMap(id => state.servers.byId[id].channels.filter(c => c.type !== 'voice').map(c => c.id)),
   ].filter(id => selectIsUnread(state, id) || selectMentionCount(state, id) > 0)
@@ -28,12 +29,12 @@ const Inbox = ({ onClose }: { onClose: () => void }) => {
   const hrefFor = (channelId: string) => {
     const context = findChannel(state, channelId)
     if (!context) return null
-    return context.kind === 'dm' ? dmHref(channelId) : channelHref(context.server.id, channelId)
+    return context.kind === 'server' ? channelHref(context.server.id, channelId) : dmHref(channelId)
   }
   const labelFor = (channelId: string) => {
     const context = findChannel(state, channelId)
     if (!context) return ''
-    return context.kind === 'dm' ? `@${context.recipient.displayName}` : `#${context.channel.name} · ${context.server.name}`
+    return contextLabel(context)
   }
 
   const jump = (channelId: string, messageId?: string) => {

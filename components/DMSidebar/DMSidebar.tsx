@@ -6,10 +6,10 @@ import Link from 'next/link'
 import { useParams, usePathname, useRouter } from 'next/navigation'
 import { useAppDispatch, useSelector } from '../../hooks'
 import { dmHref } from '../../lib/routes'
-import type { DMChannel } from '../../models'
-import { closeDM, openModal } from '../../store'
+import type { DMChannel, GroupDM } from '../../models'
+import { closeDM, groupName, leaveGroup, openModal } from '../../store'
 import { selectMentionCount } from '../../store/selectors'
-import Avatar from '../Avatar'
+import Avatar, { GroupAvatar } from '../Avatar'
 import Tooltip from '../Tooltip'
 import UserPanel from '../UserPanel'
 import VoicePanel from '../UserPanel/VoicePanel'
@@ -51,11 +51,47 @@ const DMRow = ({ dm, active }: { dm: DMChannel; active: boolean }) => {
   )
 }
 
+const GroupRow = ({ group, active }: { group: GroupDM; active: boolean }) => {
+  const dispatch = useAppDispatch()
+  const router = useRouter()
+  const users = useSelector(s => s.users.byId)
+  const mentions = useSelector(s => (active ? 0 : selectMentionCount(s, group.id)))
+  const members = group.memberIds.map(id => users[id]).filter(Boolean)
+
+  return (
+    <Link
+      href={dmHref(group.id)}
+      className={classNames(styles.dm, active && styles.active, mentions > 0 && styles.unread)}
+    >
+      <GroupAvatar members={members} size={32} />
+      <span className={styles.dmText}>
+        <span className={styles.dmName}>{groupName(group, id => users[id]?.displayName ?? 'Unknown')}</span>
+        <span className={styles.dmStatus}>{group.memberIds.length + 1} Members</span>
+      </span>
+      {mentions > 0 && <span className={styles.badge}>{mentions}</span>}
+      <button
+        type="button"
+        className={styles.close}
+        aria-label="Leave Group"
+        onClick={e => {
+          e.preventDefault()
+          e.stopPropagation()
+          dispatch(leaveGroup(group.id))
+          if (active) router.push('/channels/@me')
+        }}
+      >
+        <X size={16} />
+      </button>
+    </Link>
+  )
+}
+
 const DMSidebar = () => {
   const dispatch = useAppDispatch()
   const pathname = usePathname()
   const { channelId } = useParams<{ channelId?: string }>()
   const dms = useSelector(s => s.dms)
+  const groups = useSelector(s => s.groups)
   const incoming = useSelector(s => s.users.relationships.filter(r => r.type === 'incoming').length)
   const openSwitcher = () => dispatch(openModal({ type: 'quickSwitcher' }))
 
@@ -88,15 +124,18 @@ const DMSidebar = () => {
         <div className={styles.heading}>
           <span>Direct Messages</span>
           <Tooltip label="Create DM">
-            <button type="button" aria-label="Create DM" onClick={openSwitcher}>
+            <button type="button" aria-label="Create DM" onClick={() => dispatch(openModal({ type: 'createDM' }))}>
               <Plus size={16} />
             </button>
           </Tooltip>
         </div>
+        {groups.map(group => (
+          <GroupRow key={group.id} group={group} active={group.id === channelId} />
+        ))}
         {dms.map(dm => (
           <DMRow key={dm.id} dm={dm} active={dm.id === channelId} />
         ))}
-        {dms.length === 0 && <p className={styles.empty}>No direct messages yet.</p>}
+        {dms.length === 0 && groups.length === 0 && <p className={styles.empty}>No direct messages yet.</p>}
       </div>
       <VoicePanel />
       <UserPanel />

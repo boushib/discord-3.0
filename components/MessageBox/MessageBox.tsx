@@ -75,10 +75,21 @@ const MessageBox = ({ channelId, context }: Props) => {
 
   const server = context.kind === 'server' ? context.server : undefined
   const placeholder =
-    context.kind === 'server' ? `Message #${context.channel.name}` : `Message @${context.recipient.displayName}`
+    context.kind === 'server'
+      ? `Message #${context.channel.name}`
+      : context.kind === 'dm'
+        ? `Message @${context.recipient.displayName}`
+        : `Message ${context.name}`
 
   const memberIds = useMemo(
-    () => (server ? server.members.map(m => m.userId) : context.kind === 'dm' ? [context.recipient.id, CURRENT_USER_ID] : []),
+    () =>
+      server
+        ? server.members.map(m => m.userId)
+        : context.kind === 'dm'
+          ? [context.recipient.id, CURRENT_USER_ID]
+          : context.kind === 'group'
+            ? [...context.group.memberIds, CURRENT_USER_ID]
+            : [],
     [server, context]
   )
 

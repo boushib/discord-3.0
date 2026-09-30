@@ -13,6 +13,7 @@ export type Modal =
   | { type: 'gift'; channelId: string }
   | { type: 'poll'; channelId: string }
   | { type: 'quickSwitcher' }
+  | { type: 'createDM' }
   | { type: 'shortcuts' }
   | { type: 'download' }
 

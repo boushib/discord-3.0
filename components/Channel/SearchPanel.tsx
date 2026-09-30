@@ -10,7 +10,7 @@ import { isEmptyQuery, matchMessage, parseQuery } from '../../lib/search'
 import type { Message } from '../../models'
 import { setOpenThread, setSearchOpen } from '../../store'
 import type { ChannelContext } from '../../store/selectors'
-import { displayNameIn, roleColorIn } from '../../store/selectors'
+import { contextLabel, displayNameIn, roleColorIn } from '../../store/selectors'
 import Avatar from '../Avatar'
 import Markdown from '../Markdown'
 import styles from './SearchPanel.module.sass'
@@ -32,7 +32,7 @@ const SearchPanel = ({ channelId, context }: { channelId: string; context: Chann
 
   // Search the whole server (channels + threads), or just this DM
   const scopes = useMemo<Scope[]>(() => {
-    if (!server) return [{ id: channelId, label: context.kind === 'dm' ? `@${context.recipient.displayName}` : '' }]
+    if (!server) return [{ id: channelId, label: contextLabel(context) }]
     const channels = server.channels.filter(c => c.type !== 'voice').map(c => ({ id: c.id, label: c.name }))
     const threadScopes = Object.values(threads)
       .filter(t => t.serverId === server.id)

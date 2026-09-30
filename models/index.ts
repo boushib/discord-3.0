@@ -128,3 +128,13 @@ export interface Poll {
   multiple: boolean
   endsAt: number
 }
+
+export interface GroupDM {
+  id: string
+  /** Custom name; defaults to the members' names */
+  name?: string
+  /** Other members (the current user is always part of the group) */
+  memberIds: string[]
+  ownerId: string
+  createdAt: number
+}

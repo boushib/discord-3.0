@@ -41,7 +41,7 @@ export const loadState = (): Partial<PersistedState> | undefined => {
     let state = JSON.parse(raw) as PersistedState
     if ((state.prefs?.seedVersion ?? 1) < SEED_VERSION) state = migrateSeed(state)
     // Fill in preferences added after this state was saved
-    return { ...state, threads: state.threads ?? {}, prefs: { ...initialPrefs, ...state.prefs } }
+    return { ...state, threads: state.threads ?? {}, groups: state.groups ?? [], prefs: { ...initialPrefs, ...state.prefs } }
   } catch {
     return undefined
   }
