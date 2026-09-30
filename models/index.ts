@@ -102,6 +102,7 @@ export interface Message {
   threadId?: string
   sticker?: { id: string; name: string; emoji: string }
   gift?: { plan: 'Nitro' | 'Nitro Basic'; months: number; claimedBy?: string }
+  poll?: Poll
 }
 
 export type RelationshipType = 'friend' | 'incoming' | 'outgoing' | 'blocked'
@@ -119,4 +120,11 @@ export interface Thread {
   parentMessageId: string
   ownerId: string
   createdAt: number
+}
+
+export interface Poll {
+  question: string
+  options: { id: string; text: string; emoji?: string; voterIds: string[] }[]
+  multiple: boolean
+  endsAt: number
 }

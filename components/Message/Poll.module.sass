@@ -1,0 +1,100 @@
+.poll
+  width: min(460px, 100%)
+  margin: 4px 0 2px
+  padding: 16px
+  border: 1px solid var(--bg-secondary-alt)
+  border-radius: 8px
+  background-color: var(--bg-secondary)
+  white-space: normal
+
+.question
+  color: var(--header-primary)
+  font-size: 17px
+  font-weight: 700
+
+.hint
+  margin: 2px 0 12px
+  color: var(--text-muted)
+  font-size: 13px
+
+.options
+  display: flex
+  flex-direction: column
+  gap: 8px
+
+.option
+  position: relative
+  overflow: hidden
+  display: flex
+  align-items: center
+  gap: 8px
+  min-height: 44px
+  padding: 8px 12px
+  border: 1px solid transparent
+  border-radius: 8px
+  background-color: var(--bg-primary)
+  text-align: left
+
+  &:hover:not(:disabled)
+    border-color: var(--bg-accent)
+
+  &:disabled
+    cursor: default
+
+.optionMine
+  border-color: var(--brand)
+
+  &:hover:not(:disabled)
+    border-color: var(--brand)
+
+.optionWinner .bar
+  background-color: rgba(35, 165, 90, .25)
+
+.bar
+  position: absolute
+  inset: 0 auto 0 0
+  background-color: rgba(88, 101, 242, .2)
+  transition: width .4s ease
+
+.optionText
+  position: relative
+  flex: 1
+  color: var(--header-primary)
+  font-weight: 500
+
+.optionStats
+  position: relative
+  color: var(--header-secondary)
+  font-size: 13px
+  font-weight: 600
+  white-space: nowrap
+
+.check
+  position: relative
+  width: 20px
+  height: 20px
+  flex-shrink: 0
+  display: flex
+  align-items: center
+  justify-content: center
+  border: 2px solid var(--interactive-normal)
+  border-radius: 50%
+  color: #fff
+
+.checkSquare
+  border-radius: 5px
+
+.checkOn
+  border-color: var(--brand)
+  background-color: var(--brand)
+
+.footer
+  display: flex
+  flex-wrap: wrap
+  gap: 4px 12px
+  margin-top: 12px
+  color: var(--text-muted)
+  font-size: 13px
+
+.footerHint
+  font-style: italic

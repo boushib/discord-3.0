@@ -473,6 +473,19 @@ const SEED_CONVERSATIONS: Record<string, SeedLine[]> = {
     ['u-kai', 'Nah it’s fine once you learn the lineups, check #agents-and-strats', 170],
     ['u-ironman', 'just hit Radiant btw 😎', 45, { reactions: [{ emoji: '🎉', userIds: ['u-zed', 'u-kai', 'u-sarah'] }, { emoji: '👑', userIds: ['u-omar'] }] }],
     ['u-zed', 'GGs, carried by your Jett as usual', 42],
+    ['u-zed', '', 35, {
+      poll: {
+        question: 'Which map should rotate out of the competitive pool next?',
+        multiple: false,
+        endsAt: 20 * 60, // minutes from now, resolved in createSeedMessages
+        options: [
+          { id: 'breeze', text: 'Breeze', voterIds: ['u-ironman', 'u-kai', 'u-omar'] },
+          { id: 'fracture', text: 'Fracture', voterIds: ['u-sarah', 'u-ava'] },
+          { id: 'pearl', text: 'Pearl', voterIds: ['u-luke'] },
+          { id: 'sunset', text: 'Sunset', voterIds: [] },
+        ],
+      },
+    }],
   ],
   'c-val-lfg': [
     ['u-kai', 'Immortal 1, NA, can flex controller/initiator. Need 2 for ranked tonight', 90],
@@ -598,6 +611,8 @@ export const createSeedMessages = (now: number): Record<string, Message[]> =>
         createdAt: now - minutesAgo * MINUTE,
         reactions: [],
         ...extra,
+        // Seed polls store their duration in minutes; turn it into a timestamp
+        ...(extra?.poll && { poll: { ...extra.poll, endsAt: now + extra.poll.endsAt * MINUTE } }),
       })),
     ])
   )

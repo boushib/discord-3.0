@@ -1,7 +1,7 @@
 'use client'
 
 import classNames from 'classnames'
-import { CirclePlus, FileText, Trash, X } from 'lucide-react'
+import { ChartBar, CirclePlus, FileText, Trash, Upload, X } from 'lucide-react'
 import { useMemo, useRef, useState } from 'react'
 import { CURRENT_USER_ID } from '../../constants'
 import { replaceShortcodes, searchEmojis } from '../../constants/emojis'
@@ -16,7 +16,7 @@ import { simulateReply } from '../../store/simulate'
 import { ChannelContext, displayNameIn, selectMessages } from '../../store/selectors'
 import Avatar from '../Avatar'
 import ExpressionPicker, { type ExpressionTab } from '../ExpressionPicker'
-import Popover from '../Popover'
+import Popover, { Menu, MenuItem } from '../Popover'
 import Tooltip from '../Tooltip'
 import TypingIndicator from './TypingIndicator'
 import styles from './MessageBox.module.sass'
@@ -56,6 +56,7 @@ const MessageBox = ({ channelId, context }: Props) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const fileRef = useRef<HTMLInputElement>(null)
   const expressions = usePopover()
+  const plusMenu = usePopover()
   const [expressionTab, setExpressionTab] = useState<ExpressionTab>('emoji')
   const upload = useFileUploads(channelId)
   const uploads = useSelector(s => s.ui.uploads[channelId])
@@ -321,12 +322,12 @@ const MessageBox = ({ channelId, context }: Props) => {
             e.target.value = ''
           }}
         />
-        <Tooltip label="Upload a File">
+        <Tooltip label="Upload a File or Create a Poll">
           <button
             type="button"
             className={styles.attach}
-            aria-label="Upload a File"
-            onClick={() => fileRef.current?.click()}
+            aria-label="Upload a File or Create a Poll"
+            {...plusMenu.triggerProps}
           >
             <CirclePlus size={24} fill="currentColor" stroke="var(--bg-textarea)" />
           </button>
@@ -388,6 +389,28 @@ const MessageBox = ({ channelId, context }: Props) => {
         )}
       </div>
 
+      {plusMenu.anchor && (
+        <Popover anchor={plusMenu.anchor} placement="top-start" onClose={plusMenu.close}>
+          <Menu>
+            <MenuItem
+              label="Upload a File"
+              icon={<Upload size={18} />}
+              onClick={() => {
+                plusMenu.close()
+                fileRef.current?.click()
+              }}
+            />
+            <MenuItem
+              label="Create Poll"
+              icon={<ChartBar size={18} />}
+              onClick={() => {
+                plusMenu.close()
+                dispatch(openModal({ type: 'poll', channelId }))
+              }}
+            />
+          </Menu>
+        </Popover>
+      )}
       {expressions.anchor && (
         <Popover anchor={expressions.anchor} placement="top-end" offset={8} onClose={expressions.close}>
           <ExpressionPicker

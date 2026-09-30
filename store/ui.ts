@@ -11,6 +11,7 @@ export type Modal =
   | { type: 'settings' }
   | { type: 'serverSettings'; serverId: string }
   | { type: 'gift'; channelId: string }
+  | { type: 'poll'; channelId: string }
   | { type: 'quickSwitcher' }
   | { type: 'shortcuts' }
   | { type: 'download' }

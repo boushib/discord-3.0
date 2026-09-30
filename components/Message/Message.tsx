@@ -18,6 +18,7 @@ import Tooltip from '../Tooltip'
 import { MessageMenu, MessageToolbar } from './MessageActions'
 import MessageEditor from './MessageEditor'
 import { GiftEmbed, ImageEmbed, isImageLink, StickerView } from './RichContent'
+import PollView from './PollView'
 import ThreadSummary from './ThreadSummary'
 import styles from './Message.module.sass'
 
@@ -134,6 +135,7 @@ const Message = ({ message, server, grouped: groupedProp, preview }: Props) => {
                 ))}
               {message.sticker && <StickerView sticker={message.sticker} />}
               {message.gift && <GiftEmbed message={message} />}
+              {message.poll && <PollView message={message} />}
               {message.editedAt && (
                 <Tooltip label={formatFull(message.editedAt)}>
                   <span className={styles.edited}>(edited)</span>

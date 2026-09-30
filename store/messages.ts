@@ -21,6 +21,7 @@ const messagesSlice = createSlice({
         attachments?: Attachment[]
         sticker?: Message['sticker']
         gift?: Message['gift']
+        poll?: Message['poll']
       }) {
         return {
           payload: {
@@ -71,6 +72,23 @@ const messagesSlice = createSlice({
         reaction.userIds.push(userId)
       }
     },
+    votePoll(
+      state,
+      action: PayloadAction<{ channelId: string; messageId: string; optionId: string; userId: string }>
+    ) {
+      const { channelId, messageId, optionId, userId } = action.payload
+      const poll = state[channelId]?.find(m => m.id === messageId)?.poll
+      if (!poll || Date.now() > poll.endsAt) return
+      const option = poll.options.find(o => o.id === optionId)
+      if (!option) return
+      if (option.voterIds.includes(userId)) {
+        option.voterIds = option.voterIds.filter(id => id !== userId)
+        return
+      }
+      // Single-choice polls move your vote instead of adding another
+      if (!poll.multiple) for (const o of poll.options) o.voterIds = o.voterIds.filter(id => id !== userId)
+      option.voterIds.push(userId)
+    },
     claimGift(state, action: PayloadAction<{ channelId: string; messageId: string; userId: string }>) {
       const message = state[action.payload.channelId]?.find(m => m.id === action.payload.messageId)
       if (message?.gift && !message.gift.claimedBy) message.gift.claimedBy = action.payload.userId
@@ -95,6 +113,6 @@ const messagesSlice = createSlice({
   },
 })
 
-export const { sendMessage, editMessage, deleteMessage, toggleReaction, togglePin, claimGift } =
+export const { sendMessage, editMessage, deleteMessage, toggleReaction, togglePin, claimGift, votePoll } =
   messagesSlice.actions
 export const messagesReducer = messagesSlice.reducer

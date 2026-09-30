@@ -282,3 +282,66 @@
   &:hover
     background-color: var(--brand)
     color: #fff
+
+.answers
+  display: flex
+  flex-direction: column
+  gap: 8px
+  margin-bottom: 20px
+
+.answer
+  display: flex
+  align-items: center
+  gap: 8px
+
+  input
+    flex: 1
+    height: 40px
+    padding: 0 10px
+    border-radius: 4px
+    background-color: var(--bg-input)
+    color: var(--text-normal)
+
+  button
+    display: flex
+    color: var(--interactive-normal)
+
+    &:hover
+      color: var(--red)
+
+.addAnswer
+  display: flex
+  align-items: center
+  gap: 6px
+  height: 40px
+  padding: 0 10px
+  border: 1px dashed var(--bg-accent)
+  border-radius: 4px
+  color: var(--header-secondary)
+  font-weight: 500
+
+  &:hover
+    border-color: var(--interactive-normal)
+    color: var(--interactive-hover)
+
+.select
+  width: 100%
+  height: 40px
+  padding: 0 8px
+  border-radius: 4px
+  background-color: var(--bg-input)
+  color: var(--text-normal)
+
+.checkbox
+  display: flex
+  align-items: center
+  gap: 8px
+  margin-right: auto
+  color: var(--header-secondary)
+  font-size: 14px
+  cursor: pointer
+
+  input
+    width: 18px
+    height: 18px
+    accent-color: var(--brand)
