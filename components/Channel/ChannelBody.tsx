@@ -1,6 +1,5 @@
 import ChatItem from '../ChatItem'
 import styles from './Channel.module.sass'
-import MemberList from '../Members/Members'
 
 const CHAT_MESSAGES = [
   { id: 1 },

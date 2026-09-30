@@ -36,3 +36,4 @@ yarn-error.log*
 
 # agent build output
 /.next-*/
+next-env.d.ts

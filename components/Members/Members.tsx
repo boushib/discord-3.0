@@ -69,14 +69,14 @@ const Members = () => (
     <div className={styles.members__label}>Team — {TEAM.length}</div>
     <div className={styles.members__team}>
       {TEAM.map(u => (
-        <Member username={u.username} avatar={u.avatar} key={u.id} />
+        <Member id={u.id} username={u.username} avatar={u.avatar} key={u.id} />
       ))}
     </div>
     <div className={styles.members__label}>
       Online — {ONLINE_MEMBERS.length}
     </div>
     {ONLINE_MEMBERS.map(u => (
-      <Member username={u.username} avatar={u.avatar} key={u.id} />
+      <Member id={u.id} username={u.username} avatar={u.avatar} key={u.id} />
     ))}
   </div>
 )

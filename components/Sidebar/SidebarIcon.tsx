@@ -1,6 +1,7 @@
+'use client'
+
 import classNames from 'classnames'
-import { useDispatch } from 'react-redux'
-import { useSelector } from '../../hooks'
+import { useAppDispatch, useSelector } from '../../hooks'
 import AddIcon from '../../icons/Add'
 import DiscordIcon from '../../icons/Discord'
 import DownloadIcon from '../../icons/Download'
@@ -29,7 +30,7 @@ const getSidebarIcon = (key: string): React.ReactNode => {
 const SidebarIcon = ({ server }: Props) => {
   const { currentServer } = useSelector(s => s.servers)
 
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
 
   const handleSetCurrentServer = () => {
     dispatch(setCurrentServer(server))

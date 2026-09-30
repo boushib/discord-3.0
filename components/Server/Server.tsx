@@ -1,3 +1,5 @@
+'use client'
+
 import classNames from 'classnames'
 import { useSelector } from '../../hooks'
 import ChannelIcon from '../../icons/Channel'

@@ -1,20 +1,23 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { SERVERS } from '../constants'
 import { Server } from '../models'
+
 type ServersState = {
   isLoading: boolean
   error?: string
   servers: Server[]
-  currentServer?: Server
+  currentServer: Server
+}
+
+const initialState: ServersState = {
+  isLoading: true,
+  servers: [],
+  currentServer: SERVERS[0],
 }
 
 const serversSlice = createSlice({
-  name: 'todos',
-  initialState: {
-    isLoading: true,
-    servers: [],
-    currentServer: SERVERS[0],
-  },
+  name: 'servers',
+  initialState,
   reducers: {
     fetchServersPending(state: ServersState) {
       state.isLoading = true
