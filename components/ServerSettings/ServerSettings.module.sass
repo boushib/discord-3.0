@@ -1,0 +1,215 @@
+.help
+  display: block
+  margin-bottom: 16px
+  color: var(--header-secondary)
+  font-size: 14px
+
+.overview
+  display: flex
+  gap: 24px
+  align-items: flex-start
+
+  @media (max-width: 768px)
+    flex-direction: column
+
+.iconPreview
+  width: 100px
+  height: 100px
+  flex-shrink: 0
+  display: flex
+  align-items: center
+  justify-content: center
+  overflow: hidden
+  border-radius: 50%
+  background-color: var(--bg-secondary)
+  color: var(--header-primary)
+  font-size: 28px
+
+.overviewFields
+  flex: 1
+  width: 100%
+
+.buttonInner
+  display: inline-flex
+  align-items: center
+  gap: 6px
+
+.roles
+  display: grid
+  grid-template-columns: 240px 1fr
+  gap: 24px
+
+  @media (max-width: 900px)
+    grid-template-columns: 1fr
+
+.roleList
+  display: flex
+  flex-direction: column
+  gap: 4px
+
+  > button:first-child
+    margin-bottom: 8px
+
+.roleRow
+  display: flex
+  align-items: center
+  border-radius: 4px
+
+  &:hover
+    background-color: var(--bg-modifier-hover)
+
+  > button:not(.roleName)
+    display: flex
+    padding: 4px
+    color: var(--interactive-normal)
+
+    &:disabled
+      opacity: .3
+
+.roleRowActive, .roleRowActive:hover
+  background-color: var(--bg-modifier-selected)
+
+.roleName
+  flex: 1
+  min-width: 0
+  display: flex
+  align-items: center
+  gap: 8px
+  padding: 8px
+  color: var(--header-primary)
+  font-weight: 500
+  text-align: left
+
+.roleDot
+  width: 12px
+  height: 12px
+  flex-shrink: 0
+  border-radius: 50%
+
+.roleCount
+  margin-left: auto
+  color: var(--text-muted)
+  font-size: 12px
+
+.roleEditor
+  padding: 16px
+  border-radius: 8px
+  background-color: var(--bg-secondary)
+
+.toggleRow
+  display: flex
+  align-items: center
+  justify-content: space-between
+  gap: 16px
+  margin-bottom: 24px
+  cursor: pointer
+
+.toggleLabel
+  display: block
+  color: var(--header-primary)
+  font-weight: 500
+
+.toggle
+  appearance: none
+  width: 40px
+  height: 24px
+  flex-shrink: 0
+  border-radius: 12px
+  background-color: var(--bg-accent)
+  position: relative
+  cursor: pointer
+  transition: background-color .15s
+
+  &::after
+    content: ''
+    position: absolute
+    top: 3px
+    left: 3px
+    width: 18px
+    height: 18px
+    border-radius: 50%
+    background-color: #fff
+    transition: transform .15s
+
+  &:checked
+    background-color: var(--green)
+
+    &::after
+      transform: translateX(16px)
+
+.search
+  width: 100%
+  height: 36px
+  margin-bottom: 16px
+  padding: 0 10px
+  border-radius: 4px
+  background-color: var(--bg-input)
+  color: var(--text-normal)
+
+.memberRow
+  display: flex
+  align-items: center
+  gap: 12px
+  padding: 12px 0
+  border-bottom: 1px solid var(--divider)
+
+.memberName
+  width: 160px
+  flex-shrink: 0
+  display: flex
+  flex-direction: column
+
+  strong
+    color: var(--header-primary)
+    font-weight: 600
+
+  span
+    color: var(--text-muted)
+    font-size: 13px
+
+.memberRoles
+  flex: 1
+  display: flex
+  flex-wrap: wrap
+  align-items: center
+  gap: 4px
+
+.roleChip
+  display: flex
+  align-items: center
+  gap: 4px
+  padding: 2px 6px 2px 4px
+  border-radius: 4px
+  background-color: var(--bg-secondary)
+  color: var(--text-normal)
+  font-size: 12px
+  font-weight: 500
+
+.roleChipDot
+  width: 12px
+  height: 12px
+  display: flex
+  align-items: center
+  justify-content: center
+  border-radius: 50%
+  color: transparent
+
+  &:hover
+    color: #fff
+
+.addRole
+  width: 22px
+  height: 22px
+  display: flex
+  align-items: center
+  justify-content: center
+  border-radius: 4px
+  background-color: var(--bg-secondary)
+  color: var(--interactive-normal)
+
+  &:hover
+    color: var(--interactive-hover)
+
+.kick
+  min-width: 64px
+  height: 32px

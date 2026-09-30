@@ -1,7 +1,7 @@
 import { createSlice, nanoid, PayloadAction } from '@reduxjs/toolkit'
 import { CURRENT_USER_ID } from '../constants'
 import { SEED_SERVERS } from '../constants/seed'
-import type { Channel, ChannelType, Server } from '../models'
+import type { Channel, ChannelType, Role, Server } from '../models'
 
 export interface ServersState {
   byId: Record<string, Server>
@@ -54,6 +54,54 @@ const serversSlice = createSlice({
         members: [...server.members, { userId: CURRENT_USER_ID, roleIds: [], joinedAt: Date.now() }],
       }
       state.order.push(server.id)
+    },
+    updateServer(
+      state,
+      action: PayloadAction<{ serverId: string; changes: Partial<Pick<Server, 'name' | 'icon' | 'bannerColor'>> }>
+    ) {
+      const server = state.byId[action.payload.serverId]
+      if (server) Object.assign(server, action.payload.changes)
+    },
+    createRole: {
+      reducer(state, action: PayloadAction<{ serverId: string; role: Role }>) {
+        state.byId[action.payload.serverId]?.roles.push(action.payload.role)
+      },
+      prepare(serverId: string) {
+        return { payload: { serverId, role: { id: `r-${nanoid(8)}`, name: 'new role', color: '#99aab5', hoist: false } } }
+      },
+    },
+    updateRole(state, action: PayloadAction<{ serverId: string; roleId: string; changes: Partial<Omit<Role, 'id'>> }>) {
+      const role = state.byId[action.payload.serverId]?.roles.find(r => r.id === action.payload.roleId)
+      if (role) Object.assign(role, action.payload.changes)
+    },
+    moveRole(state, action: PayloadAction<{ serverId: string; roleId: string; direction: -1 | 1 }>) {
+      const roles = state.byId[action.payload.serverId]?.roles
+      if (!roles) return
+      const i = roles.findIndex(r => r.id === action.payload.roleId)
+      const j = i + action.payload.direction
+      if (i < 0 || j < 0 || j >= roles.length) return
+      ;[roles[i], roles[j]] = [roles[j], roles[i]]
+    },
+    deleteRole(state, action: PayloadAction<{ serverId: string; roleId: string }>) {
+      const server = state.byId[action.payload.serverId]
+      if (!server) return
+      server.roles = server.roles.filter(r => r.id !== action.payload.roleId)
+      for (const m of server.members) m.roleIds = m.roleIds.filter(id => id !== action.payload.roleId)
+    },
+    toggleMemberRole(state, action: PayloadAction<{ serverId: string; userId: string; roleId: string }>) {
+      const member = state.byId[action.payload.serverId]?.members.find(m => m.userId === action.payload.userId)
+      if (!member) return
+      member.roleIds = member.roleIds.includes(action.payload.roleId)
+        ? member.roleIds.filter(id => id !== action.payload.roleId)
+        : [...member.roleIds, action.payload.roleId]
+    },
+    kickMember(state, action: PayloadAction<{ serverId: string; userId: string }>) {
+      const server = state.byId[action.payload.serverId]
+      if (!server) return
+      server.members = server.members.filter(m => m.userId !== action.payload.userId)
+      for (const key of Object.keys(server.voiceStates)) {
+        server.voiceStates[key] = server.voiceStates[key].filter(id => id !== action.payload.userId)
+      }
     },
     leaveServer(state, action: PayloadAction<string>) {
       delete state.byId[action.payload]
@@ -121,6 +169,13 @@ const serversSlice = createSlice({
 export const {
   createServer,
   joinServer,
+  updateServer,
+  createRole,
+  updateRole,
+  moveRole,
+  deleteRole,
+  toggleMemberRole,
+  kickMember,
   leaveServer,
   moveServer,
   createChannel,

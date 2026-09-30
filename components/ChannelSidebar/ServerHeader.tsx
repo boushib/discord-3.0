@@ -1,7 +1,7 @@
 'use client'
 
 import classNames from 'classnames'
-import { CheckCheck, ChevronDown, Copy, LogOut, CirclePlus, UserPlus, X } from 'lucide-react'
+import { CheckCheck, ChevronDown, CirclePlus, Copy, LogOut, Settings, UserPlus, X } from 'lucide-react'
 import { CURRENT_USER_ID } from '../../constants'
 import { useAppDispatch, usePopover } from '../../hooks'
 import VerifiedIcon from '../../icons/Verified'
@@ -44,6 +44,13 @@ const ServerHeader = ({ server }: { server: Server }) => {
               icon={<UserPlus size={18} />}
               onClick={run(() => dispatch(openModal({ type: 'invite', serverId: server.id })))}
             />
+            {isOwner && (
+              <MenuItem
+                label="Server Settings"
+                icon={<Settings size={18} />}
+                onClick={run(() => dispatch(openModal({ type: 'serverSettings', serverId: server.id })))}
+              />
+            )}
             <MenuItem
               label="Create Channel"
               icon={<CirclePlus size={18} />}

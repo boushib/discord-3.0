@@ -9,6 +9,7 @@ export type Modal =
   | { type: 'leaveServer'; serverId: string }
   | { type: 'deleteMessage'; channelId: string; messageId: string }
   | { type: 'settings' }
+  | { type: 'serverSettings'; serverId: string }
   | { type: 'gift'; channelId: string }
   | { type: 'quickSwitcher' }
   | { type: 'shortcuts' }

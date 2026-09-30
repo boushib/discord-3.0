@@ -1,6 +1,7 @@
 'use client'
 
 import { useSelector } from '../../hooks'
+import ServerSettings from '../ServerSettings'
 import Settings from '../Settings'
 import CreateChannelModal from './CreateChannelModal'
 import CreateServerModal from './CreateServerModal'
@@ -36,6 +37,8 @@ const ModalRoot = () => {
       return <DownloadModal />
     case 'shortcuts':
       return <ShortcutsModal />
+    case 'serverSettings':
+      return <ServerSettings serverId={modal.serverId} />
     case 'settings':
       return <Settings />
     case 'deleteMessage':
