@@ -1,9 +1,10 @@
 'use client'
 
 import classNames from 'classnames'
-import { AtSign, Bell, CircleHelp, Inbox, Phone, Pin, Search, Users, Video, X } from 'lucide-react'
+import { AtSign, Bell, BellOff, CircleHelp, Inbox as InboxIcon, Phone, Pin, Search, Users, Video, X } from 'lucide-react'
 import { useAppDispatch, usePopover, useSelector } from '../../hooks'
-import { setSearch, toggleMemberList } from '../../store'
+import { openModal, setSearch, toggleMemberList } from '../../store'
+import { selectRecentMentions } from '../../store/selectors'
 import type { ChannelContext } from '../../store/selectors'
 import Avatar from '../Avatar'
 import ChannelTypeIcon from '../ChannelTypeIcon'
@@ -11,6 +12,8 @@ import MobileNavButton from '../MobileNavButton'
 import Popover from '../Popover'
 import Tooltip from '../Tooltip'
 import { useMedia } from '../Voice'
+import Inbox from './Inbox'
+import NotificationMenu from './NotificationMenu'
 import PinnedMessages from './PinnedMessages'
 import { ME } from '../../lib/routes'
 import styles from './Channel.module.sass'
@@ -38,6 +41,10 @@ const ChannelHeader = ({ channelId, context }: { channelId: string; context: Cha
   const memberListOpen = useSelector(s => s.prefs.memberListOpen)
   const search = useSelector(s => s.ui.search)
   const pins = usePopover()
+  const bell = usePopover()
+  const inbox = usePopover()
+  const muted = useSelector(s => s.prefs.mutedChannels.includes(channelId))
+  const hasMentions = useSelector(s => selectRecentMentions(s).length > 0)
   const media = useMedia()
   const inCall = useSelector(s => s.ui.voice?.channelId === channelId)
   const startCall = async (video: boolean) => {
@@ -82,8 +89,8 @@ const ChannelHeader = ({ channelId, context }: { channelId: string; context: Cha
             </IconButton>
           </>
         ) : (
-          <IconButton label="Notification Settings">
-            <Bell size={20} />
+          <IconButton label="Notification Settings" active={!!bell.anchor} {...bell.triggerProps}>
+            {muted ? <BellOff size={20} /> : <Bell size={20} />}
           </IconButton>
         )}
         <IconButton label="Pinned Messages" active={!!pins.anchor} {...pins.triggerProps}>
@@ -116,14 +123,27 @@ const ChannelHeader = ({ channelId, context }: { channelId: string; context: Cha
           )}
         </label>
 
-        <IconButton label="Inbox">
-          <Inbox size={20} />
+        <IconButton label="Inbox" active={!!inbox.anchor} {...inbox.triggerProps}>
+          <span className={styles.inboxIcon}>
+            <InboxIcon size={20} />
+            {hasMentions && <span className={styles.inboxDot} />}
+          </span>
         </IconButton>
-        <IconButton label="Help">
+        <IconButton label="Keyboard Shortcuts" onClick={() => dispatch(openModal({ type: 'shortcuts' }))}>
           <CircleHelp size={20} />
         </IconButton>
       </div>
 
+      {bell.anchor && (
+        <Popover anchor={bell.anchor} placement="bottom-end" onClose={bell.close}>
+          <NotificationMenu channelId={channelId} onDone={bell.close} />
+        </Popover>
+      )}
+      {inbox.anchor && (
+        <Popover anchor={inbox.anchor} placement="bottom-end" onClose={inbox.close}>
+          <Inbox onClose={inbox.close} />
+        </Popover>
+      )}
       {pins.anchor && (
         <Popover anchor={pins.anchor} placement="bottom-end" onClose={pins.close}>
           <PinnedMessages channelId={channelId} context={context} onJump={pins.close} />

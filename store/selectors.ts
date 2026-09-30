@@ -49,27 +49,47 @@ const unreadMessages = (s: RootState, channelId: string) => {
   return result
 }
 
-export const isMention = (s: RootState, message: Message) => {
-  const me = s.users.byId[CURRENT_USER_ID]
+const mentionsMe = (me: User, messages: RootState['messages'], message: Message) => {
   const content = message.content.toLowerCase()
   return (
     content.includes(`@${me.username.toLowerCase()}`) ||
     content.includes('@everyone') ||
     (message.replyToId !== undefined &&
-      (s.messages[message.channelId] ?? EMPTY).some(
+      (messages[message.channelId] ?? EMPTY).some(
         m => m.id === message.replyToId && m.authorId === CURRENT_USER_ID
       ))
   )
 }
 
+export const isMention = (s: RootState, message: Message) =>
+  mentionsMe(s.users.byId[CURRENT_USER_ID], s.messages, message)
+
+export const selectIsMuted = (s: RootState, channelId: string) => s.prefs.mutedChannels.includes(channelId)
+
+const levelOf = (s: RootState, channelId: string) => s.prefs.notifications[channelId] ?? 'all'
+
+/** Unread dot: hidden for muted channels and ones set to mentions/nothing */
 export const selectIsUnread = (s: RootState, channelId: string) =>
-  unreadMessages(s, channelId).length > 0
+  !selectIsMuted(s, channelId) && levelOf(s, channelId) === 'all' && unreadMessages(s, channelId).length > 0
 
 export const selectMentionCount = (s: RootState, channelId: string) => {
+  if (levelOf(s, channelId) === 'none') return 0
   // Every unread DM message counts as a mention, like on Discord
   if (s.dms.some(d => d.id === channelId)) return unreadMessages(s, channelId).length
   return unreadMessages(s, channelId).filter(m => isMention(s, m)).length
 }
+
+/** Unread mentions of the current user across every channel, newest first */
+export const selectRecentMentions = createSelector(
+  [(s: RootState) => s.messages, (s: RootState) => s.users.byId[CURRENT_USER_ID]],
+  (messages, me) => {
+    const result: Message[] = []
+    for (const list of Object.values(messages)) {
+      for (const m of list) if (m.authorId !== CURRENT_USER_ID && mentionsMe(me, messages, m)) result.push(m)
+    }
+    return result.sort((a, b) => b.createdAt - a.createdAt).slice(0, 30)
+  }
+)
 
 export const selectServerUnread = (s: RootState, serverId: string) => {
   const server = s.servers.byId[serverId]

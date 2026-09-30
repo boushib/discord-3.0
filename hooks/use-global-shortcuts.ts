@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { closeModal, openModal, toggleDeafen, toggleMute } from '../store'
 import { useAppDispatch, useSelector } from './use-selector'
 
-/** Discord's desktop shortcuts: ⌘/Ctrl+K switcher, ⌘/Ctrl+Shift+M mute, ⌘/Ctrl+Shift+D deafen */
+/** Discord's desktop shortcuts: ⌘/Ctrl+K switcher, ⌘/Ctrl+/ help, ⌘/Ctrl+Shift+M mute, ⌘/Ctrl+Shift+D deafen */
 export const useGlobalShortcuts = () => {
   const dispatch = useAppDispatch()
   const modal = useSelector(s => s.ui.modal)
@@ -15,6 +15,9 @@ export const useGlobalShortcuts = () => {
       if (key === 'k' && !e.shiftKey) {
         e.preventDefault()
         dispatch(modal?.type === 'quickSwitcher' ? closeModal() : openModal({ type: 'quickSwitcher' }))
+      } else if (key === '/') {
+        e.preventDefault()
+        dispatch(modal?.type === 'shortcuts' ? closeModal() : openModal({ type: 'shortcuts' }))
       } else if (key === 'm' && e.shiftKey) {
         e.preventDefault()
         dispatch(toggleMute())

@@ -10,6 +10,7 @@ import GiftModal from './GiftModal'
 import InviteModal from './InviteModal'
 import LeaveServerModal from './LeaveServerModal'
 import QuickSwitcher from './QuickSwitcher'
+import ShortcutsModal from './ShortcutsModal'
 
 const ModalRoot = () => {
   const modal = useSelector(s => s.ui.modal)
@@ -30,6 +31,8 @@ const ModalRoot = () => {
       return <LeaveServerModal serverId={modal.serverId} />
     case 'quickSwitcher':
       return <QuickSwitcher />
+    case 'shortcuts':
+      return <ShortcutsModal />
     case 'settings':
       return <Settings />
     case 'deleteMessage':

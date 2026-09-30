@@ -1,0 +1,131 @@
+.inbox
+  width: min(480px, calc(100vw - 16px))
+  max-height: 70vh
+  display: flex
+  flex-direction: column
+  overflow: hidden
+  border-radius: 8px
+  background-color: var(--bg-secondary)
+  box-shadow: var(--elevation-high), 0 0 0 1px rgba(0, 0, 0, .15)
+
+.header
+  display: flex
+  align-items: center
+  gap: 8px
+  padding: 16px 16px 8px
+  background-color: var(--bg-tertiary)
+  color: var(--header-primary)
+
+  h2
+    flex: 1
+    font-size: 16px
+    font-weight: 600
+
+.markAll
+  display: flex
+  align-items: center
+  gap: 4px
+  color: var(--text-link)
+  font-size: 13px
+
+  &:hover
+    text-decoration: underline
+
+.tabs
+  display: flex
+  gap: 8px
+  padding: 0 16px 12px
+  background-color: var(--bg-tertiary)
+
+.tab
+  padding: 2px 8px
+  border-radius: 4px
+  color: var(--interactive-normal)
+  font-size: 14px
+  font-weight: 500
+
+  &:hover
+    background-color: var(--bg-modifier-hover)
+
+.tabActive, .tabActive:hover
+  background-color: var(--brand)
+  color: #fff
+
+.list
+  flex: 1
+  padding: 8px
+
+.item
+  width: 100%
+  margin-bottom: 8px
+  padding: 8px 12px 12px
+  border-radius: 8px
+  background-color: var(--bg-primary)
+  text-align: left
+
+  &:hover
+    background-color: var(--bg-modifier-selected)
+
+.where
+  margin-bottom: 8px
+  color: var(--header-secondary)
+  font-size: 12px
+  font-weight: 700
+
+.message
+  display: flex
+  gap: 12px
+
+.content
+  flex: 1
+  min-width: 0
+
+.meta
+  font-size: 14px
+  color: var(--header-primary)
+
+  span
+    color: var(--text-muted)
+    font-size: 12px
+
+.text
+  color: var(--text-normal)
+  font-size: 15px
+  white-space: pre-wrap
+  word-wrap: break-word
+
+.unread
+  width: 100%
+  display: flex
+  align-items: center
+  justify-content: space-between
+  height: 40px
+  padding: 0 12px
+  border-radius: 4px
+  color: var(--header-primary)
+  font-weight: 500
+  text-align: left
+
+  &:hover
+    background-color: var(--bg-modifier-hover)
+
+.badge
+  min-width: 16px
+  height: 16px
+  padding: 0 4px
+  border-radius: 8px
+  background-color: var(--red)
+  color: #fff
+  font-size: 12px
+  font-weight: 700
+  line-height: 16px
+  text-align: center
+
+.empty
+  display: flex
+  flex-direction: column
+  align-items: center
+  gap: 12px
+  padding: 40px 24px
+  color: var(--text-muted)
+  text-align: center

@@ -11,6 +11,7 @@ export type Modal =
   | { type: 'settings' }
   | { type: 'gift'; channelId: string }
   | { type: 'quickSwitcher' }
+  | { type: 'shortcuts' }
 
 export interface UIState {
   modal: Modal | null

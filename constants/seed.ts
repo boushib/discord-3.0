@@ -322,6 +322,7 @@ const SEED_CONVERSATIONS: Record<string, SeedLine[]> = {
     ['u-sarah', 'Good summary. The upgrade guide in `node_modules/next/dist/docs` covers the rest', 23 * 60],
     ['u-nina', 'Has anyone tried the React Compiler with it yet?', 45],
     ['u-kai', 'Yeah, works great. Just set `reactCompiler: true` in next.config.ts', 40],
+    ['u-sarah', '@boushib nice work on the Discord clone migration! 🙌 Mind sharing how you handled the Pages → App Router move?', 8],
   ],
   'c-next-help': [
     ['u-leo', 'Getting `Error: Cannot call impure function during render` from the linter, what does that mean?', 5 * 60],
@@ -370,4 +371,4 @@ export const createSeedMessages = (now: number): Record<string, Message[]> =>
   )
 
 /** Channels that start with unread messages */
-export const SEED_UNREAD = ['c-ts-general', 'c-dapper-announcements', 'dm-sarah', 'c-et-memes']
+export const SEED_UNREAD = ['c-ts-general', 'c-dapper-announcements', 'dm-sarah', 'c-et-memes', 'c-next-general']

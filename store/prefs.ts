@@ -1,6 +1,11 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
+export type NotificationLevel = 'all' | 'mentions' | 'none'
+
 export interface PrefsState {
+  /** Per-channel overrides; channels default to 'all' */
+  notifications: Record<string, NotificationLevel>
+  mutedChannels: string[]
   collapsedCategories: string[]
   lastChannelByServer: Record<string, string>
   memberListOpen: boolean
@@ -9,7 +14,9 @@ export interface PrefsState {
   deafened: boolean
 }
 
-const initialState: PrefsState = {
+export const initialPrefs: PrefsState = {
+  notifications: {},
+  mutedChannels: [],
   collapsedCategories: [],
   lastChannelByServer: {},
   memberListOpen: true,
@@ -20,7 +27,7 @@ const initialState: PrefsState = {
 
 const prefsSlice = createSlice({
   name: 'prefs',
-  initialState,
+  initialState: initialPrefs,
   reducers: {
     toggleCategory(state, action: PayloadAction<string>) {
       const id = action.payload
@@ -30,6 +37,16 @@ const prefsSlice = createSlice({
     },
     rememberChannel(state, action: PayloadAction<{ serverId: string; channelId: string }>) {
       state.lastChannelByServer[action.payload.serverId] = action.payload.channelId
+    },
+    setNotificationLevel(state, action: PayloadAction<{ channelId: string; level: NotificationLevel }>) {
+      if (action.payload.level === 'all') delete state.notifications[action.payload.channelId]
+      else state.notifications[action.payload.channelId] = action.payload.level
+    },
+    toggleChannelMute(state, action: PayloadAction<string>) {
+      const id = action.payload
+      state.mutedChannels = state.mutedChannels.includes(id)
+        ? state.mutedChannels.filter(c => c !== id)
+        : [...state.mutedChannels, id]
     },
     toggleMemberList(state) {
       state.memberListOpen = !state.memberListOpen
@@ -51,6 +68,8 @@ const prefsSlice = createSlice({
 export const {
   toggleCategory,
   rememberChannel,
+  setNotificationLevel,
+  toggleChannelMute,
   toggleMemberList,
   setCompactMode,
   toggleMute,

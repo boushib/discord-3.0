@@ -1,7 +1,7 @@
 'use client'
 
 import classNames from 'classnames'
-import { CheckCheck, Copy, Link2, MicOff, Settings, UserPlus, Video } from 'lucide-react'
+import { Bell, BellOff, CheckCheck, Copy, Link2, MicOff, Settings, UserPlus, Video } from 'lucide-react'
 import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -9,7 +9,7 @@ import { CURRENT_USER_ID } from '../../constants'
 import { useAppDispatch, useSelector } from '../../hooks'
 import { channelHref } from '../../lib/routes'
 import type { Channel, Server } from '../../models'
-import { markRead, openModal } from '../../store'
+import { markRead, openModal, toggleChannelMute } from '../../store'
 import { displayNameIn, selectIsUnread, selectMentionCount } from '../../store/selectors'
 import Avatar from '../Avatar'
 import Popover, { Menu, MenuItem, MenuSeparator } from '../Popover'
@@ -52,6 +52,7 @@ const ChannelItem = ({ server, channel, active }: Props) => {
   const voiceUserIds = server.voiceStates[channel.id] ?? []
   const connected = useSelector(s => s.ui.voice?.channelId === channel.id)
   const isOwner = server.ownerId === CURRENT_USER_ID
+  const muted = useSelector(s => s.prefs.mutedChannels.includes(channel.id))
   const [menu, setMenu] = useState<DOMRect | null>(null)
   const closeMenu = () => setMenu(null)
   const run = (fn: () => void) => () => {
@@ -72,6 +73,13 @@ const ChannelItem = ({ server, channel, active }: Props) => {
             icon={<CheckCheck size={16} />}
             disabled={!unread && !mentions}
             onClick={run(() => dispatch(markRead(channel.id)))}
+          />
+        )}
+        {channel.type !== 'voice' && (
+          <MenuItem
+            label={muted ? 'Unmute Channel' : 'Mute Channel'}
+            icon={muted ? <Bell size={16} /> : <BellOff size={16} />}
+            onClick={run(() => dispatch(toggleChannelMute(channel.id)))}
           />
         )}
         <MenuItem
@@ -112,7 +120,8 @@ const ChannelItem = ({ server, channel, active }: Props) => {
     styles.channel,
     active && styles.channelActive,
     (unread || mentions > 0) && styles.channelUnread,
-    connected && styles.channelConnected
+    connected && styles.channelConnected,
+    muted && styles.channelMuted
   )
 
   const content = (

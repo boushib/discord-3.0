@@ -1,4 +1,5 @@
 import type { RootState } from '.'
+import { initialPrefs } from './prefs'
 
 const STORAGE_KEY = 'discord-clone:v1'
 
@@ -7,7 +8,10 @@ type PersistedState = Omit<RootState, 'ui'>
 export const loadState = (): Partial<PersistedState> | undefined => {
   try {
     const raw = window.localStorage.getItem(STORAGE_KEY)
-    return raw ? (JSON.parse(raw) as PersistedState) : undefined
+    if (!raw) return undefined
+    const state = JSON.parse(raw) as PersistedState
+    // Fill in preferences added after this state was saved
+    return { ...state, prefs: { ...initialPrefs, ...state.prefs } }
   } catch {
     return undefined
   }
