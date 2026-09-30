@@ -16,7 +16,7 @@ interface Props {
   variant?: 'home' | 'server' | 'action'
   /** Drag-and-drop handlers and state for reorderable items */
   dragProps?: React.HTMLAttributes<HTMLDivElement>
-  dropIndicator?: 'before' | 'after' | null
+  dropIndicator?: 'before' | 'after' | 'combine' | null
   children: React.ReactNode
 }
 
@@ -49,7 +49,8 @@ const RailItem = ({
         active && styles.itemActive,
         unread && styles.itemUnread,
         dropIndicator === 'before' && styles.dropBefore,
-        dropIndicator === 'after' && styles.dropAfter
+        dropIndicator === 'after' && styles.dropAfter,
+        dropIndicator === 'combine' && styles.dropCombine
       )}
       {...dragProps}
     >

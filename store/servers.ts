@@ -1,16 +1,29 @@
 import { createSlice, nanoid, PayloadAction } from '@reduxjs/toolkit'
 import { CURRENT_USER_ID } from '../constants'
 import { SEED_SERVERS } from '../constants/seed'
-import type { Channel, ChannelType, Role, Server } from '../models'
+import type { Channel, ChannelType, Role, Server, ServerFolder } from '../models'
 
 export interface ServersState {
   byId: Record<string, Server>
   order: string[]
+  folders: Record<string, ServerFolder>
+}
+
+const folderOf = (state: ServersState, serverId: string) =>
+  Object.values(state.folders).find(f => f.serverIds.includes(serverId))
+
+/** Remove a server from its folder, dissolving folders left with one server */
+const detach = (state: ServersState, serverId: string) => {
+  const folder = folderOf(state, serverId)
+  if (!folder) return
+  folder.serverIds = folder.serverIds.filter(id => id !== serverId)
+  if (folder.serverIds.length < 2) delete state.folders[folder.id]
 }
 
 export const createServersState = (): ServersState => ({
   byId: Object.fromEntries(SEED_SERVERS.map(s => [s.id, s])),
   order: SEED_SERVERS.map(s => s.id),
+  folders: {},
 })
 
 const serversSlice = createSlice({
@@ -104,12 +117,57 @@ const serversSlice = createSlice({
       }
     },
     leaveServer(state, action: PayloadAction<string>) {
+      detach(state, action.payload)
       delete state.byId[action.payload]
       state.order = state.order.filter(id => id !== action.payload)
     },
     moveServer(state, action: PayloadAction<{ from: number; to: number }>) {
       const [moved] = state.order.splice(action.payload.from, 1)
       state.order.splice(action.payload.to, 0, moved)
+      // Landing outside your folder takes you out of it
+      const folder = folderOf(state, moved)
+      if (folder) {
+        const neighbours = [state.order[action.payload.to - 1], state.order[action.payload.to + 1]]
+        if (!neighbours.some(id => folder.serverIds.includes(id))) detach(state, moved)
+      }
+    },
+    /** Drop one server onto another: join its folder, or start a new one */
+    combineServers: {
+      reducer(state, action: PayloadAction<{ serverId: string; targetId: string; folderId: string }>) {
+        const { serverId, targetId, folderId } = action.payload
+        if (serverId === targetId) return
+        detach(state, serverId)
+        const folder = folderOf(state, targetId)
+        if (folder) folder.serverIds.push(serverId)
+        else {
+          state.folders[folderId] = {
+            id: folderId,
+            color: '#5865f2',
+            serverIds: [targetId, serverId],
+            expanded: false,
+          }
+        }
+        // Keep folder members next to each other in the order
+        const members = (folder ?? state.folders[folderId]).serverIds
+        const rest = state.order.filter(id => !members.includes(id))
+        const at = state.order.filter(id => !members.includes(id) || id === members[0]).indexOf(members[0])
+        rest.splice(at, 0, ...members)
+        state.order = rest
+      },
+      prepare(input: { serverId: string; targetId: string }) {
+        return { payload: { ...input, folderId: `f-${nanoid(6)}` } }
+      },
+    },
+    toggleFolder(state, action: PayloadAction<string>) {
+      const folder = state.folders[action.payload]
+      if (folder) folder.expanded = !folder.expanded
+    },
+    updateFolder(state, action: PayloadAction<{ folderId: string; changes: Partial<Pick<ServerFolder, 'name' | 'color'>> }>) {
+      const folder = state.folders[action.payload.folderId]
+      if (folder) Object.assign(folder, action.payload.changes)
+    },
+    removeFolder(state, action: PayloadAction<string>) {
+      delete state.folders[action.payload]
     },
     createChannel: {
       reducer(state, action: PayloadAction<{ serverId: string; channel: Channel }>) {
@@ -178,6 +236,10 @@ export const {
   kickMember,
   leaveServer,
   moveServer,
+  combineServers,
+  toggleFolder,
+  updateFolder,
+  removeFolder,
   createChannel,
   updateChannel,
   deleteChannel,

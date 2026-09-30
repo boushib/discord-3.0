@@ -138,3 +138,12 @@ export interface GroupDM {
   ownerId: string
   createdAt: number
 }
+
+export interface ServerFolder {
+  id: string
+  name?: string
+  color: string
+  /** Member servers, in display order (kept contiguous in the server order) */
+  serverIds: string[]
+  expanded: boolean
+}

@@ -28,7 +28,7 @@ const migrateSeed = (state: PersistedState): PersistedState => {
 
   return {
     ...state,
-    servers: { byId, order: [...seedOrder, ...userOrder] },
+    servers: { byId, order: [...seedOrder, ...userOrder], folders: state.servers.folders ?? {} },
     messages,
     prefs: { ...state.prefs, seedVersion: SEED_VERSION },
   }
@@ -41,6 +41,7 @@ export const loadState = (): Partial<PersistedState> | undefined => {
     let state = JSON.parse(raw) as PersistedState
     if ((state.prefs?.seedVersion ?? 1) < SEED_VERSION) state = migrateSeed(state)
     // Fill in preferences added after this state was saved
+    state = { ...state, servers: { ...state.servers, folders: state.servers.folders ?? {} } }
     return { ...state, threads: state.threads ?? {}, groups: state.groups ?? [], prefs: { ...initialPrefs, ...state.prefs } }
   } catch {
     return undefined

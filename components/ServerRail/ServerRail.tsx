@@ -1,6 +1,7 @@
 'use client'
 
-import { CheckCheck, Copy, LogOut, UserPlus } from 'lucide-react'
+import classNames from 'classnames'
+import { CheckCheck, Copy, Folder as FolderIcon, FolderMinus, LogOut, UserPlus } from 'lucide-react'
 import { useParams, usePathname } from 'next/navigation'
 import { useState } from 'react'
 import { shallowEqual } from 'react-redux'
@@ -11,20 +12,37 @@ import DiscordIcon from '../../icons/Discord'
 import DownloadIcon from '../../icons/Download'
 import ExploreIcon from '../../icons/Explore'
 import { dmHref, isMe, serverHref } from '../../lib/routes'
-import { groupName, markRead, moveServer, openModal } from '../../store'
+import type { ServerFolder } from '../../models'
+import { combineServers, groupName, markRead, moveServer, openModal, removeFolder, toggleFolder, updateFolder } from '../../store'
 import { selectMentionCount, selectServerUnread } from '../../store/selectors'
 import Avatar, { GroupAvatar } from '../Avatar'
 import Popover, { Menu, MenuItem, MenuSeparator } from '../Popover'
+import Tooltip from '../Tooltip'
 import RailItem from './RailItem'
 import ServerIcon from './ServerIcon'
 import styles from './ServerRail.module.sass'
+
+type Zone = 'before' | 'combine' | 'after'
+interface Drag {
+  from: number | null
+  over: number | null
+  zone: Zone | null
+}
+const NO_DRAG: Drag = { from: null, over: null, zone: null }
 
 interface ServerItemProps {
   serverId: string
   index: number
   active: boolean
-  drag: { from: number | null; over: number | null }
-  setDrag: (drag: { from: number | null; over: number | null }) => void
+  drag: Drag
+  setDrag: (drag: Drag) => void
+}
+
+/** Top/bottom quarter reorders, the middle combines into a folder */
+const zoneAt = (e: React.DragEvent<HTMLElement>): Zone => {
+  const rect = e.currentTarget.getBoundingClientRect()
+  const y = (e.clientY - rect.top) / rect.height
+  return y < 0.25 ? 'before' : y > 0.75 ? 'after' : 'combine'
 }
 
 const ServerItem = ({ serverId, index, active, drag, setDrag }: ServerItemProps) => {
@@ -38,12 +56,8 @@ const ServerItem = ({ serverId, index, active, drag, setDrag }: ServerItemProps)
     fn()
   }
 
-  const dropIndicator =
-    drag.from !== null && drag.over === index && drag.from !== index
-      ? drag.from > index
-        ? 'before'
-        : 'after'
-      : null
+  const dropIndicator = drag.from !== null && drag.over === index && drag.from !== index ? drag.zone : null
+  const order = useSelector(s => s.servers.order)
 
   return (
     <>
@@ -61,19 +75,30 @@ const ServerItem = ({ serverId, index, active, drag, setDrag }: ServerItemProps)
         dragProps={{
           draggable: true,
           onDragStart: e => {
+            e.stopPropagation()
             e.dataTransfer.effectAllowed = 'move'
-            setDrag({ from: index, over: index })
+            setDrag({ from: index, over: index, zone: null })
           },
           onDragOver: e => {
             e.preventDefault()
-            if (drag.over !== index) setDrag({ ...drag, over: index })
+            e.stopPropagation()
+            const zone = zoneAt(e)
+            if (drag.over !== index || drag.zone !== zone) setDrag({ ...drag, over: index, zone })
           },
           onDrop: e => {
             e.preventDefault()
-            if (drag.from !== null && drag.from !== index) dispatch(moveServer({ from: drag.from, to: index }))
-            setDrag({ from: null, over: null })
+            e.stopPropagation()
+            const { from } = drag
+            if (from !== null && from !== index) {
+              if (zoneAt(e) === 'combine') dispatch(combineServers({ serverId: order[from], targetId: serverId }))
+              else {
+                const to = zoneAt(e) === 'after' ? (from < index ? index : index + 1) : from < index ? index - 1 : index
+                dispatch(moveServer({ from, to }))
+              }
+            }
+            setDrag(NO_DRAG)
           },
-          onDragEnd: () => setDrag({ from: null, over: null }),
+          onDragEnd: () => setDrag(NO_DRAG),
         }}
       >
         <ServerIcon server={server} />
@@ -117,6 +142,137 @@ const ServerItem = ({ serverId, index, active, drag, setDrag }: ServerItemProps)
   )
 }
 
+const FOLDER_COLORS = ['#5865f2', '#3ba55c', '#faa61a', '#ed4245', '#eb459e', '#1abc9c', '#99aab5']
+
+const FolderItem = ({
+  folder,
+  indexOf,
+  activeId,
+  drag,
+  setDrag,
+}: {
+  folder: ServerFolder
+  indexOf: (id: string) => number
+  activeId?: string
+  drag: Drag
+  setDrag: (drag: Drag) => void
+}) => {
+  const dispatch = useAppDispatch()
+  const servers = useSelector(s => s.servers.byId)
+  const summary = useSelector(
+    s =>
+      folder.serverIds.reduce(
+        (acc, id) => {
+          const u = selectServerUnread(s, id)
+          return { unread: acc.unread || u.unread, mentions: acc.mentions + u.mentions }
+        },
+        { unread: false, mentions: 0 }
+      ),
+    shallowEqual
+  )
+  const [menu, setMenu] = useState<DOMRect | null>(null)
+  const members = folder.serverIds.map(id => servers[id]).filter(Boolean)
+  const label = folder.name || members.map(m => m.name).join(', ')
+  const containsActive = !!activeId && folder.serverIds.includes(activeId)
+
+  return (
+    <div
+      className={classNames(styles.folder, folder.expanded && styles.folderOpen)}
+      style={{ '--folder-color': folder.color } as React.CSSProperties}
+    >
+      <div
+        className={classNames(
+          styles.item,
+          !folder.expanded && containsActive && styles.itemActive,
+          !folder.expanded && summary.unread && styles.itemUnread
+        )}
+      >
+        <span className={styles.pill} />
+        <Tooltip label={label} placement="right" large>
+          <button
+            type="button"
+            className={styles.button}
+            aria-label={label}
+            aria-expanded={folder.expanded}
+            onClick={() => dispatch(toggleFolder(folder.id))}
+            onContextMenu={e => {
+              e.preventDefault()
+              setMenu(new DOMRect(e.clientX, e.clientY, 0, 0))
+            }}
+          >
+            <span className={classNames(styles.icon, styles.folderIcon)}>
+              {folder.expanded ? (
+                <FolderIcon size={22} fill="currentColor" />
+              ) : (
+                <span className={styles.folderGrid}>
+                  {members.slice(0, 4).map(m => (
+                    <span key={m.id} className={styles.folderMini}>
+                      <ServerIcon server={m} />
+                    </span>
+                  ))}
+                </span>
+              )}
+            </span>
+          </button>
+        </Tooltip>
+        {!folder.expanded && summary.mentions > 0 && <span className={styles.badge}>{summary.mentions}</span>}
+      </div>
+      {folder.expanded &&
+        folder.serverIds.map(id => (
+          <ServerItem key={id} serverId={id} index={indexOf(id)} active={activeId === id} drag={drag} setDrag={setDrag} />
+        ))}
+      {menu && (
+        <Popover anchor={menu} placement="right-start" offset={0} onClose={() => setMenu(null)}>
+          <div className={styles.folderMenu}>
+            <label className={styles.folderField}>
+              <span>Folder Name</span>
+              <input
+                autoFocus
+                defaultValue={folder.name ?? ''}
+                placeholder={members.map(m => m.name).join(', ')}
+                onBlur={e => dispatch(updateFolder({ folderId: folder.id, changes: { name: e.target.value.trim() || undefined } }))}
+                onKeyDown={e => e.key === 'Enter' && e.currentTarget.blur()}
+              />
+            </label>
+            <span className={styles.folderFieldLabel}>Folder Color</span>
+            <div className={styles.folderColors}>
+              {FOLDER_COLORS.map(color => (
+                <button
+                  key={color}
+                  type="button"
+                  aria-label={`Color ${color}`}
+                  className={classNames(styles.folderColor, folder.color === color && styles.folderColorOn)}
+                  style={{ backgroundColor: color }}
+                  onClick={() => dispatch(updateFolder({ folderId: folder.id, changes: { color } }))}
+                />
+              ))}
+            </div>
+            <Menu className={styles.folderMenuList}>
+              <MenuItem
+                label="Mark Folder As Read"
+                icon={<CheckCheck size={16} />}
+                onClick={() => {
+                  members.forEach(m => m.channels.forEach(c => dispatch(markRead(c.id))))
+                  setMenu(null)
+                }}
+              />
+              <MenuItem
+                danger
+                label="Ungroup Folder"
+                icon={<FolderMinus size={16} />}
+                onClick={() => {
+                  dispatch(removeFolder(folder.id))
+                  setMenu(null)
+                }}
+              />
+            </Menu>
+          </div>
+        </Popover>
+      )}
+    </div>
+  )
+}
+
 const ServerRail = () => {
   const dispatch = useAppDispatch()
   const params = useParams<{ serverId?: string; channelId?: string }>()
@@ -138,7 +294,10 @@ const ServerRail = () => {
     (a, b) => a.length === b.length && a.every((x, i) => x.group === b[i].group && x.mentions === b[i].mentions)
   )
   const home = params.serverId !== undefined && isMe(params.serverId)
-  const [drag, setDrag] = useState<{ from: number | null; over: number | null }>({ from: null, over: null })
+  const [drag, setDrag] = useState<Drag>(NO_DRAG)
+  const folders = useSelector(s => s.servers.folders)
+  const folderByServer = new Map(Object.values(folders).flatMap(f => f.serverIds.map(id => [id, f] as const)))
+  const rendered = new Set<string>()
 
   return (
     <nav className={styles.rail} aria-label="Servers sidebar" data-panel="nav">
@@ -170,16 +329,27 @@ const ServerRail = () => {
 
       <div className={styles.separator} />
 
-      {order.map((id, index) => (
-        <ServerItem
-          key={id}
-          serverId={id}
-          index={index}
-          active={params.serverId === id}
-          drag={drag}
-          setDrag={setDrag}
-        />
-      ))}
+      {order.map((id, index) => {
+        const folder = folderByServer.get(id)
+        if (!folder) {
+          return (
+            <ServerItem key={id} serverId={id} index={index} active={params.serverId === id} drag={drag} setDrag={setDrag} />
+          )
+        }
+        // Folder members are contiguous; render the folder once, at its first member
+        if (rendered.has(folder.id)) return null
+        rendered.add(folder.id)
+        return (
+          <FolderItem
+            key={folder.id}
+            folder={folder}
+            indexOf={serverId => order.indexOf(serverId)}
+            activeId={params.serverId}
+            drag={drag}
+            setDrag={setDrag}
+          />
+        )
+      })}
 
       <RailItem
         label="Add a Server"

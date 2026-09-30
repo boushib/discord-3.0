@@ -132,3 +132,106 @@
 
 .dropAfter::after
   bottom: -6px
+
+.dropCombine .icon
+  border-radius: 16px
+  box-shadow: 0 0 0 3px var(--green)
+
+.folder
+  width: 100%
+  display: flex
+  flex-direction: column
+  align-items: center
+  gap: 8px
+  flex-shrink: 0
+
+.folderOpen
+  width: 48px
+  margin: 0 12px
+  padding-bottom: 8px
+  border-radius: 16px
+  background-color: color-mix(in srgb, var(--folder-color) 20%, transparent)
+
+  .item
+    width: 72px
+
+.folderIcon
+  background-color: color-mix(in srgb, var(--folder-color) 40%, transparent)
+  color: var(--folder-color)
+
+  .button:hover &
+    background-color: color-mix(in srgb, var(--folder-color) 55%, transparent)
+
+  .folderOpen &
+    background: none
+    color: var(--folder-color)
+
+.folderGrid
+  display: grid
+  grid-template-columns: repeat(2, 16px)
+  gap: 4px
+
+.folderMini
+  width: 16px
+  height: 16px
+  display: flex
+  align-items: center
+  justify-content: center
+  overflow: hidden
+  border-radius: 50%
+  background-color: var(--bg-primary)
+  color: var(--header-primary)
+
+  .initials
+    font-size: 6px !important
+
+.folderMenu
+  width: 240px
+  padding: 12px
+  border-radius: 8px
+  background-color: var(--bg-floating)
+  box-shadow: var(--elevation-high)
+
+.folderField
+  display: block
+
+  span
+    display: block
+    margin-bottom: 6px
+    color: var(--header-secondary)
+    font-size: 12px
+    font-weight: 700
+    text-transform: uppercase
+
+  input
+    width: 100%
+    height: 36px
+    padding: 0 8px
+    border-radius: 4px
+    background-color: var(--bg-input)
+    color: var(--text-normal)
+
+.folderFieldLabel
+  display: block
+  margin: 12px 0 6px
+  color: var(--header-secondary)
+  font-size: 12px
+  font-weight: 700
+  text-transform: uppercase
+
+.folderColors
+  display: flex
+  gap: 6px
+
+.folderColor
+  width: 24px
+  height: 24px
+  border-radius: 50%
+  border: 2px solid transparent
+
+.folderColorOn
+  border-color: #fff
+
+.folderMenuList
+  margin: 12px -12px -12px
+  box-shadow: none
