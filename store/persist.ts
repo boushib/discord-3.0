@@ -49,6 +49,7 @@ const migrateSeed = (state: PersistedState, fromVersion: number): PersistedState
   const ICON_UPDATES: [serverId: string, oldIcon: string, changes: Partial<Server>][] = [
     ['s-acshadows', '/servers/ac-shadows.svg', { icon: AC_SHADOWS_ICON, iconPosition: '50% 72%' }], // v5
     ['s-bf6', '/servers/bf6.svg', { icon: BF6_ICON }], // v6
+    ['s-wukong', '/servers/wukong.svg', { icon: '/servers/wukong.jpg' }], // v7
   ]
   for (const [id, oldIcon, changes] of ICON_UPDATES) {
     if (byId[id]?.icon === oldIcon) byId[id] = { ...byId[id], ...changes }

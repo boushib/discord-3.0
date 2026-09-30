@@ -231,7 +231,7 @@ export const SEED_SERVERS: Server[] = [
   {
     id: 's-wukong',
     name: 'Black Myth: Wukong',
-    icon: '/servers/wukong.svg',
+    icon: '/servers/wukong.jpg',
     bannerColor: '#c8902c',
     verified: true,
     ownerId: 'u-omar',
