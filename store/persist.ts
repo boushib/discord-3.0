@@ -16,6 +16,7 @@ const RETIRED: Record<number, { servers: string[]; channelPrefixes: string[] }> 
     servers: ['s-dapper', 's-rl', 's-ac'],
     channelPrefixes: ['c-dapper-', 'c-rl-', 'c-ac-', 't-rookie-drop'],
   },
+  4: { servers: ['s-roblox'], channelPrefixes: ['c-rbx-'] },
 }
 
 /**

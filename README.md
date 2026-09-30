@@ -5,7 +5,7 @@ A Discord clone built with **Next.js 16** (App Router), **React 19** and **Redux
 ## Features
 
 **Servers & channels**
-- Demo servers for Minecraft, Valorant, Fortnite, League of Legends, Roblox, Assassin's Creed Shadows, Battlefield 6 and an anonymous tech project team
+- Demo servers for Minecraft, Valorant, Fortnite, League of Legends, Black Myth: Wukong, Assassin's Creed Shadows, Battlefield 6 and an anonymous tech project team
 - Server rail with unread pills, mention badges, tooltips, drag-to-reorder and server folders
 - Create servers (from scratch or a template), join servers from the Discovery page, invite friends, leave
 - Server settings for owners: rename, icon, banner, roles (color, rank, hoist) and members (roles, kick)
