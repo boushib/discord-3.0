@@ -6,7 +6,7 @@ import { useSelector } from '../../hooks'
 import styles from './Markdown.module.sass'
 
 const INLINE =
-  /`([^`\n]+)`|\|\|(.+?)\|\||\*\*(.+?)\*\*|__(.+?)__|~~(.+?)~~|\*(?!\s)([^*]+?)\*|(?<![\w])_(?!\s)([^_]+?)_(?![\w])|(https?:\/\/[^\s<]+[^\s<.,:;"')\]])|@([\w.]+)/g
+  /\\([*_~`|\\>])|`([^`\n]+)`|\|\|(.+?)\|\||\*\*(.+?)\*\*|__(.+?)__|~~(.+?)~~|\*(?!\s)([^*]+?)\*|(?<![\w])_(?!\s)([^_]+?)_(?![\w])|(https?:\/\/[^\s<]+[^\s<.,:;"')\]])|@([\w.]+)/g
 
 const EMOJI_ONLY = /^(?:\p{Extended_Pictographic}|\p{Emoji_Component}|‍|️|\s)+$/u
 
@@ -42,8 +42,9 @@ const parseInline = (text: string, keyPrefix = ''): React.ReactNode[] => {
     const index = match.index ?? 0
     if (index > last) nodes.push(text.slice(last, index))
     const key = `${keyPrefix}${i++}`
-    const [, code, spoiler, bold, underline, strike, italic, italic2, url, mention] = match
-    if (code !== undefined) nodes.push(<code key={key} className={styles.inlineCode}>{code}</code>)
+    const [, escaped, code, spoiler, bold, underline, strike, italic, italic2, url, mention] = match
+    if (escaped !== undefined) nodes.push(escaped)
+    else if (code !== undefined) nodes.push(<code key={key} className={styles.inlineCode}>{code}</code>)
     else if (spoiler !== undefined) nodes.push(<Spoiler key={key}>{parseInline(spoiler, key)}</Spoiler>)
     else if (bold !== undefined) nodes.push(<strong key={key}>{parseInline(bold, key)}</strong>)
     else if (underline !== undefined) nodes.push(<u key={key}>{parseInline(underline, key)}</u>)

@@ -33,8 +33,8 @@ const Channel = ({ channelId }: { channelId: string }) => {
     <>
       <div className={styles.channel}>
         <ChannelHeader name={name} />
-        <MessageList key={channelId} channelId={channelId} context={context} />
-        <MessageBox channelId={channelId} placeholder={`Message ${context.kind === 'server' ? '#' : '@'}${name}`} />
+        <MessageList key={`list-${channelId}`} channelId={channelId} context={context} />
+        <MessageBox key={`box-${channelId}`} channelId={channelId} context={context} />
       </div>
       {context.kind === 'server' && memberListOpen && <Members server={context.server} />}
     </>
