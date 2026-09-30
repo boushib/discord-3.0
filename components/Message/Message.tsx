@@ -9,6 +9,7 @@ import { formatFull, formatTime, formatTimestamp } from '../../lib/format'
 import type { Message as MessageType, Server } from '../../models'
 import { toggleReaction } from '../../store'
 import { displayNameIn, isMention, roleColorIn } from '../../store/selectors'
+import Attachments from '../Attachments'
 import Avatar from '../Avatar'
 import Markdown from '../Markdown'
 import Popover from '../Popover'
@@ -123,7 +124,7 @@ const Message = ({ message, server, grouped: groupedProp, preview }: Props) => {
             <MessageEditor message={message} />
           ) : (
             <div className={styles.body}>
-              <Markdown content={message.content} />
+              {message.content && <Markdown content={message.content} />}
               {message.editedAt && (
                 <Tooltip label={formatFull(message.editedAt)}>
                   <span className={styles.edited}>(edited)</span>
@@ -137,6 +138,9 @@ const Message = ({ message, server, grouped: groupedProp, preview }: Props) => {
                 </Tooltip>
               )}
             </div>
+          )}
+          {message.attachments && message.attachments.length > 0 && (
+            <Attachments attachments={message.attachments} />
           )}
           {message.reactions.length > 0 && (
             <div className={styles.reactions}>

@@ -13,13 +13,30 @@ export const loadState = (): Partial<PersistedState> | undefined => {
   }
 }
 
+/** Drop inline file data so the rest of the state still fits in storage */
+const withoutFileData = (state: PersistedState): PersistedState => ({
+  ...state,
+  messages: Object.fromEntries(
+    Object.entries(state.messages).map(([id, list]) => [
+      id,
+      list.map(m =>
+        m.attachments ? { ...m, attachments: m.attachments.map(a => ({ ...a, url: '' })) } : m
+      ),
+    ])
+  ),
+})
+
 export const saveState = (state: RootState) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { ui, ...persisted } = state
   try {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { ui, ...persisted } = state
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(persisted))
   } catch {
-    // Storage full or unavailable (private mode) – the app keeps working in memory
+    try {
+      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(withoutFileData(persisted)))
+    } catch {
+      // Storage unavailable (private mode) – the app keeps working in memory
+    }
   }
 }
 

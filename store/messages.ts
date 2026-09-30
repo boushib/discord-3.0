@@ -1,6 +1,6 @@
 import { createSlice, nanoid, PayloadAction } from '@reduxjs/toolkit'
 import { createSeedMessages } from '../constants/seed'
-import type { Message } from '../models'
+import type { Attachment, Message } from '../models'
 
 export type MessagesState = Record<string, Message[]>
 
@@ -12,7 +12,13 @@ const messagesSlice = createSlice({
       reducer(state, action: PayloadAction<Message>) {
         ;(state[action.payload.channelId] ??= []).push(action.payload)
       },
-      prepare(input: { channelId: string; authorId: string; content: string; replyToId?: string }) {
+      prepare(input: {
+        channelId: string
+        authorId: string
+        content: string
+        replyToId?: string
+        attachments?: Attachment[]
+      }) {
         return {
           payload: {
             id: `m-${nanoid(10)}`,

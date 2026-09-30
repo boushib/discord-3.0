@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import type { Attachment } from '../models'
 
 export type Modal =
   | { type: 'createServer' }
@@ -19,6 +20,8 @@ export interface UIState {
   voice: { serverId: string; channelId: string; startedAt: number } | null
   search: string
   mobileNavOpen: boolean
+  /** Files attached in the composer but not sent yet, per channel */
+  uploads: Record<string, Attachment[]>
 }
 
 const initialState: UIState = {
@@ -29,6 +32,7 @@ const initialState: UIState = {
   voice: null,
   search: '',
   mobileNavOpen: false,
+  uploads: {},
 }
 
 const uiSlice = createSlice({
@@ -66,6 +70,17 @@ const uiSlice = createSlice({
     setMobileNav(state, action: PayloadAction<boolean>) {
       state.mobileNavOpen = action.payload
     },
+    addUploads(state, action: PayloadAction<{ channelId: string; attachments: Attachment[] }>) {
+      const list = (state.uploads[action.payload.channelId] ??= [])
+      list.push(...action.payload.attachments.slice(0, 10 - list.length))
+    },
+    removeUpload(state, action: PayloadAction<{ channelId: string; id: string }>) {
+      const list = state.uploads[action.payload.channelId]
+      if (list) state.uploads[action.payload.channelId] = list.filter(a => a.id !== action.payload.id)
+    },
+    clearUploads(state, action: PayloadAction<string>) {
+      delete state.uploads[action.payload]
+    },
   },
 })
 
@@ -79,5 +94,8 @@ export const {
   setVoice,
   setSearch,
   setMobileNav,
+  addUploads,
+  removeUpload,
+  clearUploads,
 } = uiSlice.actions
 export const uiReducer = uiSlice.reducer

@@ -70,6 +70,17 @@ export interface Reaction {
   userIds: string[]
 }
 
+export interface Attachment {
+  id: string
+  name: string
+  type: string
+  size: number
+  /** data: URL (persisted) or blob: URL (this session only) */
+  url: string
+  width?: number
+  height?: number
+}
+
 export interface Message {
   id: string
   channelId: string
@@ -80,6 +91,7 @@ export interface Message {
   replyToId?: string
   reactions: Reaction[]
   pinned?: boolean
+  attachments?: Attachment[]
 }
 
 export type RelationshipType = 'friend' | 'incoming' | 'outgoing' | 'blocked'

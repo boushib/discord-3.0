@@ -186,3 +186,63 @@
 
   .button:not(.emojiButton)
     display: none
+
+.uploads
+  display: flex
+  gap: 24px
+  overflow-x: auto
+  padding: 20px 10px 10px
+  border-radius: 8px 8px 0 0
+  border-bottom: 1px solid var(--divider)
+  background-color: var(--bg-textarea)
+
+.uploadsReplying
+  border-radius: 0
+
+.upload
+  position: relative
+  flex-shrink: 0
+  width: 200px
+  height: 200px
+  display: flex
+  flex-direction: column
+  padding: 8px
+  border-radius: 4px
+  background-color: var(--bg-secondary)
+
+.uploadImage
+  flex: 1
+  min-height: 0
+  width: 100%
+  object-fit: contain
+  border-radius: 3px
+
+.uploadIcon
+  flex: 1
+  margin: auto
+  color: var(--text-link)
+
+.uploadName
+  margin-top: 8px
+  overflow: hidden
+  text-overflow: ellipsis
+  white-space: nowrap
+  color: var(--text-normal)
+  font-size: 14px
+
+.uploadRemove
+  position: absolute
+  top: -12px
+  right: -12px
+  width: 32px
+  height: 32px
+  display: flex
+  align-items: center
+  justify-content: center
+  border-radius: 4px
+  background-color: var(--bg-primary)
+  box-shadow: var(--elevation-low)
+  color: var(--red)
+
+  &:hover
+    background-color: var(--bg-secondary-alt)

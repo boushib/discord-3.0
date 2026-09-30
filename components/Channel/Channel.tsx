@@ -1,7 +1,7 @@
 'use client'
 
-import { useEffect } from 'react'
-import { useAppDispatch, useSelector } from '../../hooks'
+import { useEffect, useState } from 'react'
+import { useAppDispatch, useFileUploads, useSelector } from '../../hooks'
 import { markRead, rememberChannel, setSearch } from '../../store'
 import { findChannel, selectMessages } from '../../store/selectors'
 import Members from '../Members'
@@ -17,6 +17,8 @@ const Channel = ({ channelId }: { channelId: string }) => {
   const messageCount = useSelector(s => selectMessages(s, channelId).length)
   const memberListOpen = useSelector(s => s.prefs.memberListOpen)
   const serverId = context?.kind === 'server' ? context.server.id : undefined
+  const upload = useFileUploads(channelId)
+  const [dragging, setDragging] = useState(false)
 
   useEffect(() => {
     dispatch(markRead(channelId))
@@ -38,7 +40,33 @@ const Channel = ({ channelId }: { channelId: string }) => {
 
   return (
     <>
-      <div className={styles.channel}>
+      <div
+        className={styles.channel}
+        onDragOver={e => {
+          if (!e.dataTransfer.types.includes('Files')) return
+          e.preventDefault()
+          setDragging(true)
+        }}
+        onDragLeave={e => {
+          if (!e.currentTarget.contains(e.relatedTarget as Node)) setDragging(false)
+        }}
+        onDrop={e => {
+          if (!e.dataTransfer.files.length) return
+          e.preventDefault()
+          setDragging(false)
+          upload(e.dataTransfer.files)
+        }}
+      >
+        {dragging && (
+          <div className={styles.dropOverlay}>
+            <div className={styles.dropCard}>
+              <div className={styles.dropTitle}>
+                Upload to {context.kind === 'server' ? `#${context.channel.name}` : context.recipient.displayName}
+              </div>
+              <p>You can add comments before sending.</p>
+            </div>
+          </div>
+        )}
         <ChannelHeader channelId={channelId} context={context} />
         {context.kind === 'dm' && <DMCall dmId={context.dmId} recipient={context.recipient} />}
         <MessageList key={`list-${channelId}`} channelId={channelId} context={context} />

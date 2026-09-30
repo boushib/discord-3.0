@@ -1,16 +1,16 @@
 'use client'
 
 import classNames from 'classnames'
-import { CirclePlus, X } from 'lucide-react'
+import { CirclePlus, FileText, Trash, X } from 'lucide-react'
 import { useMemo, useRef, useState } from 'react'
 import { CURRENT_USER_ID } from '../../constants'
 import { replaceShortcodes, searchEmojis } from '../../constants/emojis'
-import { useAppDispatch, usePopover, useSelector } from '../../hooks'
+import { useAppDispatch, useFileUploads, usePopover, useSelector } from '../../hooks'
 import EmojiIcon from '../../icons/Emoji'
 import GIFIcon from '../../icons/GIF'
 import GiftIcon from '../../icons/Gift'
 import StickerIcon from '../../icons/Sticker'
-import { sendMessage, setEditing, setReplyTo } from '../../store'
+import { clearUploads, removeUpload, sendMessage, setEditing, setReplyTo } from '../../store'
 import { simulateReply } from '../../store/simulate'
 import { ChannelContext, displayNameIn, selectMessages } from '../../store/selectors'
 import Avatar from '../Avatar'
@@ -53,7 +53,10 @@ const MessageBox = ({ channelId, context }: Props) => {
   const [selected, setSelected] = useState(0)
   const [dismissed, setDismissed] = useState(false)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
+  const fileRef = useRef<HTMLInputElement>(null)
   const emoji = usePopover()
+  const upload = useFileUploads(channelId)
+  const uploads = useSelector(s => s.ui.uploads[channelId])
 
   const users = useSelector(s => s.users.byId)
   const replyToId = useSelector(s => s.ui.replyTo[channelId])
@@ -147,11 +150,18 @@ const MessageBox = ({ channelId, context }: Props) => {
 
   const submit = () => {
     const content = replaceShortcodes(applyCommands(value.trim()))
-    if (!content || content.length > MAX_LENGTH) return
+    if ((!content && !uploads?.length) || content.length > MAX_LENGTH) return
     const action = dispatch(
-      sendMessage({ channelId, authorId: CURRENT_USER_ID, content, replyToId: replyTo?.id })
+      sendMessage({
+        channelId,
+        authorId: CURRENT_USER_ID,
+        content,
+        replyToId: replyTo?.id,
+        attachments: uploads?.length ? uploads : undefined,
+      })
     )
     dispatch(setReplyTo({ channelId, messageId: null }))
+    dispatch(clearUploads(channelId))
     dispatch(simulateReply(channelId, action.payload.id, content))
     update('', 0)
   }
@@ -240,9 +250,55 @@ const MessageBox = ({ channelId, context }: Props) => {
         </div>
       )}
 
-      <div className={classNames(styles.box, replyTo && styles.boxReplying)}>
+      {uploads && uploads.length > 0 && (
+        <div className={classNames(styles.uploads, replyTo && styles.uploadsReplying)}>
+          {uploads.map(a => (
+            <div key={a.id} className={styles.upload}>
+              {a.type.startsWith('image/') ? (
+                // eslint-disable-next-line @next/next/no-img-element -- local preview
+                <img src={a.url} alt="" className={styles.uploadImage} />
+              ) : (
+                <FileText size={48} className={styles.uploadIcon} />
+              )}
+              <span className={styles.uploadName}>{a.name}</span>
+              <Tooltip label="Remove Attachment">
+                <button
+                  type="button"
+                  className={styles.uploadRemove}
+                  aria-label="Remove Attachment"
+                  onClick={() => dispatch(removeUpload({ channelId, id: a.id }))}
+                >
+                  <Trash size={16} />
+                </button>
+              </Tooltip>
+            </div>
+          ))}
+        </div>
+      )}
+
+      <div
+        className={classNames(
+          styles.box,
+          (replyTo || uploads?.length) && styles.boxReplying
+        )}
+      >
+        <input
+          ref={fileRef}
+          type="file"
+          multiple
+          hidden
+          onChange={e => {
+            if (e.target.files) upload(e.target.files)
+            e.target.value = ''
+          }}
+        />
         <Tooltip label="Upload a File">
-          <button type="button" className={styles.attach} aria-label="Upload a File">
+          <button
+            type="button"
+            className={styles.attach}
+            aria-label="Upload a File"
+            onClick={() => fileRef.current?.click()}
+          >
             <CirclePlus size={24} fill="currentColor" stroke="var(--bg-textarea)" />
           </button>
         </Tooltip>
@@ -257,6 +313,13 @@ const MessageBox = ({ channelId, context }: Props) => {
           onChange={e => update(e.target.value, e.target.selectionStart)}
           onSelect={e => setCaret(e.currentTarget.selectionStart)}
           onKeyDown={onKeyDown}
+          onPaste={e => {
+            const files = [...e.clipboardData.files]
+            if (files.length) {
+              e.preventDefault()
+              upload(files)
+            }
+          }}
           autoFocus
         />
         <div className={styles.buttons}>
