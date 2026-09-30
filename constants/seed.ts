@@ -497,6 +497,8 @@ const SEED_CONVERSATIONS: Record<string, SeedLine[]> = {
   'c-fn-general': [
     ['u-sarah', 'the new season map is so good, the city POI is chaos', 140],
     ['u-john', 'landing there every game and dying every game 💀', 135, { reactions: [{ emoji: '💀', userIds: ['u-sarah', 'u-luke'] }] }],
+    ['u-john', 'this trick shot compilation is actually insane https://www.youtube.com/watch?v=dQw4w9WgXcQ', 90],
+    ['u-sarah', 'john. JOHN. I can’t believe I fell for that in 2026 😭', 88, { reactions: [{ emoji: '😂', userIds: ['u-luke', 'u-john', 'u-kai'] }] }],
     ['u-luke', 'build or zero build tonight?', 60],
     ['u-sarah', 'zero build, my building skills are gone', 58],
   ],

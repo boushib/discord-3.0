@@ -20,6 +20,7 @@ import MessageEditor from './MessageEditor'
 import { GiftEmbed, ImageEmbed, isImageLink, StickerView } from './RichContent'
 import PollView from './PollView'
 import ThreadSummary from './ThreadSummary'
+import YouTubeEmbed, { youtubeIds } from './YouTubeEmbed'
 import styles from './Message.module.sass'
 
 interface Props {
@@ -136,6 +137,9 @@ const Message = ({ message, server, grouped: groupedProp, preview }: Props) => {
               {message.sticker && <StickerView sticker={message.sticker} />}
               {message.gift && <GiftEmbed message={message} />}
               {message.poll && <PollView message={message} />}
+              {youtubeIds(message.content).map(id => (
+                <YouTubeEmbed key={id} id={id} />
+              ))}
               {message.editedAt && (
                 <Tooltip label={formatFull(message.editedAt)}>
                   <span className={styles.edited}>(edited)</span>
