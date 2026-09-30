@@ -63,3 +63,21 @@
     height: 44%
     top: 28%
     left: 28%
+
+// Shop decoration: an animated gradient ring hugging the avatar
+.decoration
+  position: absolute
+  inset: calc(var(--deco) * -1.5)
+  border-radius: 50%
+  background: var(--deco-bg)
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - var(--deco)), #000 calc(100% - var(--deco) + 1px))
+  mask: radial-gradient(farthest-side, transparent calc(100% - var(--deco)), #000 calc(100% - var(--deco) + 1px))
+  animation: spin 6s linear infinite
+  pointer-events: none
+
+.status
+  z-index: 1
+
+@keyframes spin
+  to
+    transform: rotate(360deg)

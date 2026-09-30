@@ -5,6 +5,7 @@ import Settings from '../Settings'
 import CreateChannelModal from './CreateChannelModal'
 import CreateServerModal from './CreateServerModal'
 import DeleteMessageModal from './DeleteMessageModal'
+import DownloadModal from './DownloadModal'
 import EditChannelModal from './EditChannelModal'
 import GiftModal from './GiftModal'
 import InviteModal from './InviteModal'
@@ -31,6 +32,8 @@ const ModalRoot = () => {
       return <LeaveServerModal serverId={modal.serverId} />
     case 'quickSwitcher':
       return <QuickSwitcher />
+    case 'download':
+      return <DownloadModal />
     case 'shortcuts':
       return <ShortcutsModal />
     case 'settings':

@@ -33,6 +33,7 @@ export const SEED_USERS: User[] = [
     bio: 'Full-stack dev. I break things so you don’t have to.',
     bannerColor: '#5865f2',
     createdAt: Date.UTC(2017, 3, 12),
+    email: 'boushib@example.com',
   }),
   u('u-ironman', 'ironman', 'IronMan', 4, 'online', {
     customStatus: 'I am Iron Man',
@@ -49,6 +50,8 @@ export const SEED_USERS: User[] = [
     customStatus: '☕ refactoring',
     bio: 'Frontend engineer. CSS is my love language.',
     bannerColor: '#db2777',
+    premium: true,
+    decoration: 'aurora',
   }),
   u('u-kai', 'kai', 'Kai', 0, 'online'),
   u('u-nina', 'nina.w', 'Nina', 2, 'idle'),

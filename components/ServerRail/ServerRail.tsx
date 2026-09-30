@@ -1,7 +1,7 @@
 'use client'
 
 import { CheckCheck, Copy, LogOut, UserPlus } from 'lucide-react'
-import { useParams } from 'next/navigation'
+import { useParams, usePathname } from 'next/navigation'
 import { useState } from 'react'
 import { shallowEqual } from 'react-redux'
 import { CURRENT_USER_ID } from '../../constants'
@@ -120,6 +120,7 @@ const ServerItem = ({ serverId, index, active, drag, setDrag }: ServerItemProps)
 const ServerRail = () => {
   const dispatch = useAppDispatch()
   const params = useParams<{ serverId?: string; channelId?: string }>()
+  const pathname = usePathname()
   const order = useSelector(s => s.servers.order)
   const users = useSelector(s => s.users.byId)
   const unreadDMs = useSelector(
@@ -169,13 +170,18 @@ const ServerRail = () => {
       >
         <AddIcon />
       </RailItem>
-      <RailItem label="Explore Discoverable Servers" variant="action">
+      <RailItem
+        label="Explore Discoverable Servers"
+        variant="action"
+        href="/channels/discovery"
+        active={pathname === '/channels/discovery'}
+      >
         <ExploreIcon />
       </RailItem>
 
       <div className={styles.separator} />
 
-      <RailItem label="Download Apps" variant="action">
+      <RailItem label="Download Apps" variant="action" onClick={() => dispatch(openModal({ type: 'download' }))}>
         <DownloadIcon />
       </RailItem>
     </nav>

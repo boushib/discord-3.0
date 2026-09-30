@@ -13,6 +13,12 @@ export interface User {
   bio?: string
   bot?: boolean
   createdAt: number
+  premium?: boolean
+  /** Avatar decoration id from the shop */
+  decoration?: string
+  ownedDecorations?: string[]
+  email?: string
+  phone?: string
 }
 
 export interface Role {

@@ -3,12 +3,13 @@
 import classNames from 'classnames'
 import { useState } from 'react'
 import { AVATAR_COLORS } from '../../constants'
+import { decorationById } from '../../constants/shop'
 import DiscordIcon from '../../icons/Discord'
 import type { PresenceStatus, User } from '../../models'
 import styles from './Avatar.module.sass'
 
 interface Props {
-  user: Pick<User, 'avatar' | 'avatarColor' | 'displayName'>
+  user: Pick<User, 'avatar' | 'avatarColor' | 'displayName' | 'decoration'>
   size?: number
   status?: PresenceStatus
   /** Background behind the status dot, so it "cuts out" of the avatar */
@@ -20,6 +21,7 @@ const Avatar = ({ user, size = 40, status, ringColor = 'var(--bg-secondary)', cl
   const [failed, setFailed] = useState(false)
   const statusSize = Math.max(10, Math.round(size * 0.3))
   const ring = Math.max(3, Math.round(size * 0.075))
+  const decoration = size >= 32 ? decorationById(user.decoration) : undefined
 
   return (
     <div
@@ -49,6 +51,13 @@ const Avatar = ({ user, size = 40, status, ringColor = 'var(--bg-secondary)', cl
         >
           <DiscordIcon width={size * 0.6} height={size * 0.45} />
         </div>
+      )}
+      {decoration && (
+        <span
+          className={styles.decoration}
+          style={{ '--deco-bg': decoration.background, '--deco': `${Math.max(2, Math.round(size * 0.07))}px` } as React.CSSProperties}
+          aria-hidden
+        />
       )}
       {status && (
         <span className={classNames(styles.status, styles[status])} aria-label={status} />

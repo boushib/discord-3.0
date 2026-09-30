@@ -46,6 +46,15 @@ const serversSlice = createSlice({
         return { payload: server }
       },
     },
+    joinServer(state, action: PayloadAction<Server>) {
+      const server = action.payload
+      if (state.byId[server.id]) return
+      state.byId[server.id] = {
+        ...server,
+        members: [...server.members, { userId: CURRENT_USER_ID, roleIds: [], joinedAt: Date.now() }],
+      }
+      state.order.push(server.id)
+    },
     leaveServer(state, action: PayloadAction<string>) {
       delete state.byId[action.payload]
       state.order = state.order.filter(id => id !== action.payload)
@@ -111,6 +120,7 @@ const serversSlice = createSlice({
 
 export const {
   createServer,
+  joinServer,
   leaveServer,
   moveServer,
   createChannel,

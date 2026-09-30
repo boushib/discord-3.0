@@ -54,6 +54,11 @@ const ProfileCard = ({ userId, server, onClose }: Props) => {
           <div className={styles.username}>
             {user.username}
             {user.bot && <span className={styles.botTag}>✓ BOT</span>}
+            {user.premium && (
+              <span className={styles.nitroBadge} title="Nitro subscriber">
+                💎
+              </span>
+            )}
           </div>
         </div>
 

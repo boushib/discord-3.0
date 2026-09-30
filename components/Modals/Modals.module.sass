@@ -262,3 +262,23 @@
     font-size: 13px
     font-weight: 600
     text-align: center
+
+.platforms
+  display: grid
+  grid-template-columns: repeat(2, 1fr)
+  gap: 12px
+
+.platform
+  display: flex
+  flex-direction: column
+  align-items: center
+  gap: 8px
+  padding: 20px 12px
+  border-radius: 8px
+  background-color: var(--bg-secondary)
+  color: var(--header-primary)
+  font-weight: 600
+
+  &:hover
+    background-color: var(--brand)
+    color: #fff

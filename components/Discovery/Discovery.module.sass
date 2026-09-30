@@ -1,0 +1,194 @@
+.page
+  flex: 1
+  min-width: 0
+  display: flex
+  background-color: var(--bg-primary)
+
+.sidebar
+  width: 240px
+  flex-shrink: 0
+  display: flex
+  flex-direction: column
+  gap: 2px
+  padding: 16px 8px
+  background-color: var(--bg-secondary)
+  border-top-left-radius: 8px
+
+.sidebarTitle
+  padding: 8px 10px 16px
+  color: var(--header-primary)
+  font-size: 22px
+  font-weight: 800
+
+.category
+  display: flex
+  align-items: center
+  gap: 12px
+  height: 42px
+  padding: 0 10px
+  border-radius: 4px
+  color: var(--interactive-normal)
+  font-weight: 500
+  text-align: left
+
+  &:hover
+    background-color: var(--bg-modifier-hover)
+    color: var(--interactive-hover)
+
+.categoryActive, .categoryActive:hover
+  background-color: var(--brand)
+  color: #fff
+
+.main
+  flex: 1
+  min-width: 0
+  padding: 16px 32px 48px
+
+.mobileBar
+  display: none
+
+.hero
+  display: flex
+  flex-direction: column
+  align-items: center
+  justify-content: center
+  gap: 8px
+  min-height: 240px
+  padding: 32px 16px
+  border-radius: 8px
+  background: linear-gradient(135deg, #5865f2, #eb459e)
+  color: #fff
+  text-align: center
+
+  h1
+    font-size: 28px
+    font-weight: 800
+
+  p
+    opacity: .9
+
+.search
+  width: min(560px, 100%)
+  height: 44px
+  display: flex
+  align-items: center
+  gap: 8px
+  margin-top: 16px
+  padding: 0 16px
+  border-radius: 4px
+  background-color: #fff
+  color: #4e5058
+
+  input
+    flex: 1
+    color: #060607
+    font-size: 16px
+
+.heading
+  margin: 32px 0 16px
+  color: var(--header-primary)
+  font-size: 20px
+  font-weight: 700
+
+.grid
+  display: grid
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr))
+  gap: 16px
+
+.card
+  position: relative
+  overflow: hidden
+  border-radius: 8px
+  background-color: var(--bg-secondary)
+  transition: transform .15s, box-shadow .15s
+
+  &:hover
+    transform: translateY(-2px)
+    box-shadow: var(--elevation-high)
+
+.banner
+  height: 120px
+
+.icon
+  position: absolute
+  top: 92px
+  left: 16px
+  width: 48px
+  height: 48px
+  display: flex
+  align-items: center
+  justify-content: center
+  overflow: hidden
+  border: 4px solid var(--bg-secondary)
+  border-radius: 14px
+  background-color: var(--bg-primary)
+  color: var(--header-primary)
+  box-sizing: content-box
+
+.body
+  padding: 36px 16px 16px
+
+  h3
+    color: var(--header-primary)
+    font-size: 16px
+    font-weight: 700
+
+  p
+    margin: 4px 0 12px
+    color: var(--header-secondary)
+    font-size: 14px
+    line-height: 1.3
+
+.stats
+  display: flex
+  align-items: center
+  gap: 4px
+  color: var(--header-secondary)
+  font-size: 12px
+
+.online, .members
+  width: 8px
+  height: 8px
+  margin-left: 6px
+  border-radius: 50%
+
+  &:first-child
+    margin-left: 0
+
+.online
+  background-color: var(--green)
+
+.members
+  background-color: var(--text-muted)
+
+.join
+  width: 100%
+  height: 36px
+  margin-top: 16px
+  border-radius: 4px
+  background-color: var(--green)
+  color: #fff
+  font-weight: 500
+
+  &:hover
+    background-color: var(--green-hover)
+
+.joined
+  background-color: var(--bg-accent)
+
+  &:hover
+    background-color: #6d6f78
+
+.empty
+  color: var(--text-muted)
+
+@media (max-width: 768px)
+  .main
+    padding: 8px 12px 32px
+
+  .mobileBar
+    display: block
+    margin-bottom: 8px
+
+  .hero h1
+    font-size: 22px

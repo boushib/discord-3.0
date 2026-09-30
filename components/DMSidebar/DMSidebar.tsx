@@ -75,15 +75,15 @@ const DMSidebar = () => {
           <span>Friends</span>
           {incoming > 0 && <span className={styles.badge}>{incoming}</span>}
         </Link>
-        <div className={styles.nav}>
+        <Link href="/channels/@me/nitro" className={classNames(styles.nav, channelId === 'nitro' && styles.active)}>
           <Sparkles size={22} />
           <span>Nitro</span>
-        </div>
-        <div className={styles.nav}>
+        </Link>
+        <Link href="/channels/@me/shop" className={classNames(styles.nav, channelId === 'shop' && styles.active)}>
           <ShoppingBag size={22} />
           <span>Shop</span>
           <span className={styles.newTag}>NEW</span>
-        </div>
+        </Link>
 
         <div className={styles.heading}>
           <span>Direct Messages</span>
