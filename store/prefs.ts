@@ -3,6 +3,8 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 export type NotificationLevel = 'all' | 'mentions' | 'none'
 
 export interface PrefsState {
+  /** Version of the demo data this state was created from */
+  seedVersion: number
   /** Per-channel overrides; channels default to 'all' */
   notifications: Record<string, NotificationLevel>
   mutedChannels: string[]
@@ -15,7 +17,10 @@ export interface PrefsState {
   deafened: boolean
 }
 
+export const SEED_VERSION = 2
+
 export const initialPrefs: PrefsState = {
+  seedVersion: SEED_VERSION,
   notifications: {},
   mutedChannels: [],
   collapsedCategories: [],

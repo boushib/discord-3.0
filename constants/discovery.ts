@@ -67,9 +67,9 @@ export const DISCOVERABLE: DiscoverableServer[] = [
     online: 14322,
   },
   {
-    server: make('d-reactiflux', 'Reactiflux', '#0891b2', ['help-react', 'help-nextjs', 'jobs', 'off-topic'], 'The React community'),
-    description: 'Chat about React, Next.js and the JavaScript ecosystem with 200k+ developers.',
-    category: 'tech',
+    server: make('d-apex', 'Apex Legends Squad', '#b91c1c', ['general', 'lfg', 'legends', 'clips'], 'Find your trio'),
+    description: 'Trios, ranked grind and legend tier lists. Find a squad any time of day.',
+    category: 'gaming',
     members: 231556,
     online: 18830,
   },

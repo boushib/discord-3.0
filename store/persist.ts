@@ -1,18 +1,45 @@
 import type { RootState } from '.'
-import { initialPrefs } from './prefs'
+import { createSeedMessages, SEED_SERVERS } from '../constants/seed'
+import { initialPrefs, SEED_VERSION } from './prefs'
 
 const STORAGE_KEY = 'discord-clone:v1'
 
 type PersistedState = Omit<RootState, 'ui'>
 
+// Demo servers from the first seed that were replaced in v2
+const RETIRED_SERVERS = ['s-topshot', 's-nflallday', 's-nextjs', 's-eternal', 's-ac']
+const RETIRED_CHANNEL_PREFIXES = ['c-ts-', 'c-nfl-', 'c-next-', 'c-et-', 'c-ac-']
+
+/**
+ * Swap the old demo servers for the current seed ones while keeping
+ * everything the user made: their own servers, DMs, messages and settings.
+ */
+const migrateSeed = (state: PersistedState): PersistedState => {
+  const byId = { ...state.servers.byId }
+  RETIRED_SERVERS.forEach(id => delete byId[id])
+  for (const server of SEED_SERVERS) byId[server.id] ??= server
+  const seedOrder = SEED_SERVERS.map(s => s.id)
+  const userOrder = state.servers.order.filter(id => byId[id] && !seedOrder.includes(id))
+
+  const messages = Object.fromEntries(
+    Object.entries(state.messages).filter(([id]) => !RETIRED_CHANNEL_PREFIXES.some(p => id.startsWith(p)))
+  )
+  for (const [id, list] of Object.entries(createSeedMessages(Date.now()))) messages[id] ??= list
+
+  return {
+    ...state,
+    servers: { byId, order: [...seedOrder, ...userOrder] },
+    messages,
+    prefs: { ...state.prefs, seedVersion: SEED_VERSION },
+  }
+}
+
 export const loadState = (): Partial<PersistedState> | undefined => {
   try {
     const raw = window.localStorage.getItem(STORAGE_KEY)
     if (!raw) return undefined
-    const state = JSON.parse(raw) as PersistedState
-    // The Next.js "Core Team" role used to be near-white, unreadable in light mode
-    const core = state.servers?.byId['s-nextjs']?.roles.find(r => r.id === 'r-next-core')
-    if (core?.color === '#f2f3f5') core.color = '#e67e22'
+    let state = JSON.parse(raw) as PersistedState
+    if ((state.prefs?.seedVersion ?? 1) < SEED_VERSION) state = migrateSeed(state)
     // Fill in preferences added after this state was saved
     return { ...state, threads: state.threads ?? {}, prefs: { ...initialPrefs, ...state.prefs } }
   } catch {
