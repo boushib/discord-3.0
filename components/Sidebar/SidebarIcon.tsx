@@ -1,65 +1,56 @@
 'use client'
 
 import classNames from 'classnames'
-import { useAppDispatch, useSelector } from '../../hooks'
+import Link from 'next/link'
+import { useParams } from 'next/navigation'
+import { useSelector } from '../../hooks'
 import AddIcon from '../../icons/Add'
 import DiscordIcon from '../../icons/Discord'
-import DownloadIcon from '../../icons/Download'
 import ExploreIcon from '../../icons/Explore'
-import { Server } from '../../models'
-import { setCurrentServer } from '../../store'
+import { serverHref } from '../../lib/routes'
 import styles from './Sidebar.module.sass'
 
 interface Props {
-  server: Server
+  id: string
+  name?: string
+  kind: 'home' | 'server' | 'add' | 'explore'
 }
 
-const getSidebarIcon = (key: string): React.ReactNode => {
-  switch (key) {
-    case 'add':
-      return <AddIcon />
-    case 'explore':
-      return <ExploreIcon />
-    case 'download':
-      return <DownloadIcon />
-    default:
-      return null
-  }
-}
+const SidebarIcon = ({ id, name, kind }: Props) => {
+  const params = useParams<{ serverId?: string }>()
+  const server = useSelector(s => s.servers.byId[id])
+  const active = params.serverId !== undefined && decodeURIComponent(params.serverId) === id
 
-const SidebarIcon = ({ server }: Props) => {
-  const { currentServer } = useSelector(s => s.servers)
-
-  const dispatch = useAppDispatch()
-
-  const handleSetCurrentServer = () => {
-    dispatch(setCurrentServer(server))
-  }
-  return (
+  const icon = (
     <div
       className={classNames({
-        [styles.sidebar__icon__wrapper]: true,
-        [styles['sidebar__icon__wrapper--active']]:
-          server.id === currentServer.id,
+        [styles.sidebar__icon]: true,
+        [styles['sidebar__icon--primary']]: kind === 'home',
+        [styles['sidebar__icon--secondary']]: kind === 'add' || kind === 'explore',
+        [styles['sidebar__icon--active']]: active,
       })}
-      onClick={handleSetCurrentServer}
+      style={{ backgroundImage: server?.icon ? `url('${server.icon}')` : undefined }}
+      title={name ?? server?.name}
     >
-      <div
-        className={classNames({
-          [styles.sidebar__icon]: true,
-          [styles['sidebar__icon--primary']]: server.isPrimary,
-          [styles['sidebar__icon--secondary']]: server.icon,
-          [styles['sidebar__icon--active']]: server.id === currentServer.id,
-        })}
-        style={{
-          backgroundImage: server.image ? `url('${server.image}')` : 'unset',
-        }}
-      >
-        {server.isPrimary && <DiscordIcon />}
-        {server.icon && getSidebarIcon(server.icon)}
-      </div>
+      {kind === 'home' && <DiscordIcon />}
+      {kind === 'add' && <AddIcon />}
+      {kind === 'explore' && <ExploreIcon />}
     </div>
   )
+
+  const wrapperClass = classNames({
+    [styles.sidebar__icon__wrapper]: true,
+    [styles['sidebar__icon__wrapper--active']]: active,
+  })
+
+  if (kind === 'home' || kind === 'server') {
+    return (
+      <Link href={serverHref(id)} className={wrapperClass}>
+        {icon}
+      </Link>
+    )
+  }
+  return <div className={wrapperClass}>{icon}</div>
 }
 
 export default SidebarIcon

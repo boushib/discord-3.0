@@ -1,0 +1,65 @@
+.avatar
+  position: relative
+  flex-shrink: 0
+  border-radius: 50%
+
+.image, .fallback
+  width: 100%
+  height: 100%
+  border-radius: 50%
+  object-fit: cover
+
+.fallback
+  display: flex
+  align-items: center
+  justify-content: center
+  color: #fff
+
+.status
+  position: absolute
+  right: calc(var(--ring-width) * -1)
+  bottom: calc(var(--ring-width) * -1)
+  width: calc(var(--status-size) + var(--ring-width) * 2)
+  height: calc(var(--status-size) + var(--ring-width) * 2)
+  border-radius: 50%
+  border: var(--ring-width) solid var(--ring)
+  background-color: var(--status-offline)
+  transition: background-color .2s
+
+  &::after
+    content: ''
+    position: absolute
+    border-radius: 50%
+    background-color: var(--ring)
+
+.online
+  background-color: var(--status-online)
+
+  &::after
+    display: none
+
+.idle
+  background-color: var(--status-idle)
+
+  &::after
+    width: 62%
+    height: 62%
+    top: -8%
+    left: -8%
+
+.dnd
+  background-color: var(--status-dnd)
+
+  &::after
+    width: 64%
+    height: 26%
+    top: 37%
+    left: 18%
+    border-radius: 999px
+
+.offline
+  &::after
+    width: 44%
+    height: 44%
+    top: 28%
+    left: 28%

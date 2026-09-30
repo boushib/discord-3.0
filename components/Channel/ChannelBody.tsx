@@ -1,27 +1,19 @@
+'use client'
+
+import { useSelector } from '../../hooks'
+import { selectMessages } from '../../store/selectors'
 import ChatItem from '../ChatItem'
 import styles from './Channel.module.sass'
 
-const CHAT_MESSAGES = [
-  { id: 1 },
-  { id: 2 },
-  { id: 3 },
-  { id: 4 },
-  { id: 5 },
-  { id: 6 },
-  { id: 7 },
-  { id: 8 },
-  { id: 9 },
-  { id: 10 },
-]
-
-const ChannelBody = () => (
-  <div className={styles.channel__body}>
-    <div className={styles.channel__chat}>
-      {CHAT_MESSAGES.map(m => (
-        <ChatItem key={m.id} />
+const ChannelBody = ({ channelId }: { channelId: string }) => {
+  const messages = useSelector(s => selectMessages(s, channelId))
+  return (
+    <div className={styles.channel__body}>
+      {messages.map(m => (
+        <ChatItem key={m.id} message={m} />
       ))}
     </div>
-  </div>
-)
+  )
+}
 
 export default ChannelBody

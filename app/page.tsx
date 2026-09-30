@@ -1,11 +1,5 @@
-import Server from '@/components/Server'
-import Sidebar from '@/components/Sidebar'
+import { redirect } from 'next/navigation'
 
-const Home = () => (
-  <div className="app">
-    <Sidebar />
-    <Server />
-  </div>
-)
+const Home = () => redirect('/channels/@me')
 
 export default Home

@@ -1,11 +1,11 @@
 import type { Metadata, Viewport } from 'next'
-import { Poppins } from 'next/font/google'
+import { Noto_Sans } from 'next/font/google'
 import StoreProvider from './StoreProvider'
 import '@/styles/globals.sass'
 
-const poppins = Poppins({
+const notoSans = Noto_Sans({
   subsets: ['latin'],
-  weight: ['400', '500', '600'],
+  weight: ['400', '500', '600', '700', '800'],
   variable: '--font-sans',
 })
 
@@ -15,11 +15,11 @@ export const metadata: Metadata = {
 }
 
 export const viewport: Viewport = {
-  themeColor: '#202225',
+  themeColor: '#1e1f22',
 }
 
 const RootLayout = ({ children }: { children: React.ReactNode }) => (
-  <html lang="en" className={poppins.variable}>
+  <html lang="en" className={notoSans.variable}>
     <body>
       <StoreProvider>{children}</StoreProvider>
     </body>

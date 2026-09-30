@@ -4,10 +4,10 @@ import InfoIcon from '../../icons/Info'
 import MembersIcon from '../../icons/Members'
 import styles from './Channel.module.sass'
 
-const ChannelHeader = () => (
+const ChannelHeader = ({ name }: { name: string }) => (
   <div className={styles.channel__header}>
     <div className={styles.channel__header__name}>
-      <ChannelIcon /> 🌵 General
+      <ChannelIcon /> {name}
     </div>
     <div className={styles.channel__header__tail}>
       <MembersIcon />

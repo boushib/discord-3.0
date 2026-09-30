@@ -1,12 +1,15 @@
 .sidebar
   width: 72px
-  background-color: var(--color-grey-dark)
+  flex-shrink: 0
+  overflow-y: auto
+  scrollbar-width: none
+  background-color: var(--bg-tertiary)
   padding: 12px 0
 
   &__icon
     width: 48px
     height: 48px
-    background-color: var(--color-grey-light)
+    background-color: var(--bg-primary)
     border-radius: 48px
     display: flex
     align-items: center
@@ -20,20 +23,21 @@
       border-radius: 16px
 
     &--primary
-      background-color: var(--color-primary)
+      background-color: var(--brand)
 
     &--secondary
       svg
-        color: var(--color-green)
+        color: var(--green)
         transition: color 0.4s
 
       &:hover
-        background-color: var(--color-green)
+        background-color: var(--green)
 
         svg
           color: #fff
 
     &__wrapper
+      display: block
       width: 100%
       padding: 6px 12px
       position: relative

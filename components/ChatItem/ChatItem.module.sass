@@ -3,15 +3,6 @@
   display: flex
   gap: 12px
 
-  &__avatar
-    width: 40px
-    height: 40px
-    border-radius: 50%
-    background-size: cover
-    background-position: center
-    background-color: rgba(#fff, 0.05)
-    filter: grayscale(1)
-
   &__header
     display: flex
     align-items: center
@@ -20,14 +11,17 @@
 
   &__username
     font-size: 15px
-    color: #95a5a6
+    color: var(--header-primary)
+    font-weight: 500
 
   &__time
     font-size: 13px
-    color: #a3a6aa
+    color: var(--text-muted)
+    font-size: 12px
 
   &__message
     font-size: 15px
-    width: 580px
+    white-space: pre-wrap
+    word-break: break-word
     line-height: 1.6
-    color: #dcddde
+    color: var(--text-normal)

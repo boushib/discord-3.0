@@ -1,7 +1,90 @@
+export type PresenceStatus = 'online' | 'idle' | 'dnd' | 'offline'
+
+export interface User {
+  id: string
+  username: string
+  displayName: string
+  avatar?: string
+  /** Index into AVATAR_COLORS, used for the default Discord avatar */
+  avatarColor: number
+  bannerColor?: string
+  status: PresenceStatus
+  customStatus?: string
+  bio?: string
+  bot?: boolean
+  createdAt: number
+}
+
+export interface Role {
+  id: string
+  name: string
+  color?: string
+  /** Hoisted roles get their own section in the member list */
+  hoist: boolean
+}
+
+export interface Member {
+  userId: string
+  roleIds: string[]
+  nickname?: string
+  joinedAt: number
+}
+
+export type ChannelType = 'text' | 'voice' | 'announcement'
+
+export interface Channel {
+  id: string
+  name: string
+  type: ChannelType
+  categoryId: string | null
+  topic?: string
+}
+
+export interface Category {
+  id: string
+  name: string
+}
+
 export interface Server {
   id: string
   name: string
-  image?: string
-  isPrimary?: boolean
   icon?: string
+  bannerColor?: string
+  verified?: boolean
+  ownerId: string
+  categories: Category[]
+  channels: Channel[]
+  roles: Role[]
+  members: Member[]
+  /** User ids connected to each voice channel */
+  voiceStates: Record<string, string[]>
+}
+
+export interface DMChannel {
+  id: string
+  recipientId: string
+}
+
+export interface Reaction {
+  emoji: string
+  userIds: string[]
+}
+
+export interface Message {
+  id: string
+  channelId: string
+  authorId: string
+  content: string
+  createdAt: number
+  editedAt?: number
+  replyToId?: string
+  reactions: Reaction[]
+  pinned?: boolean
+}
+
+export type RelationshipType = 'friend' | 'incoming' | 'outgoing' | 'blocked'
+
+export interface Relationship {
+  userId: string
+  type: RelationshipType
 }
