@@ -27,8 +27,10 @@ const shouldGroup = (prev: MessageType | undefined, message: MessageType, newSin
 const MessageList = ({ channelId, context }: Props) => {
   const messages = useSelector(s => selectMessages(s, channelId))
   const lastReadAt = useSelector(s => s.readState.lastReadAt[channelId] ?? s.readState.baseline)
-  // Freeze the "new messages" marker at the moment the channel was opened
+  // Freeze the "new messages" marker at the moment the channel was opened;
+  // only messages that were already there (and unread) get the NEW line
   const [newSince] = useState(lastReadAt)
+  const [countAtOpen] = useState(messages.length)
   const scrollerRef = useRef<HTMLDivElement>(null)
   const stickToBottom = useRef(true)
   // Message count when the user scrolled up, used for the "jump to present" bar
@@ -68,7 +70,9 @@ const MessageList = ({ channelId, context }: Props) => {
   const newWhileAway =
     awayAt === null ? 0 : messages.slice(awayAt).filter(m => m.authorId !== CURRENT_USER_ID).length
 
-  const firstUnread = visible.find(m => m.createdAt > newSince && m.authorId !== CURRENT_USER_ID)
+  const firstUnread = visible
+    .slice(0, countAtOpen)
+    .find(m => m.createdAt > newSince && m.authorId !== CURRENT_USER_ID)
 
   return (
     <div className={styles.messagesWrap}>
