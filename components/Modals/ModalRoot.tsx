@@ -7,6 +7,7 @@ import CreateServerModal from './CreateServerModal'
 import DeleteMessageModal from './DeleteMessageModal'
 import InviteModal from './InviteModal'
 import LeaveServerModal from './LeaveServerModal'
+import QuickSwitcher from './QuickSwitcher'
 
 const ModalRoot = () => {
   const modal = useSelector(s => s.ui.modal)
@@ -21,6 +22,8 @@ const ModalRoot = () => {
       return <InviteModal serverId={modal.serverId} />
     case 'leaveServer':
       return <LeaveServerModal serverId={modal.serverId} />
+    case 'quickSwitcher':
+      return <QuickSwitcher />
     case 'settings':
       return <Settings />
     case 'deleteMessage':

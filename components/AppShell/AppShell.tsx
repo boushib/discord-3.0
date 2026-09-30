@@ -1,6 +1,6 @@
 'use client'
 
-import { useIsClient } from '../../hooks'
+import { useGlobalShortcuts, useIsClient } from '../../hooks'
 import ModalRoot from '../Modals'
 import ServerRail from '../ServerRail'
 import LoadingScreen from './LoadingScreen'
@@ -11,6 +11,7 @@ import LoadingScreen from './LoadingScreen'
  */
 const AppShell = ({ children }: { children: React.ReactNode }) => {
   const isClient = useIsClient()
+  useGlobalShortcuts()
   if (!isClient) return <LoadingScreen />
 
   return (
