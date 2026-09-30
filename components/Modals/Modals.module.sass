@@ -23,3 +23,193 @@
   strong:first-child
     color: var(--green)
     text-transform: uppercase
+
+.template
+  width: 100%
+  height: 64px
+  display: flex
+  align-items: center
+  gap: 12px
+  margin-bottom: 8px
+  padding: 0 16px 0 12px
+  border: 1px solid var(--bg-accent)
+  border-radius: 8px
+  color: var(--header-primary)
+  font-size: 16px
+  font-weight: 600
+  text-align: left
+
+  span:nth-child(2)
+    flex: 1
+
+  &:hover
+    background-color: var(--bg-modifier-hover)
+
+.templateEmoji
+  width: 40px
+  height: 40px
+  display: flex
+  align-items: center
+  justify-content: center
+  font-size: 26px
+
+.templateHeading
+  margin: 16px 0 8px
+  color: var(--header-secondary)
+  font-size: 12px
+  font-weight: 700
+  text-transform: uppercase
+
+.back
+  margin-right: auto
+
+.iconPreview
+  width: 80px
+  height: 80px
+  margin: 0 auto 24px
+  display: flex
+  align-items: center
+  justify-content: center
+  overflow: hidden
+  border: 2px dashed var(--interactive-normal)
+  border-radius: 50%
+  background-color: var(--bg-secondary)
+  color: var(--header-primary)
+
+.field
+  display: block
+  margin-bottom: 16px
+
+  input
+    width: 100%
+    height: 40px
+    padding: 0 10px
+    border-radius: 4px
+    background-color: var(--bg-input)
+    color: var(--text-normal)
+    font-size: 16px
+
+.label
+  display: block
+  margin-bottom: 8px
+  color: var(--header-secondary)
+  font-size: 12px
+  font-weight: 700
+  text-transform: uppercase
+
+.hint
+  color: var(--text-muted)
+  font-size: 12px
+
+.types
+  display: flex
+  flex-direction: column
+  gap: 8px
+  margin-bottom: 20px
+
+.type
+  display: flex
+  align-items: center
+  gap: 12px
+  padding: 10px 12px
+  border-radius: 4px
+  background-color: var(--bg-secondary)
+  cursor: pointer
+
+  &:hover
+    background-color: var(--bg-modifier-selected)
+
+.typeActive, .typeActive:hover
+  background-color: var(--bg-modifier-selected)
+
+  .radio
+    border-color: #fff
+
+    &::after
+      content: ''
+      position: absolute
+      inset: 3px
+      border-radius: 50%
+      background-color: #fff
+
+.typeIcon
+  color: var(--interactive-normal)
+
+.typeText
+  flex: 1
+  display: flex
+  flex-direction: column
+
+.typeLabel
+  color: var(--header-primary)
+  font-weight: 500
+
+.typeDescription
+  color: var(--header-secondary)
+  font-size: 14px
+
+.radio
+  position: relative
+  width: 20px
+  height: 20px
+  flex-shrink: 0
+  border: 2px solid var(--interactive-normal)
+  border-radius: 50%
+
+.prefixed
+  display: flex
+  align-items: center
+  gap: 6px
+  padding-left: 10px
+  border-radius: 4px
+  background-color: var(--bg-input)
+  color: var(--interactive-normal)
+
+  input
+    padding-left: 0
+
+.searchInput
+  width: 100%
+  height: 36px
+  padding: 0 10px
+  margin-bottom: 12px
+  border-radius: 4px
+  background-color: var(--bg-input)
+  color: var(--text-normal)
+
+.inviteList
+  max-height: 220px
+  margin: 0 -8px 20px
+
+.inviteRow
+  height: 44px
+  display: flex
+  align-items: center
+  gap: 12px
+  padding: 0 8px
+  border-radius: 4px
+
+  &:hover
+    background-color: var(--bg-modifier-hover)
+
+.inviteName
+  flex: 1
+  color: var(--header-primary)
+  font-weight: 500
+
+.inviteButton
+  min-width: 72px
+  height: 32px
+
+.copyField
+  display: flex
+  gap: 8px
+  margin-bottom: 8px
+  padding: 4px
+  border-radius: 4px
+  background-color: var(--bg-input)
+
+  input
+    flex: 1
+    padding: 0 8px
+    color: var(--text-normal)
