@@ -175,7 +175,7 @@ export const SEED_SERVERS: Server[] = [
       ch('c-next-pairing', 'Pairing Room', 'cat-next-voice', 'voice'),
     ],
     roles: [
-      { id: 'r-next-core', name: 'Core Team', color: '#f2f3f5', hoist: true },
+      { id: 'r-next-core', name: 'Core Team', color: '#e67e22', hoist: true },
       { id: 'r-next-helper', name: 'Helper', color: '#00a8fc', hoist: true },
     ],
     members: members(

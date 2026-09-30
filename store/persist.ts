@@ -10,6 +10,9 @@ export const loadState = (): Partial<PersistedState> | undefined => {
     const raw = window.localStorage.getItem(STORAGE_KEY)
     if (!raw) return undefined
     const state = JSON.parse(raw) as PersistedState
+    // The Next.js "Core Team" role used to be near-white, unreadable in light mode
+    const core = state.servers?.byId['s-nextjs']?.roles.find(r => r.id === 'r-next-core')
+    if (core?.color === '#f2f3f5') core.color = '#e67e22'
     // Fill in preferences added after this state was saved
     return { ...state, prefs: { ...initialPrefs, ...state.prefs } }
   } catch {
