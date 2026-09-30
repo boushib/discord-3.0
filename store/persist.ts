@@ -1,5 +1,6 @@
+import type { Server } from '../models'
 import type { RootState } from '.'
-import { AC_SHADOWS_ICON, createSeedMessages, SEED_SERVERS, SEED_THREADS } from '../constants/seed'
+import { AC_SHADOWS_ICON, BF6_ICON, createSeedMessages, SEED_SERVERS, SEED_THREADS } from '../constants/seed'
 import { initialPrefs, SEED_VERSION } from './prefs'
 
 const STORAGE_KEY = 'discord-clone:v1'
@@ -44,10 +45,13 @@ const migrateSeed = (state: PersistedState, fromVersion: number): PersistedState
     Object.entries(state.threads ?? {}).filter(([, t]) => !retiredServers.has(t.serverId))
   )
 
-  // v5: Shadows switched from the drawn emblem to the official cover art
-  const shadows = byId['s-acshadows']
-  if (shadows?.icon === '/servers/ac-shadows.svg') {
-    byId['s-acshadows'] = { ...shadows, icon: AC_SHADOWS_ICON, iconPosition: '50% 72%' }
+  // Drawn emblems later replaced with official artwork (only if still unchanged)
+  const ICON_UPDATES: [serverId: string, oldIcon: string, changes: Partial<Server>][] = [
+    ['s-acshadows', '/servers/ac-shadows.svg', { icon: AC_SHADOWS_ICON, iconPosition: '50% 72%' }], // v5
+    ['s-bf6', '/servers/bf6.svg', { icon: BF6_ICON }], // v6
+  ]
+  for (const [id, oldIcon, changes] of ICON_UPDATES) {
+    if (byId[id]?.icon === oldIcon) byId[id] = { ...byId[id], ...changes }
   }
 
   const messages = Object.fromEntries(

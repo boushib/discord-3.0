@@ -11,6 +11,9 @@ import { CURRENT_USER_ID } from '.'
 
 const MINUTE = 60 * 1000
 
+export const BF6_ICON =
+  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTqGZrG0VENzVoH8EUkJ1B5A6EX2Kub6rUk1VT9pL8Haw&s=10'
+
 export const AC_SHADOWS_ICON =
   'https://image.api.playstation.com/vulcan/ap/rnd/202404/1815/33f39cad34ac468a040ffed5a43149fb4329ec6c73326838.jpg'
 
@@ -348,7 +351,7 @@ export const SEED_SERVERS: Server[] = [
   {
     id: 's-bf6',
     name: 'Battlefield 6',
-    icon: '/servers/bf6.svg',
+    icon: BF6_ICON,
     bannerColor: '#ff6a13',
     verified: true,
     ownerId: 'u-john',
