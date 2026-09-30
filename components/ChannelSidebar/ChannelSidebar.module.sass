@@ -1,44 +1,203 @@
-.server__sidebar
+.sidebar
   width: 240px
   flex-shrink: 0
+  display: flex
+  flex-direction: column
   background-color: var(--bg-secondary)
-  padding-bottom: 16px
+  border-top-left-radius: 8px
+  overflow: hidden
 
-  &__name
+.header
+  height: 48px
+  flex-shrink: 0
+  display: flex
+  align-items: center
+  gap: 6px
+  padding: 0 16px
+  box-shadow: var(--elevation-low)
+  color: var(--header-primary)
+  font-size: 16px
+  font-weight: 600
+  text-align: left
+  transition: background-color .1s
+  position: relative
+  z-index: 2
+
+  &:hover, &.headerOpen
+    background-color: var(--bg-modifier-hover)
+
+.headerName
+  flex: 1
+  overflow: hidden
+  text-overflow: ellipsis
+  white-space: nowrap
+
+.verified
+  display: flex
+  color: var(--green)
+
+  svg
+    width: 16px
+    height: 16px
+
+.serverMenu
+  width: 220px
+
+.scroller
+  flex: 1
+  padding: 8px 0 16px
+
+.section
+  padding-top: 16px
+
+  &:first-child
+    padding-top: 0
+
+.category
+  display: flex
+  align-items: center
+  justify-content: space-between
+  padding: 0 8px 4px 8px
+  color: var(--text-muted)
+
+  &:hover
+    color: var(--interactive-hover)
+
+.categoryToggle
+  flex: 1
+  display: flex
+  align-items: center
+  gap: 2px
+  min-width: 0
+  font-size: 12px
+  font-weight: 600
+  letter-spacing: .02em
+  text-transform: uppercase
+  text-align: left
+
+  span
+    overflow: hidden
+    text-overflow: ellipsis
+    white-space: nowrap
+
+.chevron
+  transition: transform .15s
+
+.chevronCollapsed
+  transform: rotate(-90deg)
+
+.categoryAdd
+  display: flex
+  color: var(--text-muted)
+
+  &:hover
+    color: var(--interactive-hover)
+
+.channelWrapper
+  position: relative
+  padding: 1px 8px
+
+.unreadPill
+  position: absolute
+  left: 0
+  top: 50%
+  width: 4px
+  height: 8px
+  margin-top: -4px
+  border-radius: 0 4px 4px 0
+  background-color: var(--header-primary)
+
+.channel
+  width: 100%
+  height: 34px
+  display: flex
+  align-items: center
+  gap: 6px
+  padding: 0 8px
+  border-radius: 4px
+  color: var(--text-muted)
+  font-size: 16px
+  font-weight: 500
+  text-align: left
+
+  &:hover
+    background-color: var(--bg-modifier-hover)
+    color: var(--interactive-hover)
+
+    .channelActions
+      display: flex
+
+.channelActive, .channelActive:hover
+  background-color: var(--bg-modifier-selected)
+  color: var(--interactive-active)
+
+  .channelActions
     display: flex
-    align-items: center
-    gap: 4px
-    font-size: 16px
-    font-weight: 600
-    padding: 12px 16px
-    box-shadow: var(--elevation-low)
-    margin-bottom: 16px
-    height: 48px
-    color: var(--header-primary)
 
-  &__category
-    padding: 16px 8px 4px 16px
-    font-size: 12px
-    font-weight: 600
-    text-transform: uppercase
-    color: var(--text-muted)
+.channelUnread
+  color: var(--interactive-active)
+  font-weight: 600
 
-  &__channel
-    display: flex
-    align-items: center
-    gap: 6px
-    font-size: 16px
-    padding: 6px 8px
-    border-radius: 4px
-    color: var(--text-muted)
+.channelConnected
+  color: var(--interactive-active)
 
-    &__wrapper
-      padding: 1px 8px
+.channelIcon
+  flex-shrink: 0
+  color: var(--text-muted)
 
-    &:hover
-      background-color: var(--bg-modifier-hover)
-      color: var(--interactive-hover)
+.channelName
+  flex: 1
+  overflow: hidden
+  text-overflow: ellipsis
+  white-space: nowrap
 
-    &--active, &--active:hover
-      background-color: var(--bg-modifier-selected)
-      color: var(--interactive-active)
+.channelActions
+  display: none
+  align-items: center
+
+.channelAction
+  display: flex
+  color: var(--interactive-normal)
+  cursor: pointer
+
+  &:hover
+    color: var(--interactive-hover)
+
+.mentionBadge
+  min-width: 16px
+  height: 16px
+  padding: 0 4px
+  border-radius: 8px
+  background-color: var(--red)
+  color: #fff
+  font-size: 12px
+  font-weight: 700
+  line-height: 16px
+  text-align: center
+
+.voiceUsers
+  padding: 0 0 8px 28px
+
+.voiceUser
+  display: flex
+  align-items: center
+  gap: 8px
+  height: 30px
+  padding: 0 8px
+  border-radius: 4px
+  color: var(--text-muted)
+  font-size: 14px
+  cursor: pointer
+
+  &:hover
+    background-color: var(--bg-modifier-hover)
+    color: var(--interactive-hover)
+
+.voiceUserName
+  flex: 1
+  overflow: hidden
+  text-overflow: ellipsis
+  white-space: nowrap
+
+.voiceUserIcon
+  color: var(--interactive-normal)

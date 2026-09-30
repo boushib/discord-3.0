@@ -1,3 +1,4 @@
 export * from './use-selector'
 export * from './use-on-click-outside'
 export * from './use-is-client'
+export * from './use-popover'
