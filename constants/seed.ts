@@ -134,7 +134,7 @@ export const SEED_SERVERS: Server[] = [
   {
     id: 's-valorant',
     name: 'Valorant',
-    icon: '/servers/valorant.svg',
+    icon: '/servers/valorant.jpg',
     bannerColor: '#ff4655',
     verified: true,
     ownerId: 'u-zed',

@@ -19,7 +19,7 @@ export interface PrefsState {
   deafened: boolean
 }
 
-export const SEED_VERSION = 9
+export const SEED_VERSION = 10
 
 export const initialPrefs: PrefsState = {
   seedVersion: SEED_VERSION,
