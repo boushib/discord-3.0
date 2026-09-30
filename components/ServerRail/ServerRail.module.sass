@@ -116,3 +116,19 @@
   line-height: 16px
   text-align: center
   pointer-events: none
+
+// Drop indicator shown while dragging a server to a new position
+.dropBefore::after, .dropAfter::after
+  content: ''
+  position: absolute
+  left: 12px
+  right: 12px
+  height: 3px
+  border-radius: 2px
+  background-color: var(--green)
+
+.dropBefore::after
+  top: -6px
+
+.dropAfter::after
+  bottom: -6px

@@ -4,6 +4,7 @@ export type Modal =
   | { type: 'createServer' }
   | { type: 'createChannel'; serverId: string; categoryId: string | null }
   | { type: 'invite'; serverId: string }
+  | { type: 'editChannel'; serverId: string; channelId: string }
   | { type: 'leaveServer'; serverId: string }
   | { type: 'deleteMessage'; channelId: string; messageId: string }
   | { type: 'settings' }

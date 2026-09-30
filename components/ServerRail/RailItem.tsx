@@ -14,6 +14,9 @@ interface Props {
   unread?: boolean
   mentions?: number
   variant?: 'home' | 'server' | 'action'
+  /** Drag-and-drop handlers and state for reorderable items */
+  dragProps?: React.HTMLAttributes<HTMLDivElement>
+  dropIndicator?: 'before' | 'after' | null
   children: React.ReactNode
 }
 
@@ -26,6 +29,8 @@ const RailItem = ({
   unread,
   mentions = 0,
   variant = 'server',
+  dragProps,
+  dropIndicator,
   children,
 }: Props) => {
   const icon = (
@@ -39,7 +44,14 @@ const RailItem = ({
 
   return (
     <div
-      className={classNames(styles.item, active && styles.itemActive, unread && styles.itemUnread)}
+      className={classNames(
+        styles.item,
+        active && styles.itemActive,
+        unread && styles.itemUnread,
+        dropIndicator === 'before' && styles.dropBefore,
+        dropIndicator === 'after' && styles.dropAfter
+      )}
+      {...dragProps}
     >
       <span className={styles.pill} />
       <Tooltip label={label} placement="right" large>
