@@ -53,6 +53,7 @@ const migrateSeed = (state: PersistedState, fromVersion: number): PersistedState
     ['s-league', '/servers/league.svg', { icon: '/servers/league.jpg' }], // v8
     ['s-fortnite', '/servers/fortnite.svg', { icon: '/servers/fortnite.jpg' }], // v9
     ['s-valorant', '/servers/valorant.svg', { icon: '/servers/valorant.jpg' }], // v10
+    ['s-halcyon', '/servers/halcyon.svg', { icon: '/servers/stealth.svg', bannerColor: '#2b2b2b' }], // v11
   ]
   for (const [id, oldIcon, changes] of ICON_UPDATES) {
     if (byId[id]?.icon === oldIcon) byId[id] = { ...byId[id], ...changes }

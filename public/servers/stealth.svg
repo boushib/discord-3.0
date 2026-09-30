@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <!-- Vector trace of the stealth project mark: a faceted arrowhead on black -->
+  <rect width="200" height="200" fill="#000"/>
+  <!-- left wing -->
+  <polygon points="73.7,73.3 73.7,127 43.3,149.2 31.7,130.8" fill="#8a8a8a"/>
+  <!-- right wing -->
+  <polygon points="125.8,71.7 168,130.8 156.7,149.2 125.8,127" fill="#666"/>
+  <!-- top facet -->
+  <polygon points="100,35.3 113.5,56 100,78.3 88.3,54.2" fill="#9c9c9c"/>
+  <!-- light strip, left of centre -->
+  <polygon points="73.7,73.3 88.3,54.2 100,78.3 73.7,123.3" fill="#a9a9a9"/>
+  <!-- darker strip, right of centre -->
+  <polygon points="113.5,56 125.8,71.7 125.8,118.3 100,78.3" fill="#777"/>
+  <!-- bottom centre -->
+  <polygon points="100,78.3 125.8,118.3 125.8,127 100,141.7 73.7,127 73.7,123.3" fill="#8f8f8f"/>
+</svg>

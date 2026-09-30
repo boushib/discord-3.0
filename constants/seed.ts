@@ -268,8 +268,8 @@ export const SEED_SERVERS: Server[] = [
   {
     id: 's-halcyon',
     name: 'Project Halcyon',
-    icon: '/servers/halcyon.svg',
-    bannerColor: '#0f766e',
+    icon: '/servers/stealth.svg',
+    bannerColor: '#2b2b2b',
     ownerId: 'u-sarah',
     categories: [
       { id: 'cat-hal-project', name: 'Project' },
