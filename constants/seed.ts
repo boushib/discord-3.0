@@ -11,6 +11,9 @@ import { CURRENT_USER_ID } from '.'
 
 const MINUTE = 60 * 1000
 
+export const AC_SHADOWS_ICON =
+  'https://image.api.playstation.com/vulcan/ap/rnd/202404/1815/33f39cad34ac468a040ffed5a43149fb4329ec6c73326838.jpg'
+
 const u = (
   id: string,
   username: string,
@@ -298,7 +301,8 @@ export const SEED_SERVERS: Server[] = [
   {
     id: 's-acshadows',
     name: "Assassin's Creed Shadows",
-    icon: '/servers/ac-shadows.svg',
+    icon: AC_SHADOWS_ICON,
+    iconPosition: '50% 72%',
     bannerColor: '#8b0f1f',
     verified: true,
     ownerId: 'u-leo',

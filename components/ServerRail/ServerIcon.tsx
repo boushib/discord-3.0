@@ -5,11 +5,19 @@ import { initials } from '../../lib/initials'
 import type { Server } from '../../models'
 import styles from './ServerRail.module.sass'
 
-const ServerIcon = ({ server }: { server: Pick<Server, 'name' | 'icon'> }) => {
+const ServerIcon = ({ server }: { server: Pick<Server, 'name' | 'icon' | 'iconPosition'> }) => {
   const [failed, setFailed] = useState(false)
   if (server.icon && !failed) {
-    // eslint-disable-next-line @next/next/no-img-element -- arbitrary server icon URLs
-    return <img src={server.icon} alt="" className={styles.image} onError={() => setFailed(true)} />
+    return (
+      // eslint-disable-next-line @next/next/no-img-element -- arbitrary server icon URLs
+      <img
+        src={server.icon}
+        alt=""
+        className={styles.image}
+        style={server.iconPosition ? { objectPosition: server.iconPosition } : undefined}
+        onError={() => setFailed(true)}
+      />
+    )
   }
   const text = initials(server.name)
   return (

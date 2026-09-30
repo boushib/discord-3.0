@@ -1,5 +1,5 @@
 import type { RootState } from '.'
-import { createSeedMessages, SEED_SERVERS, SEED_THREADS } from '../constants/seed'
+import { AC_SHADOWS_ICON, createSeedMessages, SEED_SERVERS, SEED_THREADS } from '../constants/seed'
 import { initialPrefs, SEED_VERSION } from './prefs'
 
 const STORAGE_KEY = 'discord-clone:v1'
@@ -43,6 +43,12 @@ const migrateSeed = (state: PersistedState, fromVersion: number): PersistedState
   const threads = Object.fromEntries(
     Object.entries(state.threads ?? {}).filter(([, t]) => !retiredServers.has(t.serverId))
   )
+
+  // v5: Shadows switched from the drawn emblem to the official cover art
+  const shadows = byId['s-acshadows']
+  if (shadows?.icon === '/servers/ac-shadows.svg') {
+    byId['s-acshadows'] = { ...shadows, icon: AC_SHADOWS_ICON, iconPosition: '50% 72%' }
+  }
 
   const messages = Object.fromEntries(
     Object.entries(state.messages).filter(([id]) => !prefixes.some(p => id.startsWith(p)))

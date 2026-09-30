@@ -55,6 +55,8 @@ export interface Server {
   id: string
   name: string
   icon?: string
+  /** CSS object-position for non-square icon images */
+  iconPosition?: string
   bannerColor?: string
   verified?: boolean
   ownerId: string
