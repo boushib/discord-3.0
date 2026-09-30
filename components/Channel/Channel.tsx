@@ -6,7 +6,7 @@ import { markRead, rememberChannel } from '../../store'
 import { findChannel, selectMessages } from '../../store/selectors'
 import Members from '../Members'
 import MessageBox from '../MessageBox'
-import ChannelBody from './ChannelBody'
+import MessageList from './MessageList'
 import ChannelHeader from './ChannelHeader'
 import styles from './Channel.module.sass'
 
@@ -33,7 +33,7 @@ const Channel = ({ channelId }: { channelId: string }) => {
     <>
       <div className={styles.channel}>
         <ChannelHeader name={name} />
-        <ChannelBody channelId={channelId} />
+        <MessageList key={channelId} channelId={channelId} context={context} />
         <MessageBox channelId={channelId} placeholder={`Message ${context.kind === 'server' ? '#' : '@'}${name}`} />
       </div>
       {context.kind === 'server' && memberListOpen && <Members server={context.server} />}

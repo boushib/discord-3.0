@@ -1,0 +1,95 @@
+.inlineCode
+  padding: 0 .2em
+  border-radius: 4px
+  background-color: var(--bg-secondary)
+  font-family: var(--font-code)
+  font-size: 85%
+  line-height: 1.125rem
+
+.codeBlock
+  margin: 6px 0 2px
+  padding: 8px
+  max-width: 90%
+  border: 1px solid var(--bg-tertiary)
+  border-radius: 4px
+  background-color: var(--bg-secondary)
+  color: var(--header-secondary)
+  font-family: var(--font-code)
+  font-size: 14px
+  line-height: 1.125rem
+  white-space: pre-wrap
+  overflow-x: auto
+
+  code
+    font-family: inherit
+
+.link
+  color: var(--text-link)
+  word-break: break-all
+
+  &:hover
+    text-decoration: underline
+
+.mention
+  padding: 0 2px
+  border-radius: 3px
+  background-color: var(--mention-bg)
+  color: var(--mention-fg)
+  font-weight: 500
+  cursor: pointer
+  transition: background-color 50ms, color 50ms
+
+  &:hover
+    background-color: var(--brand)
+    color: #fff
+
+.spoiler
+  border-radius: 3px
+  background-color: #1e1f22
+  cursor: pointer
+
+  .spoilerText
+    opacity: 0
+
+  &:hover:not(.revealed)
+    background-color: #111214
+
+.revealed
+  background-color: rgba(255, 255, 255, .1)
+  cursor: text
+
+  .spoilerText
+    opacity: 1
+
+.quote
+  margin: 2px 0
+  padding: 0 8px 0 12px
+  border-left: 4px solid var(--interactive-muted)
+  border-radius: 4px 0 0 4px
+
+.heading
+  margin: 8px 0 4px
+  color: var(--header-primary)
+  line-height: 1.375
+
+h1.heading
+  font-size: 1.5rem
+
+h2.heading
+  font-size: 1.25rem
+
+h3.heading
+  font-size: 1rem
+
+.bullet
+  position: relative
+  padding-left: 20px
+
+  &::before
+    content: '•'
+    position: absolute
+    left: 6px
+
+.jumbo
+  font-size: 48px
+  line-height: 1.2

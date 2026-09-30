@@ -1,0 +1,181 @@
+.message
+  position: relative
+  margin-top: 17px
+  padding: 2px 48px 2px 72px
+  min-height: 44px
+
+  &:hover
+    background-color: var(--bg-message-hover)
+
+    .hoverTime
+      visibility: visible
+
+.grouped
+  margin-top: 0
+  min-height: 0
+
+.mentioned
+  background-color: var(--bg-mention)
+
+  &::before
+    content: ''
+    position: absolute
+    left: 0
+    top: 0
+    bottom: 0
+    width: 2px
+    background-color: var(--yellow)
+
+  &:hover
+    background-color: rgba(250, 168, 26, .08)
+
+.row
+  display: flex
+
+.gutter
+  position: absolute
+  left: 16px
+  width: 40px
+  display: flex
+  justify-content: center
+
+  .message:not(.grouped) &
+    top: 4px
+
+  .message.message .reply ~ .row &
+    top: 26px
+
+.hoverTime
+  visibility: hidden
+  margin-top: 3px
+  color: var(--text-muted)
+  font-size: 11px
+  line-height: 1.375rem
+  white-space: nowrap
+
+.contents
+  flex: 1
+  min-width: 0
+
+.header
+  display: flex
+  align-items: baseline
+  gap: 8px
+  font-size: 16px
+  font-weight: 500
+  line-height: 1.375rem
+
+.username
+  color: var(--header-primary)
+  font-weight: 500
+  cursor: pointer
+
+  &:hover
+    text-decoration: underline
+
+.botTag
+  align-self: center
+  padding: 0 4px
+  border-radius: 3px
+  background-color: var(--brand)
+  color: #fff
+  font-size: 10px
+  font-weight: 600
+  line-height: 15px
+
+.time
+  color: var(--text-muted)
+  font-size: 12px
+  font-weight: 400
+
+.body
+  color: var(--text-normal)
+  font-size: 16px
+  line-height: 1.375rem
+  white-space: pre-wrap
+  word-wrap: break-word
+
+.edited
+  margin-left: 4px
+  color: var(--text-muted)
+  font-size: 10px
+  cursor: default
+
+.reply
+  position: relative
+  display: flex
+  align-items: center
+  gap: 4px
+  margin-bottom: 4px
+  color: var(--text-muted)
+  font-size: 14px
+  line-height: 1.125rem
+
+.replySpine
+  position: absolute
+  left: -36px
+  top: 50%
+  width: 33px
+  height: 12px
+  border-left: 2px solid var(--interactive-muted)
+  border-top: 2px solid var(--interactive-muted)
+  border-top-left-radius: 6px
+
+.replyName
+  flex-shrink: 0
+  color: var(--header-primary)
+  font-weight: 500
+  opacity: .64
+
+.replyContent
+  overflow: hidden
+  text-overflow: ellipsis
+  white-space: nowrap
+  cursor: pointer
+
+  &:hover
+    color: var(--interactive-hover)
+
+.replyDeleted
+  font-style: italic
+
+.reactions
+  display: flex
+  flex-wrap: wrap
+  gap: 4px
+  padding: 4px 0 2px
+
+.reaction
+  display: flex
+  align-items: center
+  gap: 6px
+  height: 24px
+  padding: 2px 6px
+  border: 1px solid transparent
+  border-radius: 8px
+  background-color: var(--bg-secondary)
+  transition: background-color .1s, border-color .1s
+
+  &:hover
+    border-color: var(--bg-accent)
+    background-color: var(--bg-modifier-hover)
+
+.reactionMe
+  border-color: var(--brand)
+  background-color: rgba(88, 101, 242, .15)
+
+  .reactionCount
+    color: #dee0fc
+
+  &:hover
+    border-color: var(--brand)
+
+.reactionEmoji
+  font-size: 16px
+  line-height: 1
+
+.reactionCount
+  min-width: 9px
+  color: var(--interactive-normal)
+  font-size: 14px
+  font-weight: 600
