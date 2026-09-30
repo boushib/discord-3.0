@@ -1,6 +1,7 @@
 'use client'
 
 import { useSelector } from '../../hooks'
+import Settings from '../Settings'
 import CreateChannelModal from './CreateChannelModal'
 import CreateServerModal from './CreateServerModal'
 import DeleteMessageModal from './DeleteMessageModal'
@@ -20,6 +21,8 @@ const ModalRoot = () => {
       return <InviteModal serverId={modal.serverId} />
     case 'leaveServer':
       return <LeaveServerModal serverId={modal.serverId} />
+    case 'settings':
+      return <Settings />
     case 'deleteMessage':
       return <DeleteMessageModal channelId={modal.channelId} messageId={modal.messageId} />
     default:

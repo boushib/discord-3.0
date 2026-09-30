@@ -1,0 +1,365 @@
+.settings
+  position: fixed
+  inset: 0
+  z-index: 700
+  display: flex
+  background-color: var(--bg-primary)
+  animation: enter .2s ease-out
+
+@keyframes enter
+  from
+    opacity: 0
+    transform: scale(1.05)
+
+.sidebar
+  flex: 1 0 218px
+  display: flex
+  justify-content: flex-end
+  background-color: var(--bg-secondary)
+
+.sidebarInner
+  width: 218px
+  padding: 60px 6px 60px 20px
+
+.navHeading
+  padding: 6px 10px
+  color: var(--text-muted)
+  font-size: 12px
+  font-weight: 700
+  text-transform: uppercase
+
+.navItem
+  width: 100%
+  margin-bottom: 2px
+  padding: 6px 10px
+  border-radius: 4px
+  color: var(--interactive-normal)
+  font-size: 16px
+  font-weight: 500
+  text-align: left
+
+  &:hover
+    background-color: var(--bg-modifier-hover)
+    color: var(--interactive-hover)
+
+.navItemActive, .navItemActive:hover
+  background-color: var(--bg-modifier-selected)
+  color: var(--interactive-active)
+
+.navDanger, .navDanger:hover
+  color: var(--red)
+
+.navSeparator
+  height: 1px
+  margin: 8px 10px
+  background-color: var(--divider)
+
+.version
+  padding: 8px 10px
+  color: var(--text-muted)
+  font-size: 12px
+
+.content
+  flex: 1 1 800px
+  display: flex
+
+.contentInner
+  width: 100%
+  max-width: 740px
+  padding: 60px 40px 80px
+
+.closeColumn
+  flex-shrink: 0
+  display: flex
+  flex-direction: column
+  align-items: center
+  gap: 8px
+  padding-top: 60px
+  width: 72px
+
+.close
+  width: 36px
+  height: 36px
+  display: flex
+  align-items: center
+  justify-content: center
+  border: 2px solid var(--interactive-normal)
+  border-radius: 50%
+  color: var(--interactive-normal)
+
+  &:hover
+    border-color: var(--interactive-hover)
+    background-color: var(--bg-modifier-hover)
+    color: var(--interactive-hover)
+
+.closeHint
+  color: var(--interactive-normal)
+  font-size: 13px
+  font-weight: 600
+
+.title
+  margin-bottom: 20px
+  color: var(--header-primary)
+  font-size: 20px
+  font-weight: 700
+
+.subtitle
+  margin-bottom: 12px
+  color: var(--header-secondary)
+  font-size: 12px
+  font-weight: 700
+  text-transform: uppercase
+
+.divider
+  height: 1px
+  margin: 32px 0
+  background-color: var(--divider)
+
+.accountCard
+  overflow: hidden
+  border-radius: 8px
+  background-color: var(--bg-tertiary)
+
+.accountBanner
+  height: 100px
+
+.accountHeader
+  display: flex
+  align-items: flex-end
+  gap: 16px
+  padding: 0 16px
+  margin-top: -32px
+
+.accountAvatar
+  border: 7px solid var(--bg-tertiary)
+  border-radius: 50%
+
+.accountName
+  flex: 1
+  margin-bottom: 18px
+  color: var(--header-primary)
+  font-size: 20px
+  font-weight: 700
+
+  & + button
+    margin-bottom: 16px
+
+.accountFields
+  margin: 8px 16px 16px
+  padding: 16px
+  border-radius: 8px
+  background-color: var(--bg-secondary)
+
+.accountRow
+  display: flex
+  align-items: center
+  justify-content: space-between
+  padding: 8px 0
+
+  & + &
+    margin-top: 16px
+
+  button
+    min-width: 60px
+    height: 32px
+
+.fieldLabel
+  display: block
+  margin-bottom: 8px
+  color: var(--header-secondary)
+  font-size: 12px
+  font-weight: 700
+  text-transform: uppercase
+
+.fieldValue
+  color: var(--header-primary)
+
+.profileLayout
+  display: grid
+  grid-template-columns: 1fr 300px
+  gap: 32px
+
+  @media (max-width: 1000px)
+    grid-template-columns: 1fr
+
+.profileForm
+  min-width: 0
+
+.field
+  position: relative
+  display: block
+  margin-bottom: 24px
+
+  input:not([type=color]), textarea
+    width: 100%
+    padding: 10px
+    border-radius: 4px
+    background-color: var(--bg-input)
+    color: var(--text-normal)
+    font-size: 16px
+    resize: none
+
+.counter
+  position: absolute
+  right: 10px
+  bottom: 8px
+  color: var(--text-muted)
+  font-size: 12px
+
+.swatches
+  display: flex
+  flex-wrap: wrap
+  gap: 8px
+
+.swatch
+  width: 40px
+  height: 40px
+  border-radius: 4px
+  border: 2px solid transparent
+
+.swatchActive
+  border-color: #fff
+  box-shadow: 0 0 0 2px var(--bg-primary) inset
+
+.colorInput
+  width: 40px
+  height: 40px
+  padding: 0
+  border: none
+  border-radius: 4px
+  background: none
+  cursor: pointer
+
+.preview
+  position: relative
+  overflow: hidden
+  border-radius: 8px
+  background-color: var(--bg-floating)
+  box-shadow: var(--elevation-high)
+
+.previewBanner
+  height: 105px
+
+.previewAvatar
+  position: absolute
+  top: 61px
+  left: 16px
+  border: 6px solid var(--bg-floating)
+  border-radius: 50%
+
+.previewBody
+  padding: 52px 16px 16px
+
+.previewName
+  color: var(--header-primary)
+  font-size: 20px
+  font-weight: 700
+
+.previewUsername
+  color: var(--header-primary)
+  font-size: 14px
+
+.previewStatus
+  margin-top: 8px
+  color: var(--text-normal)
+  font-size: 14px
+
+.previewHeading
+  margin: 16px 0 6px
+  color: var(--header-primary)
+  font-size: 12px
+  font-weight: 700
+  text-transform: uppercase
+
+.previewBio
+  color: var(--text-normal)
+  font-size: 14px
+  white-space: pre-wrap
+
+.unsaved
+  position: fixed
+  left: 50%
+  bottom: 20px
+  z-index: 1
+  width: min(700px, calc(100vw - 40px))
+  display: flex
+  align-items: center
+  gap: 8px
+  padding: 10px 10px 10px 16px
+  border-radius: 8px
+  background-color: var(--bg-floating)
+  box-shadow: var(--elevation-high)
+  transform: translateX(-50%)
+  animation: slide .25s cubic-bezier(.3, 1.4, .6, 1)
+
+  span
+    flex: 1
+    color: var(--header-primary)
+    font-weight: 500
+
+@keyframes slide
+  from
+    transform: translate(-50%, 120%)
+
+.themes
+  display: flex
+  gap: 16px
+
+.theme
+  width: 60px
+  height: 60px
+  border-radius: 50%
+  border: 2px solid var(--bg-accent)
+
+.themeActive
+  border-color: var(--brand)
+
+.radios
+  display: flex
+  flex-direction: column
+  gap: 8px
+
+.radioRow
+  display: flex
+  align-items: center
+  gap: 12px
+  padding: 10px
+  border-radius: 4px
+  background-color: var(--bg-secondary)
+  cursor: pointer
+
+  &:hover
+    background-color: var(--bg-modifier-hover)
+
+  > span:last-child
+    display: flex
+    flex-direction: column
+
+.radioRowActive, .radioRowActive:hover
+  background-color: var(--bg-modifier-selected)
+
+  .radio
+    border-color: #fff
+
+    &::after
+      content: ''
+      position: absolute
+      inset: 3px
+      border-radius: 50%
+      background-color: #fff
+
+.radio
+  position: relative
+  width: 20px
+  height: 20px
+  flex-shrink: 0
+  border: 2px solid var(--interactive-normal)
+  border-radius: 50%
+
+.radioLabel
+  color: var(--header-primary)
+  font-weight: 500
+
+.radioDescription
+  color: var(--header-secondary)
+  font-size: 14px

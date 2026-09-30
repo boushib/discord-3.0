@@ -59,7 +59,7 @@ const ReplyPreview = ({ message, server }: { message: MessageType; server?: Serv
   )
 }
 
-const Message = ({ message, server, grouped, preview }: Props) => {
+const Message = ({ message, server, grouped: groupedProp, preview }: Props) => {
   const dispatch = useAppDispatch()
   const [contextMenu, setContextMenu] = useState<DOMRect | null>(null)
   const editing = useSelector(
@@ -67,6 +67,9 @@ const Message = ({ message, server, grouped, preview }: Props) => {
   )
   const author = useSelector(s => s.users.byId[message.authorId])
   const users = useSelector(s => s.users.byId)
+  const compact = useSelector(s => s.prefs.compactMode && !preview)
+  // Compact mode shows the author on every line
+  const grouped = groupedProp && !compact
   const mentioned = useSelector(s => message.authorId !== CURRENT_USER_ID && isMention(s, message))
   const color = roleColorIn(server, author.id)
 
@@ -76,6 +79,7 @@ const Message = ({ message, server, grouped, preview }: Props) => {
       className={classNames(
         styles.message,
         grouped && styles.grouped,
+        compact && styles.compact,
         mentioned && styles.mentioned,
         (editing || contextMenu) && styles.active
       )}
