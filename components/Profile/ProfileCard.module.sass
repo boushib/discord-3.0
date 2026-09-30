@@ -1,0 +1,157 @@
+.card
+  position: relative
+  width: 300px
+  overflow: hidden
+  border-radius: 8px
+  background-color: var(--bg-floating)
+  box-shadow: var(--elevation-high), 0 0 0 1px rgba(255, 255, 255, .04)
+
+.banner
+  height: 105px
+
+.avatar
+  position: absolute
+  top: 61px
+  left: 16px
+  border: 6px solid var(--bg-floating)
+  border-radius: 50%
+
+.bubble
+  position: absolute
+  top: 76px
+  left: 120px
+  max-width: 164px
+  padding: 6px 10px
+  border-radius: 12px
+  background-color: var(--bg-secondary)
+  color: var(--text-normal)
+  font-size: 14px
+  box-shadow: var(--elevation-low)
+
+  &::before
+    content: ''
+    position: absolute
+    left: -6px
+    top: 14px
+    width: 10px
+    height: 10px
+    border-radius: 50%
+    background-color: var(--bg-secondary)
+
+.body
+  padding: 52px 16px 16px
+
+.names
+  margin-bottom: 12px
+
+.displayName
+  color: var(--header-primary)
+  font-size: 20px
+  font-weight: 700
+  line-height: 1.2
+
+.username
+  display: flex
+  align-items: center
+  gap: 6px
+  color: var(--header-primary)
+  font-size: 14px
+
+.botTag
+  padding: 0 4px
+  border-radius: 3px
+  background-color: var(--brand)
+  color: #fff
+  font-size: 10px
+  font-weight: 600
+
+.section
+  padding: 12px
+  border-radius: 8px
+  background-color: var(--bg-secondary-alt)
+
+.heading
+  margin: 12px 0 6px
+  color: var(--header-primary)
+  font-size: 12px
+  font-weight: 700
+  text-transform: uppercase
+
+  &:first-child
+    margin-top: 0
+
+.bio
+  color: var(--text-normal)
+  font-size: 14px
+  white-space: pre-wrap
+
+.since
+  display: flex
+  align-items: center
+  gap: 8px
+  color: var(--text-normal)
+  font-size: 14px
+
+  svg
+    color: var(--interactive-normal)
+
+.dot
+  width: 4px
+  height: 4px
+  border-radius: 50%
+  background-color: var(--interactive-muted)
+
+.roles
+  display: flex
+  flex-wrap: wrap
+  gap: 4px
+
+.role
+  display: flex
+  align-items: center
+  gap: 4px
+  padding: 2px 6px
+  border-radius: 4px
+  background-color: var(--bg-primary)
+  color: var(--text-normal)
+  font-size: 12px
+  font-weight: 500
+
+.roleDot
+  width: 12px
+  height: 12px
+  border-radius: 50%
+
+.message
+  width: 100%
+  height: 40px
+  margin-top: 12px
+  padding: 0 12px
+  border: 1px solid var(--bg-accent)
+  border-radius: 8px
+  background-color: var(--bg-secondary-alt)
+  color: var(--text-normal)
+  font-size: 14px
+
+  &::placeholder
+    color: var(--text-muted)
+
+  &:focus
+    border-color: var(--text-link)
+
+.edit
+  width: 100%
+  height: 36px
+  margin-top: 12px
+  display: flex
+  align-items: center
+  justify-content: center
+  gap: 8px
+  border-radius: 4px
+  background-color: var(--bg-accent)
+  color: #fff
+  font-size: 14px
+  font-weight: 500
+
+  &:hover
+    background-color: #6d6f78

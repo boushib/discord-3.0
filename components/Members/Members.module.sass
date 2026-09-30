@@ -1,17 +1,16 @@
 .members
   width: 240px
-  padding: 16px 12px
   flex-shrink: 0
+  padding: 0 8px 20px 8px
   background-color: var(--bg-secondary)
-  overflow-y: auto
 
-  &__label
-    font-size: 13px
-    font-weight: 500
-    text-transform: uppercase
-    color: var(--text-muted)
-    letter-spacing: 0.5px
-    padding: 4px 8px
+  @media (max-width: 1100px)
+    display: none
 
-  &__team
-    margin-bottom: 24px
+.label
+  padding: 24px 8px 4px
+  color: var(--text-muted)
+  font-size: 12px
+  font-weight: 600
+  letter-spacing: .02em
+  text-transform: uppercase

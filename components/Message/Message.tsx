@@ -12,6 +12,7 @@ import { displayNameIn, isMention, roleColorIn } from '../../store/selectors'
 import Avatar from '../Avatar'
 import Markdown from '../Markdown'
 import Popover from '../Popover'
+import { ProfileTrigger } from '../Profile'
 import Tooltip from '../Tooltip'
 import { MessageMenu, MessageToolbar } from './MessageActions'
 import MessageEditor from './MessageEditor'
@@ -95,15 +96,17 @@ const Message = ({ message, server, grouped, preview }: Props) => {
               {formatTime(message.createdAt)}
             </time>
           ) : (
-            <Avatar user={author} size={40} />
+            <ProfileTrigger userId={author.id} server={server} className={styles.avatarButton}>
+              <Avatar user={author} size={40} />
+            </ProfileTrigger>
           )}
         </div>
         <div className={styles.contents}>
           {!grouped && (
             <h3 className={styles.header}>
-              <span className={styles.username} style={{ color }}>
-                {displayNameIn(server, author)}
-              </span>
+              <ProfileTrigger userId={author.id} server={server} className={styles.username}>
+                <span style={{ color }}>{displayNameIn(server, author)}</span>
+              </ProfileTrigger>
               {author.bot && <span className={styles.botTag}>✓ BOT</span>}
               <Tooltip label={formatFull(message.createdAt)}>
                 <time className={styles.time} dateTime={new Date(message.createdAt).toISOString()}>
