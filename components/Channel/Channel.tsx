@@ -1,14 +1,16 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { useStore } from 'react-redux'
 import { useAppDispatch, useFileUploads, useSelector } from '../../hooks'
-import { markRead, rememberChannel, setSearch } from '../../store'
+import { markRead, rememberChannel, setSearch, type RootState } from '../../store'
 import { findChannel, selectMessages } from '../../store/selectors'
 import Members from '../Members'
 import MessageBox from '../MessageBox'
 import MessageList from './MessageList'
 import ChannelHeader from './ChannelHeader'
 import { DMCall, VoiceChannelView } from '../Voice'
+import SearchPanel from './SearchPanel'
 import ThreadPanel from './ThreadPanel'
 import styles from './Channel.module.sass'
 
@@ -18,6 +20,7 @@ const Channel = ({ channelId }: { channelId: string }) => {
   const messageCount = useSelector(s => selectMessages(s, channelId).length)
   const memberListOpen = useSelector(s => s.prefs.memberListOpen)
   // Only show the open thread if it belongs to this channel
+  const searchOpen = useSelector(s => s.ui.searchOpen)
   const openThreadId = useSelector(s => {
     const id = s.ui.openThreadId
     return id && s.threads[id]?.parentChannelId === channelId ? id : null
@@ -30,9 +33,12 @@ const Channel = ({ channelId }: { channelId: string }) => {
     dispatch(markRead(channelId))
   }, [dispatch, channelId, messageCount])
 
+  const store = useStore<RootState>()
+  // A stale query shouldn't follow you into another channel, but jumping
+  // from the results panel keeps the search open
   useEffect(() => {
-    dispatch(setSearch(''))
-  }, [dispatch, channelId])
+    if (!store.getState().ui.searchOpen) dispatch(setSearch(''))
+  }, [dispatch, store, channelId])
 
   useEffect(() => {
     if (serverId) dispatch(rememberChannel({ serverId, channelId }))
@@ -78,7 +84,9 @@ const Channel = ({ channelId }: { channelId: string }) => {
         <MessageList key={`list-${channelId}`} channelId={channelId} context={context} />
         <MessageBox key={`box-${channelId}`} channelId={channelId} context={context} />
       </div>
-      {openThreadId ? (
+      {searchOpen ? (
+        <SearchPanel channelId={channelId} context={context} />
+      ) : openThreadId ? (
         <ThreadPanel threadId={openThreadId} />
       ) : (
         context.kind === 'server' && memberListOpen && <Members server={context.server} />

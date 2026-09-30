@@ -14,8 +14,6 @@ import styles from './Channel.module.sass'
 interface Props {
   channelId: string
   context: ChannelContext
-  /** Thread panels don't follow the channel search box */
-  ignoreSearch?: boolean
 }
 
 const shouldGroup = (prev: MessageType | undefined, message: MessageType, newSince: number) =>
@@ -26,9 +24,8 @@ const shouldGroup = (prev: MessageType | undefined, message: MessageType, newSin
   isSameDay(prev.createdAt, message.createdAt) &&
   !(prev.createdAt <= newSince && message.createdAt > newSince)
 
-const MessageList = ({ channelId, context, ignoreSearch }: Props) => {
+const MessageList = ({ channelId, context }: Props) => {
   const messages = useSelector(s => selectMessages(s, channelId))
-  const search = useSelector(s => (ignoreSearch ? '' : s.ui.search.trim().toLowerCase()))
   const lastReadAt = useSelector(s => s.readState.lastReadAt[channelId] ?? s.readState.baseline)
   // Freeze the "new messages" marker at the moment the channel was opened
   const [newSince] = useState(lastReadAt)
@@ -38,9 +35,7 @@ const MessageList = ({ channelId, context, ignoreSearch }: Props) => {
   const [awayAt, setAwayAt] = useState<number | null>(null)
   const server = context.kind === 'server' ? context.server : undefined
 
-  const visible = search
-    ? messages.filter(m => m.content.toLowerCase().includes(search))
-    : messages
+  const visible = messages
   const lastMessage = messages[messages.length - 1]
 
   useLayoutEffect(() => {
@@ -49,7 +44,7 @@ const MessageList = ({ channelId, context, ignoreSearch }: Props) => {
     if (stickToBottom.current || lastMessage?.authorId === CURRENT_USER_ID) {
       el.scrollTop = el.scrollHeight
     }
-  }, [messages.length, lastMessage?.authorId, search])
+  }, [messages.length, lastMessage?.authorId])
 
   const onScroll = () => {
     const el = scrollerRef.current
@@ -79,13 +74,7 @@ const MessageList = ({ channelId, context, ignoreSearch }: Props) => {
     <div className={styles.messagesWrap}>
       <div ref={scrollerRef} className={`${styles.messages} scroller scroller--auto`} onScroll={onScroll}>
         <div className={styles.messagesInner}>
-          {search ? (
-            <div className={styles.searchResults}>
-              {visible.length} result{visible.length === 1 ? '' : 's'} for “{search}”
-            </div>
-          ) : (
-            <ChannelWelcome context={context} />
-          )}
+          <ChannelWelcome context={context} />
           {visible.map((message, i) => {
             const prev = visible[i - 1]
             const newDay = !prev || !isSameDay(prev.createdAt, message.createdAt)
@@ -104,7 +93,7 @@ const MessageList = ({ channelId, context, ignoreSearch }: Props) => {
                 <Message
                   message={message}
                   server={server}
-                  grouped={!search && !newDay && shouldGroup(prev, message, newSince)}
+                  grouped={!newDay && shouldGroup(prev, message, newSince)}
                 />
               </Fragment>
             )

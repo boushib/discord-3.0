@@ -33,7 +33,7 @@ const ThreadPanel = ({ threadId }: { threadId: string }) => {
           </button>
         </Tooltip>
       </header>
-      <MessageList key={`thread-list-${threadId}`} channelId={threadId} context={context} ignoreSearch />
+      <MessageList key={`thread-list-${threadId}`} channelId={threadId} context={context} />
       <MessageBox key={`thread-box-${threadId}`} channelId={threadId} context={context} />
     </aside>
   )

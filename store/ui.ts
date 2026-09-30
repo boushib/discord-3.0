@@ -24,6 +24,8 @@ export interface UIState {
   /** Current call; serverId is '@me' for DM calls */
   voice: { serverId: string; channelId: string; startedAt: number } | null
   search: string
+  /** Search results panel is showing results for `search` */
+  searchOpen: boolean
   mobileNavOpen: boolean
   /** Thread open in the side panel */
   openThreadId: string | null
@@ -40,6 +42,7 @@ const initialState: UIState = {
   typing: {},
   voice: null,
   search: '',
+  searchOpen: false,
   mobileNavOpen: false,
   openThreadId: null,
   autoIdle: false,
@@ -77,6 +80,10 @@ const uiSlice = createSlice({
     },
     setSearch(state, action: PayloadAction<string>) {
       state.search = action.payload
+      if (!action.payload.trim()) state.searchOpen = false
+    },
+    setSearchOpen(state, action: PayloadAction<boolean>) {
+      state.searchOpen = action.payload
     },
     setAutoIdle(state, action: PayloadAction<boolean>) {
       state.autoIdle = action.payload
@@ -110,6 +117,7 @@ export const {
   stopTyping,
   setVoice,
   setSearch,
+  setSearchOpen,
   setMobileNav,
   setOpenThread,
   setAutoIdle,

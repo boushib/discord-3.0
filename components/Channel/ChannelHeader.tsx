@@ -2,8 +2,10 @@
 
 import classNames from 'classnames'
 import { AtSign, Bell, BellOff, CircleHelp, Inbox as InboxIcon, MessagesSquare, Phone, Pin, Search, Users, Video, X } from 'lucide-react'
+import { useState } from 'react'
 import { useAppDispatch, usePopover, useSelector } from '../../hooks'
-import { openModal, setOpenThread, setSearch, toggleMemberList } from '../../store'
+import { openModal, setOpenThread, setSearch, setSearchOpen, toggleMemberList } from '../../store'
+import { SEARCH_FILTERS } from '../../lib/search'
 import { selectChannelThreads, selectRecentMentions } from '../../store/selectors'
 import type { ChannelContext } from '../../store/selectors'
 import Avatar from '../Avatar'
@@ -40,6 +42,7 @@ const ChannelHeader = ({ channelId, context }: { channelId: string; context: Cha
   const dispatch = useAppDispatch()
   const memberListOpen = useSelector(s => s.prefs.memberListOpen)
   const search = useSelector(s => s.ui.search)
+  const [searchFocused, setSearchFocused] = useState(false)
   const pins = usePopover()
   const bell = usePopover()
   const threadsMenu = usePopover()
@@ -118,9 +121,35 @@ const ChannelHeader = ({ channelId, context }: { channelId: string; context: Cha
             value={search}
             placeholder="Search"
             aria-label="Search messages"
+            onFocus={() => setSearchFocused(true)}
+            onBlur={() => setSearchFocused(false)}
             onChange={e => dispatch(setSearch(e.target.value))}
-            onKeyDown={e => e.key === 'Escape' && dispatch(setSearch(''))}
+            onKeyDown={e => {
+              if (e.key === 'Enter' && search.trim()) {
+                dispatch(setSearchOpen(true))
+                e.currentTarget.blur()
+              }
+              if (e.key === 'Escape') dispatch(setSearch(''))
+            }}
           />
+          {searchFocused && (!search || search.endsWith(' ')) && (
+            <div className={styles.searchHints}>
+              <div className={styles.searchHintsTitle}>Search Options</div>
+              {SEARCH_FILTERS.map(f => (
+                <button
+                  key={f.key}
+                  type="button"
+                  className={styles.searchHint}
+                  onMouseDown={e => {
+                    e.preventDefault()
+                    dispatch(setSearch(`${search}${f.key}`))
+                  }}
+                >
+                  <strong>{f.key}</strong> {f.hint}
+                </button>
+              ))}
+            </div>
+          )}
           {search ? (
             <button type="button" aria-label="Clear search" onClick={() => dispatch(setSearch(''))}>
               <X size={16} />

@@ -184,6 +184,7 @@
   color: var(--interactive-active)
 
 .search
+  position: relative
   width: 144px
   height: 24px
   display: flex
@@ -296,3 +297,38 @@
   from
     transform: translateY(8px)
     opacity: 0
+
+.searchHints
+  position: absolute
+  top: calc(100% + 8px)
+  right: 0
+  z-index: 30
+  width: 280px
+  padding: 8px
+  border-radius: 8px
+  background-color: var(--bg-floating)
+  box-shadow: var(--elevation-high)
+
+.searchHintsTitle
+  padding: 4px 8px 8px
+  color: var(--header-secondary)
+  font-size: 12px
+  font-weight: 700
+  text-transform: uppercase
+
+.searchHint
+  width: 100%
+  display: flex
+  gap: 6px
+  padding: 8px
+  border-radius: 4px
+  color: var(--text-muted)
+  font-size: 14px
+  text-align: left
+
+  strong
+    color: var(--header-primary)
+    font-weight: 600
+
+  &:hover
+    background-color: var(--bg-modifier-hover)
