@@ -1,0 +1,345 @@
+.page
+  flex: 1
+  min-width: 0
+  display: flex
+  flex-direction: column
+
+.header
+  height: 48px
+  flex-shrink: 0
+  display: flex
+  align-items: center
+  gap: 8px
+  padding: 0 16px
+  box-shadow: var(--elevation-low)
+  overflow-x: auto
+  scrollbar-width: none
+
+.title
+  display: flex
+  align-items: center
+  gap: 8px
+  color: var(--text-muted)
+
+  h1
+    color: var(--header-primary)
+    font-size: 16px
+    font-weight: 600
+
+.divider
+  width: 1px
+  height: 24px
+  margin: 0 8px
+  background-color: var(--divider)
+
+.tabs
+  display: flex
+  align-items: center
+  gap: 16px
+
+.tab
+  display: flex
+  align-items: center
+  gap: 6px
+  padding: 2px 8px
+  border-radius: 4px
+  color: var(--interactive-normal)
+  font-size: 16px
+  font-weight: 500
+  white-space: nowrap
+
+  &:hover
+    background-color: var(--bg-modifier-hover)
+    color: var(--interactive-hover)
+
+.tabActive, .tabActive:hover
+  background-color: var(--bg-modifier-selected)
+  color: var(--interactive-active)
+
+.addTab
+  padding: 2px 8px
+  border-radius: 4px
+  background-color: var(--green)
+  color: #fff
+  font-size: 14px
+  font-weight: 500
+  white-space: nowrap
+
+.addTabActive
+  background: none
+  color: var(--green)
+
+.badge
+  min-width: 16px
+  height: 16px
+  padding: 0 4px
+  border-radius: 8px
+  background-color: var(--red)
+  color: #fff
+  font-size: 12px
+  font-weight: 700
+  line-height: 16px
+
+.body
+  flex: 1
+  min-height: 0
+  display: flex
+
+.main
+  flex: 1
+  min-width: 0
+  display: flex
+  flex-direction: column
+  padding: 16px 20px 0 30px
+
+.search
+  height: 34px
+  display: flex
+  align-items: center
+  gap: 8px
+  padding: 0 8px
+  border-radius: 4px
+  background-color: var(--bg-tertiary)
+  color: var(--text-muted)
+
+  input
+    flex: 1
+    font-size: 16px
+
+    &::placeholder
+      color: var(--text-muted)
+
+  button
+    display: flex
+    color: var(--interactive-normal)
+
+.count
+  margin: 24px 0 8px
+  color: var(--header-secondary)
+  font-size: 12px
+  font-weight: 600
+  text-transform: uppercase
+
+.list
+  flex: 1
+  margin-right: -20px
+  padding-right: 20px
+
+.row
+  height: 62px
+  display: flex
+  align-items: center
+  gap: 12px
+  margin-left: -10px
+  padding: 0 10px
+  border-top: 1px solid var(--divider)
+  border-radius: 8px
+  cursor: pointer
+
+  &:hover
+    border-color: transparent
+    background-color: var(--bg-modifier-hover)
+
+    & + .row
+      border-color: transparent
+
+    .rowUsername
+      visibility: visible
+
+    .action
+      background-color: var(--bg-tertiary)
+
+.rowText
+  flex: 1
+  min-width: 0
+
+.rowName
+  display: flex
+  align-items: baseline
+  gap: 6px
+  color: var(--header-primary)
+  font-weight: 600
+
+.rowUsername
+  visibility: hidden
+  color: var(--header-secondary)
+  font-size: 14px
+  font-weight: 500
+
+.rowStatus
+  overflow: hidden
+  text-overflow: ellipsis
+  white-space: nowrap
+  color: var(--header-secondary)
+  font-size: 14px
+
+.actions
+  display: flex
+  gap: 10px
+
+.action
+  width: 36px
+  height: 36px
+  display: flex
+  align-items: center
+  justify-content: center
+  border-radius: 50%
+  background-color: var(--bg-secondary)
+  color: var(--interactive-normal)
+
+  &:hover, &[aria-expanded=true]
+    color: var(--interactive-hover)
+
+.actionSuccess:hover
+  color: var(--green)
+
+.actionDanger:hover
+  color: var(--red)
+
+.empty
+  flex: 1
+  display: flex
+  flex-direction: column
+  align-items: center
+  justify-content: center
+  gap: 24px
+  color: var(--text-muted)
+  text-align: center
+
+.wumpus
+  font-size: 96px
+  filter: grayscale(.4)
+
+.add
+  padding-bottom: 20px
+  border-bottom: 1px solid var(--divider)
+
+.addTitle
+  margin-bottom: 8px
+  color: var(--header-primary)
+  font-size: 16px
+  font-weight: 600
+  text-transform: uppercase
+
+.addText
+  margin-bottom: 16px
+  color: var(--header-secondary)
+  font-size: 14px
+
+.addForm
+  display: flex
+  align-items: center
+  gap: 8px
+  padding: 0 12px
+  border: 1px solid var(--bg-tertiary)
+  border-radius: 8px
+  background-color: var(--bg-tertiary)
+
+  &:focus-within
+    border-color: var(--text-link)
+
+  input
+    flex: 1
+    height: 50px
+    font-size: 16px
+
+    &::placeholder
+      color: var(--text-muted)
+
+  button
+    height: 32px
+    padding: 0 16px
+    border-radius: 4px
+    background-color: var(--brand)
+    color: #fff
+    font-size: 14px
+    font-weight: 500
+    white-space: nowrap
+
+    &:disabled
+      opacity: .5
+      cursor: not-allowed
+
+.addFormOk, .addFormOk:focus-within
+  border-color: var(--green)
+
+.addFormError, .addFormError:focus-within
+  border-color: var(--red)
+
+.addResult
+  margin-top: 8px
+  font-size: 14px
+
+.addResultOk
+  color: var(--green)
+
+.addResultError
+  color: var(--red)
+
+.activeNow
+  width: 360px
+  flex-shrink: 0
+  padding: 16px
+  border-left: 1px solid var(--divider)
+  overflow-y: auto
+
+  @media (max-width: 1200px)
+    display: none
+
+.activeTitle
+  margin: 8px 0 16px
+  color: var(--header-primary)
+  font-size: 20px
+  font-weight: 800
+
+.activeEmpty
+  padding: 16px
+  text-align: center
+
+  h3
+    margin-bottom: 4px
+    color: var(--header-primary)
+    font-size: 16px
+    font-weight: 600
+
+  p
+    color: var(--header-secondary)
+    font-size: 14px
+
+.activeCard
+  margin-bottom: 8px
+  padding: 16px
+  border: 1px solid var(--divider)
+  border-radius: 8px
+  background-color: var(--bg-secondary)
+
+.activeHeader
+  display: flex
+  align-items: center
+  gap: 12px
+
+.activeName
+  color: var(--header-primary)
+  font-weight: 600
+
+.activeWhere
+  color: var(--header-secondary)
+  font-size: 12px
+
+.activeVoice
+  display: flex
+  align-items: center
+  gap: 6px
+  margin-top: 12px
+  padding: 8px 10px
+  border-radius: 8px
+  background-color: var(--bg-primary)
+  color: var(--header-secondary)
+  font-size: 14px
+
+.activeAvatars
+  display: flex
+  margin-left: auto
+
+  > * + *
+    margin-left: -4px

@@ -1,10 +1,11 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
+import { CURRENT_USER_ID } from '../constants'
 import { dmsReducer } from './dms'
 import { messagesReducer } from './messages'
 import { loadState, saveState } from './persist'
 import { prefsReducer } from './prefs'
 import { readStateReducer } from './readState'
-import { serversReducer } from './servers'
+import { leaveVoice, serversReducer } from './servers'
 import { uiReducer } from './ui'
 import { usersReducer } from './users'
 
@@ -28,6 +29,9 @@ export const makeStore = () => {
   })
 
   if (isBrowser) {
+    // Voice connections don't survive a reload
+    store.dispatch(leaveVoice(CURRENT_USER_ID))
+
     let timeout: ReturnType<typeof setTimeout> | undefined
     store.subscribe(() => {
       clearTimeout(timeout)
