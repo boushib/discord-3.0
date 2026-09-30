@@ -2,13 +2,16 @@
 
 import { createContext, useCallback, useContext, useMemo, useState } from 'react'
 import { CURRENT_USER_ID } from '../../constants'
-import { useAppDispatch } from '../../hooks'
+import { useAppDispatch, useSelector } from '../../hooks'
 import { ME } from '../../lib/routes'
 import { joinVoice, leaveVoice, setVoice } from '../../store'
+import { useMicrophone } from './useMicrophone'
 
 interface MediaApi {
   camera: MediaStream | null
   screen: MediaStream | null
+  /** Whether your microphone currently picks up speech */
+  speaking: boolean
   error: string | null
   clearError: () => void
   toggleCamera: () => Promise<void>
@@ -38,6 +41,8 @@ export const MediaProvider = ({ children }: { children: React.ReactNode }) => {
   const [camera, setCamera] = useState<MediaStream | null>(null)
   const [screen, setScreen] = useState<MediaStream | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const muted = useSelector(s => s.prefs.muted)
+  const { speaking, start: startMic, stop: stopMic } = useMicrophone(muted, setError)
 
   const toggleCamera = useCallback(async () => {
     if (camera) {
@@ -77,8 +82,9 @@ export const MediaProvider = ({ children }: { children: React.ReactNode }) => {
       if (serverId === ME) dispatch(leaveVoice(CURRENT_USER_ID))
       else dispatch(joinVoice({ serverId, channelId, userId: CURRENT_USER_ID }))
       dispatch(setVoice({ serverId, channelId, startedAt: Date.now() }))
+      void startMic()
     },
-    [dispatch]
+    [dispatch, startMic]
   )
 
   const disconnect = useCallback(() => {
@@ -86,14 +92,16 @@ export const MediaProvider = ({ children }: { children: React.ReactNode }) => {
     stopStream(screen)
     setCamera(null)
     setScreen(null)
+    stopMic()
     dispatch(leaveVoice(CURRENT_USER_ID))
     dispatch(setVoice(null))
-  }, [camera, screen, dispatch])
+  }, [camera, screen, stopMic, dispatch])
 
   const value = useMemo(
     () => ({
       camera,
       screen,
+      speaking,
       error,
       clearError: () => setError(null),
       toggleCamera,
@@ -101,7 +109,7 @@ export const MediaProvider = ({ children }: { children: React.ReactNode }) => {
       join,
       disconnect,
     }),
-    [camera, screen, error, toggleCamera, toggleScreen, join, disconnect]
+    [camera, screen, speaking, error, toggleCamera, toggleScreen, join, disconnect]
   )
 
   return <MediaContext.Provider value={value}>{children}</MediaContext.Provider>

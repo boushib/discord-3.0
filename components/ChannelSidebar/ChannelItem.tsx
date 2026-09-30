@@ -34,7 +34,9 @@ const VoiceUsers = ({ server, userIds }: { server: Server; userIds: string[] }) 
       {userIds.map(id => (
         <li key={id}>
           <ProfileTrigger userId={id} server={server} className={styles.voiceUser}>
-            <Avatar user={users[id]} size={24} />
+            <span className={id === CURRENT_USER_ID && media.speaking ? styles.voiceSpeaking : undefined}>
+              <Avatar user={users[id]} size={24} />
+            </span>
             <span className={styles.voiceUserName}>{displayNameIn(server, users[id])}</span>
             {id === CURRENT_USER_ID && media.screen && <span className={styles.liveBadge}>LIVE</span>}
             {id === CURRENT_USER_ID && media.camera && <Video size={16} className={styles.voiceUserIcon} />}

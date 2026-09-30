@@ -77,7 +77,10 @@ const CallStage = ({ participants, server, compact }: Props) => {
       name={displayNameIn(server, tile.user)}
       stream={tile.stream}
       kind={tile.kind}
-      speaking={tile.kind === 'camera' && speaking.includes(tile.user.id)}
+      speaking={
+        tile.kind === 'camera' &&
+        (tile.user.id === CURRENT_USER_ID ? media.speaking : speaking.includes(tile.user.id))
+      }
       muted={tile.user.id === CURRENT_USER_ID && muted}
       focused={tile.key === focusedKey}
       onClick={() => setChosen(tile.key === focusedKey ? 'grid' : tile.key)}
