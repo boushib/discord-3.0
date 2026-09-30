@@ -34,6 +34,8 @@ const MessageList = ({ channelId, context, ignoreSearch }: Props) => {
   const [newSince] = useState(lastReadAt)
   const scrollerRef = useRef<HTMLDivElement>(null)
   const stickToBottom = useRef(true)
+  // Message count when the user scrolled up, used for the "jump to present" bar
+  const [awayAt, setAwayAt] = useState<number | null>(null)
   const server = context.kind === 'server' ? context.server : undefined
 
   const visible = search
@@ -51,46 +53,75 @@ const MessageList = ({ channelId, context, ignoreSearch }: Props) => {
 
   const onScroll = () => {
     const el = scrollerRef.current
-    if (el) stickToBottom.current = el.scrollHeight - el.scrollTop - el.clientHeight < 120
+    if (!el) return
+    const atBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 120
+    stickToBottom.current = atBottom
+    // Only show the bar once the user is well away from the latest messages
+    const farAway = el.scrollHeight - el.scrollTop - el.clientHeight > 600
+    if (atBottom && awayAt !== null) setAwayAt(null)
+    else if (farAway && awayAt === null) setAwayAt(messages.length)
   }
+
+  const jumpToPresent = () => {
+    const el = scrollerRef.current
+    if (!el) return
+    stickToBottom.current = true
+    setAwayAt(null)
+    el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' })
+  }
+
+  const newWhileAway =
+    awayAt === null ? 0 : messages.slice(awayAt).filter(m => m.authorId !== CURRENT_USER_ID).length
 
   const firstUnread = visible.find(m => m.createdAt > newSince && m.authorId !== CURRENT_USER_ID)
 
   return (
-    <div ref={scrollerRef} className={`${styles.messages} scroller scroller--auto`} onScroll={onScroll}>
-      <div className={styles.messagesInner}>
-        {search ? (
-          <div className={styles.searchResults}>
-            {visible.length} result{visible.length === 1 ? '' : 's'} for “{search}”
-          </div>
-        ) : (
-          <ChannelWelcome context={context} />
-        )}
-        {visible.map((message, i) => {
-          const prev = visible[i - 1]
-          const newDay = !prev || !isSameDay(prev.createdAt, message.createdAt)
-          const isFirstUnread = message === firstUnread
-          return (
-            <Fragment key={message.id}>
-              {(newDay || isFirstUnread) && (
-                <div
-                  className={`${styles.divider} ${isFirstUnread ? styles.dividerNew : ''}`}
-                  role="separator"
-                >
-                  {newDay && <span className={styles.dividerDate}>{formatDateDivider(message.createdAt)}</span>}
-                  {isFirstUnread && <span className={styles.dividerNewTag}>NEW</span>}
-                </div>
-              )}
-              <Message
-                message={message}
-                server={server}
-                grouped={!search && !newDay && shouldGroup(prev, message, newSince)}
-              />
-            </Fragment>
-          )
-        })}
-        <div className={styles.messagesEnd} />
+    <div className={styles.messagesWrap}>
+      <div ref={scrollerRef} className={`${styles.messages} scroller scroller--auto`} onScroll={onScroll}>
+        <div className={styles.messagesInner}>
+          {search ? (
+            <div className={styles.searchResults}>
+              {visible.length} result{visible.length === 1 ? '' : 's'} for “{search}”
+            </div>
+          ) : (
+            <ChannelWelcome context={context} />
+          )}
+          {visible.map((message, i) => {
+            const prev = visible[i - 1]
+            const newDay = !prev || !isSameDay(prev.createdAt, message.createdAt)
+            const isFirstUnread = message === firstUnread
+            return (
+              <Fragment key={message.id}>
+                {(newDay || isFirstUnread) && (
+                  <div
+                    className={`${styles.divider} ${isFirstUnread ? styles.dividerNew : ''}`}
+                    role="separator"
+                  >
+                    {newDay && <span className={styles.dividerDate}>{formatDateDivider(message.createdAt)}</span>}
+                    {isFirstUnread && <span className={styles.dividerNewTag}>NEW</span>}
+                  </div>
+                )}
+                <Message
+                  message={message}
+                  server={server}
+                  grouped={!search && !newDay && shouldGroup(prev, message, newSince)}
+                />
+              </Fragment>
+            )
+          })}
+          <div className={styles.messagesEnd} />
+        </div>
       </div>
+      {awayAt !== null && (
+        <button type="button" className={styles.jumpBar} onClick={jumpToPresent}>
+          <span>
+            {newWhileAway > 0
+              ? `${newWhileAway} new message${newWhileAway === 1 ? '' : 's'}`
+              : 'You’re viewing older messages'}
+          </span>
+          <strong>Jump To Present</strong>
+        </button>
+      )}
     </div>
   )
 }
