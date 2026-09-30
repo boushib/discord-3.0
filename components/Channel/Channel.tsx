@@ -9,6 +9,7 @@ import MessageBox from '../MessageBox'
 import MessageList from './MessageList'
 import ChannelHeader from './ChannelHeader'
 import { DMCall, VoiceChannelView } from '../Voice'
+import ThreadPanel from './ThreadPanel'
 import styles from './Channel.module.sass'
 
 const Channel = ({ channelId }: { channelId: string }) => {
@@ -16,6 +17,11 @@ const Channel = ({ channelId }: { channelId: string }) => {
   const context = useSelector(s => findChannel(s, channelId))
   const messageCount = useSelector(s => selectMessages(s, channelId).length)
   const memberListOpen = useSelector(s => s.prefs.memberListOpen)
+  // Only show the open thread if it belongs to this channel
+  const openThreadId = useSelector(s => {
+    const id = s.ui.openThreadId
+    return id && s.threads[id]?.parentChannelId === channelId ? id : null
+  })
   const serverId = context?.kind === 'server' ? context.server.id : undefined
   const upload = useFileUploads(channelId)
   const [dragging, setDragging] = useState(false)
@@ -72,7 +78,11 @@ const Channel = ({ channelId }: { channelId: string }) => {
         <MessageList key={`list-${channelId}`} channelId={channelId} context={context} />
         <MessageBox key={`box-${channelId}`} channelId={channelId} context={context} />
       </div>
-      {context.kind === 'server' && memberListOpen && <Members server={context.server} />}
+      {openThreadId ? (
+        <ThreadPanel threadId={openThreadId} />
+      ) : (
+        context.kind === 'server' && memberListOpen && <Members server={context.server} />
+      )}
     </>
   )
 }

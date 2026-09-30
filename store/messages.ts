@@ -1,5 +1,6 @@
 import { createSlice, nanoid, PayloadAction } from '@reduxjs/toolkit'
 import { createSeedMessages } from '../constants/seed'
+import { createThread, deleteThread } from './threads'
 import type { Attachment, Message } from '../models'
 
 export type MessagesState = Record<string, Message[]>
@@ -78,6 +79,19 @@ const messagesSlice = createSlice({
       const message = state[action.payload.channelId]?.find(m => m.id === action.payload.messageId)
       if (message) message.pinned = !message.pinned
     },
+  },
+  extraReducers: builder => {
+    builder.addCase(createThread, (state, action) => {
+      const { parentChannelId, parentMessageId, id } = action.payload
+      const message = state[parentChannelId]?.find(m => m.id === parentMessageId)
+      if (message) message.threadId = id
+    })
+    builder.addCase(deleteThread, (state, action) => {
+      delete state[action.payload]
+      for (const list of Object.values(state)) {
+        for (const m of list) if (m.threadId === action.payload) delete m.threadId
+      }
+    })
   },
 })
 

@@ -24,6 +24,8 @@ export interface UIState {
   voice: { serverId: string; channelId: string; startedAt: number } | null
   search: string
   mobileNavOpen: boolean
+  /** Thread open in the side panel */
+  openThreadId: string | null
   /** Files attached in the composer but not sent yet, per channel */
   uploads: Record<string, Attachment[]>
 }
@@ -36,6 +38,7 @@ const initialState: UIState = {
   voice: null,
   search: '',
   mobileNavOpen: false,
+  openThreadId: null,
   uploads: {},
 }
 
@@ -71,6 +74,9 @@ const uiSlice = createSlice({
     setSearch(state, action: PayloadAction<string>) {
       state.search = action.payload
     },
+    setOpenThread(state, action: PayloadAction<string | null>) {
+      state.openThreadId = action.payload
+    },
     setMobileNav(state, action: PayloadAction<boolean>) {
       state.mobileNavOpen = action.payload
     },
@@ -98,6 +104,7 @@ export const {
   setVoice,
   setSearch,
   setMobileNav,
+  setOpenThread,
   addUploads,
   removeUpload,
   clearUploads,

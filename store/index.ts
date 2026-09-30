@@ -6,6 +6,7 @@ import { loadState, saveState } from './persist'
 import { prefsReducer } from './prefs'
 import { readStateReducer } from './readState'
 import { leaveVoice, serversReducer } from './servers'
+import { threadsReducer } from './threads'
 import { uiReducer } from './ui'
 import { usersReducer } from './users'
 
@@ -13,6 +14,7 @@ const rootReducer = combineReducers({
   servers: serversReducer,
   dms: dmsReducer,
   messages: messagesReducer,
+  threads: threadsReducer,
   users: usersReducer,
   readState: readStateReducer,
   prefs: prefsReducer,
@@ -50,5 +52,6 @@ export * from './messages'
 export * from './prefs'
 export * from './readState'
 export * from './servers'
+export * from './threads'
 export * from './ui'
 export * from './users'

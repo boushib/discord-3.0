@@ -14,6 +14,8 @@ import styles from './Channel.module.sass'
 interface Props {
   channelId: string
   context: ChannelContext
+  /** Thread panels don't follow the channel search box */
+  ignoreSearch?: boolean
 }
 
 const shouldGroup = (prev: MessageType | undefined, message: MessageType, newSince: number) =>
@@ -24,9 +26,9 @@ const shouldGroup = (prev: MessageType | undefined, message: MessageType, newSin
   isSameDay(prev.createdAt, message.createdAt) &&
   !(prev.createdAt <= newSince && message.createdAt > newSince)
 
-const MessageList = ({ channelId, context }: Props) => {
+const MessageList = ({ channelId, context, ignoreSearch }: Props) => {
   const messages = useSelector(s => selectMessages(s, channelId))
-  const search = useSelector(s => s.ui.search.trim().toLowerCase())
+  const search = useSelector(s => (ignoreSearch ? '' : s.ui.search.trim().toLowerCase()))
   const lastReadAt = useSelector(s => s.readState.lastReadAt[channelId] ?? s.readState.baseline)
   // Freeze the "new messages" marker at the moment the channel was opened
   const [newSince] = useState(lastReadAt)

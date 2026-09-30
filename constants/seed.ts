@@ -1,5 +1,6 @@
 import type {
   Channel,
+  Thread,
   DMChannel,
   Message,
   Relationship,
@@ -280,7 +281,7 @@ const SEED_CONVERSATIONS: Record<string, SeedLine[]> = {
     ['u-luke', 'Morning everyone ☀️', 26 * 60 + 12],
     ['u-kai', 'gm gm', 26 * 60 + 10],
     ['u-mustapha', 'Reminder: office hours are moving to **Thursday 5pm PT** this week. See #office-hours for details.', 26 * 60, { pinned: true, reactions: [{ emoji: '👍', userIds: ['u-kai', 'u-luke', 'u-sarah'] }] }],
-    ['u-ironman', 'Does anyone remember if they are postponing the Legendary Rookie Revelation drop, or did they scrap it all together?', 95],
+    ['u-ironman', 'Does anyone remember if they are postponing the Legendary Rookie Revelation drop, or did they scrap it all together?', 95, { threadId: 't-rookie-drop' }],
     ['u-sarah', 'Postponed afaik. They said it would be back "soon™"', 93],
     ['u-ironman', 'soon™ is doing a lot of heavy lifting there 😂', 92, { reactions: [{ emoji: '😂', userIds: ['u-sarah', 'u-kai', CURRENT_USER_ID] }] }],
     ['u-ironman', 'guess I’ll hold on to my budget then', 91],
@@ -291,6 +292,11 @@ const SEED_CONVERSATIONS: Record<string, SeedLine[]> = {
     ['u-nina', 'ah ok ty', 28],
     ['u-kai', 'Pro tip: `Ctrl+K` lets you jump between channels fast in this clone 👀', 12, { reactions: [{ emoji: '🔥', userIds: ['u-omar'] }] }],
     ['u-sarah', 'Who’s joining the Lounge voice channel later?', 4],
+  ],
+  't-rookie-drop': [
+    ['u-mustapha', 'Starting a thread so this doesn’t get buried 🧵', 94],
+    ['u-luke', 'Officially postponed, not cancelled. New date should drop with next week’s announcement.', 90],
+    ['u-ironman', 'Perfect, thanks Luke 🙏', 88],
   ],
   'c-dapper-announcements': [
     ['u-mustapha', '## Season 3 is here 🎉\nNew challenges, new rewards, and a revamped leaderboard. Check #challenges for the full breakdown.', 3 * 24 * 60, { reactions: [{ emoji: '🎉', userIds: ['u-kai', 'u-sarah', 'u-ironman', 'u-omar'] }, { emoji: '❤️', userIds: ['u-luke'] }] }],
@@ -372,6 +378,18 @@ export const createSeedMessages = (now: number): Record<string, Message[]> =>
       })),
     ])
   )
+
+export const SEED_THREADS = (now: number): Thread[] => [
+  {
+    id: 't-rookie-drop',
+    name: 'Legendary Rookie Revelation drop',
+    serverId: 's-dapper',
+    parentChannelId: 'c-dapper-general',
+    parentMessageId: 'm-c-dapper-general-3',
+    ownerId: 'u-mustapha',
+    createdAt: now - 94 * MINUTE,
+  },
+]
 
 /** Channels that start with unread messages */
 export const SEED_UNREAD = ['c-ts-general', 'c-dapper-announcements', 'dm-sarah', 'c-et-memes', 'c-next-general']

@@ -9,8 +9,8 @@ import { CURRENT_USER_ID } from '../../constants'
 import { useAppDispatch, useSelector } from '../../hooks'
 import { channelHref } from '../../lib/routes'
 import type { Channel, Server } from '../../models'
-import { markRead, openModal, toggleChannelMute } from '../../store'
-import { displayNameIn, selectIsUnread, selectMentionCount } from '../../store/selectors'
+import { markRead, openModal, setOpenThread, toggleChannelMute } from '../../store'
+import { displayNameIn, selectChannelThreads, selectIsUnread, selectMentionCount } from '../../store/selectors'
 import Avatar from '../Avatar'
 import { ProfileTrigger } from '../Profile'
 import Popover, { Menu, MenuItem, MenuSeparator } from '../Popover'
@@ -40,6 +40,34 @@ const VoiceUsers = ({ server, userIds }: { server: Server; userIds: string[] }) 
             {id === CURRENT_USER_ID && media.camera && <Video size={16} className={styles.voiceUserIcon} />}
             {id === CURRENT_USER_ID && muted && <MicOff size={16} className={styles.voiceUserIcon} />}
           </ProfileTrigger>
+        </li>
+      ))}
+    </ul>
+  )
+}
+
+/** Active threads nested under their parent channel */
+const ChannelThreads = ({ serverId, channelId }: { serverId: string; channelId: string }) => {
+  const dispatch = useAppDispatch()
+  const router = useRouter()
+  const threads = useSelector(s => selectChannelThreads(s, channelId))
+  const openId = useSelector(s => s.ui.openThreadId)
+  if (!threads.length) return null
+  return (
+    <ul className={styles.threads}>
+      {threads.slice(0, 5).map(thread => (
+        <li key={thread.id}>
+          <button
+            type="button"
+            className={classNames(styles.thread, openId === thread.id && styles.threadActive)}
+            onClick={() => {
+              router.push(channelHref(serverId, channelId))
+              dispatch(setOpenThread(thread.id))
+            }}
+          >
+            <span className={styles.threadSpine} />
+            <span className={styles.threadName}>{thread.name}</span>
+          </button>
         </li>
       ))}
     </ul>
@@ -182,6 +210,7 @@ const ChannelItem = ({ server, channel, active }: Props) => {
       >
         {content}
       </Link>
+      <ChannelThreads serverId={server.id} channelId={channel.id} />
       {contextMenu}
     </div>
   )

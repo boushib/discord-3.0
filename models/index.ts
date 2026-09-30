@@ -98,6 +98,8 @@ export interface Message {
   reactions: Reaction[]
   pinned?: boolean
   attachments?: Attachment[]
+  /** Set on the message a thread was started from */
+  threadId?: string
   sticker?: { id: string; name: string; emoji: string }
   gift?: { plan: 'Nitro' | 'Nitro Basic'; months: number; claimedBy?: string }
 }
@@ -107,4 +109,14 @@ export type RelationshipType = 'friend' | 'incoming' | 'outgoing' | 'blocked'
 export interface Relationship {
   userId: string
   type: RelationshipType
+}
+
+export interface Thread {
+  id: string
+  name: string
+  serverId: string
+  parentChannelId: string
+  parentMessageId: string
+  ownerId: string
+  createdAt: number
 }

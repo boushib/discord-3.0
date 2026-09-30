@@ -1,15 +1,15 @@
 'use client'
 
 import classNames from 'classnames'
-import { AtSign, Bell, BellOff, CircleHelp, Inbox as InboxIcon, Phone, Pin, Search, Users, Video, X } from 'lucide-react'
+import { AtSign, Bell, BellOff, CircleHelp, Inbox as InboxIcon, MessagesSquare, Phone, Pin, Search, Users, Video, X } from 'lucide-react'
 import { useAppDispatch, usePopover, useSelector } from '../../hooks'
-import { openModal, setSearch, toggleMemberList } from '../../store'
-import { selectRecentMentions } from '../../store/selectors'
+import { openModal, setOpenThread, setSearch, toggleMemberList } from '../../store'
+import { selectChannelThreads, selectRecentMentions } from '../../store/selectors'
 import type { ChannelContext } from '../../store/selectors'
 import Avatar from '../Avatar'
 import ChannelTypeIcon from '../ChannelTypeIcon'
 import MobileNavButton from '../MobileNavButton'
-import Popover from '../Popover'
+import Popover, { Menu, MenuItem } from '../Popover'
 import Tooltip from '../Tooltip'
 import { useMedia } from '../Voice'
 import Inbox from './Inbox'
@@ -42,6 +42,8 @@ const ChannelHeader = ({ channelId, context }: { channelId: string; context: Cha
   const search = useSelector(s => s.ui.search)
   const pins = usePopover()
   const bell = usePopover()
+  const threadsMenu = usePopover()
+  const threads = useSelector(s => selectChannelThreads(s, channelId))
   const inbox = usePopover()
   const muted = useSelector(s => s.prefs.mutedChannels.includes(channelId))
   const hasMentions = useSelector(s => selectRecentMentions(s).length > 0)
@@ -89,9 +91,14 @@ const ChannelHeader = ({ channelId, context }: { channelId: string; context: Cha
             </IconButton>
           </>
         ) : (
-          <IconButton label="Notification Settings" active={!!bell.anchor} {...bell.triggerProps}>
-            {muted ? <BellOff size={20} /> : <Bell size={20} />}
-          </IconButton>
+          <>
+            <IconButton label="Threads" active={!!threadsMenu.anchor} {...threadsMenu.triggerProps}>
+              <MessagesSquare size={20} />
+            </IconButton>
+            <IconButton label="Notification Settings" active={!!bell.anchor} {...bell.triggerProps}>
+              {muted ? <BellOff size={20} /> : <Bell size={20} />}
+            </IconButton>
+          </>
         )}
         <IconButton label="Pinned Messages" active={!!pins.anchor} {...pins.triggerProps}>
           <Pin size={20} />
@@ -134,6 +141,29 @@ const ChannelHeader = ({ channelId, context }: { channelId: string; context: Cha
         </IconButton>
       </div>
 
+      {threadsMenu.anchor && (
+        <Popover anchor={threadsMenu.anchor} placement="bottom-end" onClose={threadsMenu.close}>
+          <Menu className={styles.threadsMenu}>
+            {threads.length ? (
+              threads.map(t => (
+                <MenuItem
+                  key={t.id}
+                  label={t.name}
+                  icon={<MessagesSquare size={16} />}
+                  onClick={() => {
+                    threadsMenu.close()
+                    dispatch(setOpenThread(t.id))
+                  }}
+                />
+              ))
+            ) : (
+              <p className={styles.threadsEmpty}>
+                No threads yet. Hover a message and click the thread icon to start one.
+              </p>
+            )}
+          </Menu>
+        </Popover>
+      )}
       {bell.anchor && (
         <Popover anchor={bell.anchor} placement="bottom-end" onClose={bell.close}>
           <NotificationMenu channelId={channelId} onDone={bell.close} />

@@ -1,16 +1,18 @@
 'use client'
 
 import classNames from 'classnames'
-import { Copy, Ellipsis, EyeOff, Hash, Pencil, Pin, Reply, SmilePlus, Trash } from 'lucide-react'
+import { Copy, Ellipsis, EyeOff, Hash, MessagesSquare, Pencil, Pin, Reply, SmilePlus, Trash } from 'lucide-react'
 import { CURRENT_USER_ID, QUICK_REACTIONS } from '../../constants'
 import { emojiName } from '../../constants/emojis'
-import { useAppDispatch, usePopover } from '../../hooks'
+import { useAppDispatch, usePopover, useSelector } from '../../hooks'
 import type { Message } from '../../models'
 import {
+  createThread,
   deleteMessage,
   markUnread,
   openModal,
   setEditing,
+  setOpenThread,
   setReplyTo,
   togglePin,
   toggleReaction,
@@ -23,7 +25,28 @@ import styles from './Message.module.sass'
 export const useMessageActions = (message: Message) => {
   const dispatch = useAppDispatch()
   const { channelId, id: messageId } = message
+  // Threads can be started from server channel messages (not DMs or other threads)
+  const threadServerId = useSelector(s => {
+    if (s.threads[channelId]) return null
+    return s.servers.order.find(id => s.servers.byId[id].channels.some(c => c.id === channelId)) ?? null
+  })
   return {
+    canThread: threadServerId !== null,
+    thread: () => {
+      if (message.threadId) return dispatch(setOpenThread(message.threadId))
+      if (!threadServerId) return
+      const text = message.content.replace(/[*_~`|>#]/g, '').trim()
+      const action = dispatch(
+        createThread({
+          name: text ? text.slice(0, 48) + (text.length > 48 ? '…' : '') : 'New Thread',
+          serverId: threadServerId,
+          parentChannelId: channelId,
+          parentMessageId: messageId,
+          ownerId: CURRENT_USER_ID,
+        })
+      )
+      dispatch(setOpenThread(action.payload.id))
+    },
     react: (emoji: string) =>
       dispatch(toggleReaction({ channelId, messageId, emoji, userId: CURRENT_USER_ID })),
     reply: () => {
@@ -59,6 +82,13 @@ export const MessageMenu = ({ message, onDone }: { message: Message; onDone: () 
       <MenuSeparator />
       {own && <MenuItem label="Edit Message" icon={<Pencil size={16} />} onClick={run(() => actions.edit())} />}
       <MenuItem label="Reply" icon={<Reply size={16} />} onClick={run(() => actions.reply())} />
+      {actions.canThread && (
+        <MenuItem
+          label={message.threadId ? 'Open Thread' : 'Create Thread'}
+          icon={<MessagesSquare size={16} />}
+          onClick={run(() => actions.thread())}
+        />
+      )}
       <MenuItem
         label={message.pinned ? 'Unpin Message' : 'Pin Message'}
         icon={<Pin size={16} />}
@@ -114,6 +144,13 @@ export const MessageToolbar = ({ message }: { message: Message }) => {
         <Tooltip label="Reply">
           <button type="button" className={styles.toolbarButton} aria-label="Reply" onClick={actions.reply}>
             <Reply size={20} />
+          </button>
+        </Tooltip>
+      )}
+      {actions.canThread && (
+        <Tooltip label={message.threadId ? 'Open Thread' : 'Create Thread'}>
+          <button type="button" className={styles.toolbarButton} aria-label="Create Thread" onClick={actions.thread}>
+            <MessagesSquare size={19} />
           </button>
         </Tooltip>
       )}

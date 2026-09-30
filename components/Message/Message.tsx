@@ -18,6 +18,7 @@ import Tooltip from '../Tooltip'
 import { MessageMenu, MessageToolbar } from './MessageActions'
 import MessageEditor from './MessageEditor'
 import { GiftEmbed, ImageEmbed, isImageLink, StickerView } from './RichContent'
+import ThreadSummary from './ThreadSummary'
 import styles from './Message.module.sass'
 
 interface Props {
@@ -147,6 +148,7 @@ const Message = ({ message, server, grouped: groupedProp, preview }: Props) => {
               )}
             </div>
           )}
+          {message.threadId && !preview && <ThreadSummary threadId={message.threadId} />}
           {message.attachments && message.attachments.length > 0 && (
             <Attachments attachments={message.attachments} />
           )}

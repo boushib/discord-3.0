@@ -24,7 +24,16 @@ const ChannelWelcome = ({ context }: { context: ChannelContext }) => {
     )
   }
 
-  const { channel } = context
+  const { channel, thread } = context
+  if (thread) {
+    return (
+      <div className={styles.welcome}>
+        <div className={styles.welcomeIcon}>🧵</div>
+        <h1 className={styles.welcomeTitle}>{thread.name}</h1>
+        <p className={styles.welcomeText}>Started from a message in the parent channel.</p>
+      </div>
+    )
+  }
   return (
     <div className={styles.welcome}>
       <div className={styles.welcomeIcon}>

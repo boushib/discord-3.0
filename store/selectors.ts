@@ -1,6 +1,6 @@
 import { createSelector } from '@reduxjs/toolkit'
 import { CURRENT_USER_ID } from '../constants'
-import type { Message, Server, User } from '../models'
+import type { Message, Server, Thread, User } from '../models'
 import type { RootState } from '.'
 
 const EMPTY: Message[] = []
@@ -11,7 +11,7 @@ export const selectMessages = (s: RootState, channelId: string) =>
   s.messages[channelId] ?? EMPTY
 
 export type ChannelContext =
-  | { kind: 'server'; server: Server; channel: Server['channels'][number] }
+  | { kind: 'server'; server: Server; channel: Server['channels'][number]; thread?: Thread }
   | { kind: 'dm'; dmId: string; recipient: User }
 
 export const findChannel = createSelector(
@@ -19,9 +19,23 @@ export const findChannel = createSelector(
     (s: RootState) => s.dms,
     (s: RootState) => s.servers,
     (s: RootState) => s.users.byId,
+    (s: RootState) => s.threads,
     (_: RootState, channelId: string) => channelId,
   ],
-  (dms, servers, users, channelId): ChannelContext | null => {
+  (dms, servers, users, threads, channelId): ChannelContext | null => {
+    const thread = threads[channelId]
+    if (thread) {
+      const server = servers.byId[thread.serverId]
+      const parent = server?.channels.find(c => c.id === thread.parentChannelId)
+      if (!server || !parent) return null
+      // A thread behaves like a text channel that lives inside its parent's server
+      return {
+        kind: 'server',
+        server,
+        channel: { id: thread.id, name: thread.name, type: 'text', categoryId: parent.categoryId },
+        thread,
+      }
+    }
     const dm = dms.find(d => d.id === channelId)
     if (dm) {
       const recipient = users[dm.recipientId]
@@ -118,3 +132,12 @@ export const roleColorIn = (server: Server | undefined, userId: string) => {
   if (!server || !member) return undefined
   return server.roles.find(r => r.color && member.roleIds.includes(r.id))?.color
 }
+
+/** Threads started in a channel, newest first */
+export const selectChannelThreads = createSelector(
+  [(s: RootState) => s.threads, (_: RootState, channelId: string) => channelId],
+  (threads, channelId) =>
+    Object.values(threads)
+      .filter(t => t.parentChannelId === channelId)
+      .sort((a, b) => b.createdAt - a.createdAt)
+)

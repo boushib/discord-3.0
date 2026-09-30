@@ -14,7 +14,7 @@ export const loadState = (): Partial<PersistedState> | undefined => {
     const core = state.servers?.byId['s-nextjs']?.roles.find(r => r.id === 'r-next-core')
     if (core?.color === '#f2f3f5') core.color = '#e67e22'
     // Fill in preferences added after this state was saved
-    return { ...state, prefs: { ...initialPrefs, ...state.prefs } }
+    return { ...state, threads: state.threads ?? {}, prefs: { ...initialPrefs, ...state.prefs } }
   } catch {
     return undefined
   }
