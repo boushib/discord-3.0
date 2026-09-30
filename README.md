@@ -5,31 +5,38 @@ A Discord clone built with **Next.js 16** (App Router), **React 19** and **Redux
 ## Features
 
 **Servers & channels**
-- Server rail with unread pills, mention badges, tooltips and drag-to-reorder
+- Demo servers for Minecraft, Valorant, Fortnite, League of Legends, Roblox, Assassin's Creed, Rocket League, a community server and an anonymous tech project team
+- Server rail with unread pills, mention badges, tooltips, drag-to-reorder and server folders
 - Create servers (from scratch or a template), join servers from the Discovery page, invite friends, leave
+- Server settings for owners: rename, icon, banner, roles (color, rank, hoist) and members (roles, kick)
 - Collapsible categories; text, announcement and voice channels
 - Create, rename and delete channels, set topics, per-channel mute and notification levels
+- Threads started from any message, in a side panel
 
 **Messaging**
 - Markdown: bold, italic, underline, strike, inline and block code, spoilers, quotes, headings, lists, links, @mentions
 - Grouped messages, date dividers, a "NEW" line at your first unread message
 - Reactions, replies, inline editing, pins, delete (Shift+click skips the confirmation), mark unread
 - Composer autocomplete for `@mentions`, `:emoji:` and `/commands` (`/shrug`, `/tableflip`, `/me`, …)
-- File uploads by picker, paste or drag-and-drop; GIFs, stickers and Nitro gifts
+- File uploads by picker, paste or drag-and-drop; GIFs, stickers, polls and Nitro gifts
+- YouTube links become playable embeds
 - Typing indicators and simulated replies from other members
+- "Jump To Present" bar when you've scrolled up
 
 **Voice & video**
 - Voice channels with a call view: participant tiles, speaking indicators, spotlight
-- Your camera (`getUserMedia`) and screen share (`getDisplayMedia`) are real; other participants are simulated
+- Your camera (`getUserMedia`), screen share (`getDisplayMedia`) and microphone level (Web Audio, for your speaking ring) are real; other participants are simulated
 - One-to-one voice and video calls in DMs
 
 **Social**
 - Friends page: online, all, pending and blocked; add friends by username
-- DMs, profile cards, custom status, presence (online, idle, do not disturb, invisible)
+- DMs and group DMs, profile cards, custom status, presence (online, idle, do not disturb, invisible) with auto-idle
 - Member list grouped by hoisted roles with role colors
 
 **Everything else**
-- Inbox with your @mentions and unread channels, pinned messages, channel search
+- Server-wide search with `from:`, `in:`, `has:`, `mentions:` and `pinned:` filters
+- Inbox with your @mentions and unread channels, pinned messages
+- Notification sounds and desktop notifications for DMs and @mentions
 - Ctrl/⌘+K quick switcher, Ctrl/⌘+/ keyboard shortcuts
 - User settings: profile editor with live preview, account details, dark/light theme, cozy/compact display
 - Nitro and Shop demo pages (avatar decorations)
