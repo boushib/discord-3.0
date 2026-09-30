@@ -6,13 +6,14 @@ import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { STATUS_LABELS } from '../../constants'
 import { useAppDispatch, usePopover, useSelector } from '../../hooks'
-import { dmHref } from '../../lib/routes'
+import { dmHref, ME } from '../../lib/routes'
 import type { Relationship, User } from '../../models'
 import { acceptFriend, blockUser, dmIdFor, openDM, removeRelationship } from '../../store'
 import Avatar from '../Avatar'
 import MobileNavButton from '../MobileNavButton'
 import Popover, { Menu, MenuItem } from '../Popover'
 import Tooltip from '../Tooltip'
+import { useMedia } from '../Voice'
 import ActiveNow from './ActiveNow'
 import AddFriend from './AddFriend'
 import styles from './Friends.module.sass'
@@ -56,10 +57,18 @@ const FriendRow = ({ user, relationship }: { user: User; relationship: Relations
   const dispatch = useAppDispatch()
   const router = useRouter()
   const more = usePopover()
+  const media = useMedia()
 
   const message = () => {
     dispatch(openDM(user.id))
     router.push(dmHref(dmIdFor(user.id)))
+  }
+
+  const call = async (video: boolean) => {
+    more.close()
+    message()
+    media.join(ME, dmIdFor(user.id))
+    if (video && !media.camera) await media.toggleCamera()
   }
 
   const subtitle =
@@ -129,8 +138,8 @@ const FriendRow = ({ user, relationship }: { user: User; relationship: Relations
       {more.anchor && (
         <Popover anchor={more.anchor} placement="bottom-end" onClose={more.close}>
           <Menu>
-            <MenuItem label="Start Video Call" onClick={more.close} />
-            <MenuItem label="Start Voice Call" onClick={more.close} />
+            <MenuItem label="Start Video Call" onClick={() => call(true)} />
+            <MenuItem label="Start Voice Call" onClick={() => call(false)} />
             <MenuItem
               danger
               label="Remove Friend"

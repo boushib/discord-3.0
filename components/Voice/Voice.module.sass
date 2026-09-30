@@ -1,0 +1,280 @@
+.voiceView
+  flex: 1
+  min-width: 0
+  display: flex
+  flex-direction: column
+  background-color: #000
+
+.voiceHeader
+  height: 48px
+  flex-shrink: 0
+  display: flex
+  align-items: center
+  gap: 8px
+  padding: 0 16px
+  color: var(--text-muted)
+
+  h1
+    color: var(--header-primary)
+    font-size: 16px
+    font-weight: 600
+
+.lobby
+  flex: 1
+  display: flex
+  flex-direction: column
+  align-items: center
+  justify-content: center
+  gap: 12px
+  padding: 24px
+  text-align: center
+
+  h2
+    color: var(--header-primary)
+    font-size: 24px
+    font-weight: 700
+
+  p
+    color: var(--header-secondary)
+
+.lobbyAvatars
+  display: flex
+  gap: 8px
+  min-height: 56px
+
+.stage
+  position: relative
+  flex: 1
+  min-height: 0
+  display: flex
+  flex-direction: column
+  padding: 8px 16px 0
+
+.stageCompact
+  padding: 12px 16px 0
+
+.dmCall
+  position: relative
+  height: 45%
+  min-height: 260px
+  flex-shrink: 0
+  display: flex
+  flex-direction: column
+  background-color: #000
+
+.ringing
+  position: absolute
+  top: 12px
+  left: 50%
+  transform: translateX(-50%)
+  padding: 6px 14px
+  border-radius: 16px
+  background-color: rgba(0, 0, 0, .6)
+  color: var(--header-primary)
+  font-size: 14px
+  animation: pulse 1.4s ease-in-out infinite
+
+@keyframes pulse
+  50%
+    opacity: .5
+
+.grid
+  flex: 1
+  min-height: 0
+  display: grid
+  gap: 8px
+  align-content: center
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr))
+
+  &[data-count='1']
+    grid-template-columns: minmax(0, 900px)
+    justify-content: center
+
+  &[data-count='2']
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 560px))
+    justify-content: center
+
+.spotlight
+  flex: 1
+  min-height: 0
+  display: flex
+  flex-direction: column
+  gap: 8px
+
+.spotlightMain
+  flex: 1
+  min-height: 0
+  display: flex
+
+  .tile
+    aspect-ratio: auto
+    width: 100%
+    height: 100%
+
+.strip
+  flex-shrink: 0
+  display: flex
+  gap: 8px
+  overflow-x: auto
+  justify-content: center
+
+  .tile
+    width: 160px
+    flex-shrink: 0
+
+    .tileAvatar > *
+      width: 40px !important
+      height: 40px !important
+
+.tile
+  position: relative
+  aspect-ratio: 16 / 9
+  display: flex
+  align-items: center
+  justify-content: center
+  overflow: hidden
+  border-radius: 8px
+  background-color: color-mix(in srgb, var(--tile-color) 45%, #111)
+  box-shadow: inset 0 0 0 0 var(--green)
+  transition: box-shadow .1s
+
+.speaking
+  box-shadow: inset 0 0 0 3px var(--green)
+
+.video
+  position: absolute
+  inset: 0
+  width: 100%
+  height: 100%
+  object-fit: cover
+  background-color: #000
+
+.mirrored
+  transform: scaleX(-1)
+
+.contain
+  object-fit: contain
+
+.tileAvatar
+  display: flex
+
+.tileName
+  position: absolute
+  left: 8px
+  bottom: 8px
+  display: flex
+  align-items: center
+  gap: 4px
+  max-width: calc(100% - 16px)
+  padding: 2px 8px
+  border-radius: 4px
+  background-color: rgba(0, 0, 0, .6)
+  color: #fff
+  font-size: 14px
+  font-weight: 500
+  overflow: hidden
+  text-overflow: ellipsis
+  white-space: nowrap
+
+.tileMuted
+  color: var(--red)
+
+.live
+  position: absolute
+  top: 8px
+  left: 8px
+  display: flex
+  align-items: center
+  gap: 4px
+  padding: 2px 6px
+  border-radius: 4px
+  background-color: var(--red)
+  color: #fff
+  font-size: 12px
+  font-weight: 700
+
+.controls
+  flex-shrink: 0
+  display: flex
+  justify-content: center
+  gap: 16px
+  padding: 16px 0 24px
+
+.control
+  width: 56px
+  height: 56px
+  display: flex
+  align-items: center
+  justify-content: center
+  border-radius: 50%
+  background-color: #2b2d31
+  color: #fff
+  transition: background-color .15s
+
+  &:hover
+    background-color: #3a3c42
+
+.controlActive
+  background-color: #fff
+  color: #000
+
+  &:hover
+    background-color: #e3e5e8
+
+.controlDanger
+  background-color: var(--red)
+
+  &:hover
+    background-color: var(--red-hover)
+
+.stageCompact .controls
+  padding: 12px 0 16px
+
+.stageCompact .control
+  width: 44px
+  height: 44px
+
+.error
+  position: absolute
+  top: 8px
+  left: 50%
+  z-index: 2
+  display: flex
+  align-items: center
+  gap: 8px
+  padding: 8px 12px
+  border-radius: 8px
+  background-color: var(--red)
+  color: #fff
+  font-size: 14px
+  transform: translateX(-50%)
+  white-space: nowrap
+
+  button
+    display: flex
+
+// DM call area is short: lay tiles out in one row, sized by height
+.stageCompact
+  .grid
+    display: flex
+    justify-content: center
+    align-items: stretch
+
+    .tile
+      height: 100%
+      width: auto
+      max-width: calc(50% - 4px)
+      min-width: 0
+      flex: 0 1 auto
+
+  .spotlightMain .tile
+    width: auto
+    max-width: 100%
+    margin: 0 auto
+    aspect-ratio: 16 / 9
+
+  .strip .tile
+    width: 120px
+
+.grid
+  overflow-y: auto

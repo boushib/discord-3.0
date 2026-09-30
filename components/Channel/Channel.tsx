@@ -8,6 +8,7 @@ import Members from '../Members'
 import MessageBox from '../MessageBox'
 import MessageList from './MessageList'
 import ChannelHeader from './ChannelHeader'
+import { DMCall, VoiceChannelView } from '../Voice'
 import styles from './Channel.module.sass'
 
 const Channel = ({ channelId }: { channelId: string }) => {
@@ -31,10 +32,15 @@ const Channel = ({ channelId }: { channelId: string }) => {
 
   if (!context) return <div className={styles.empty}>This channel doesn’t exist.</div>
 
+  if (context.kind === 'server' && context.channel.type === 'voice') {
+    return <VoiceChannelView server={context.server} channel={context.channel} />
+  }
+
   return (
     <>
       <div className={styles.channel}>
         <ChannelHeader channelId={channelId} context={context} />
+        {context.kind === 'dm' && <DMCall dmId={context.dmId} recipient={context.recipient} />}
         <MessageList key={`list-${channelId}`} channelId={channelId} context={context} />
         <MessageBox key={`box-${channelId}`} channelId={channelId} context={context} />
       </div>

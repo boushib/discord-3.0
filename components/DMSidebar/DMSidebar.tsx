@@ -12,6 +12,7 @@ import { selectMentionCount } from '../../store/selectors'
 import Avatar from '../Avatar'
 import Tooltip from '../Tooltip'
 import UserPanel from '../UserPanel'
+import VoicePanel from '../UserPanel/VoicePanel'
 import styles from './DMSidebar.module.sass'
 
 const DMRow = ({ dm, active }: { dm: DMChannel; active: boolean }) => {
@@ -97,6 +98,7 @@ const DMSidebar = () => {
         ))}
         {dms.length === 0 && <p className={styles.empty}>No direct messages yet.</p>}
       </div>
+      <VoicePanel />
       <UserPanel />
     </aside>
   )

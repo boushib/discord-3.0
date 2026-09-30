@@ -15,7 +15,8 @@ export interface UIState {
   replyTo: Record<string, string>
   editing: { channelId: string; messageId: string } | null
   typing: Record<string, string[]>
-  voice: { serverId: string; channelId: string } | null
+  /** Current call; serverId is '@me' for DM calls */
+  voice: { serverId: string; channelId: string; startedAt: number } | null
   search: string
   mobileNavOpen: boolean
 }

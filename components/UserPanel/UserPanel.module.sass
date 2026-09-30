@@ -122,9 +122,6 @@
   background: var(--status-offline)
 
 .voice
-  display: flex
-  align-items: center
-  gap: 8px
   padding: 8px
   border-bottom: 1px solid var(--divider)
   background-color: var(--bg-secondary-alt)
@@ -147,3 +144,41 @@
   overflow: hidden
   text-overflow: ellipsis
   white-space: nowrap
+
+.voiceRow
+  display: flex
+  align-items: center
+  gap: 8px
+
+.voiceInfo:hover .voiceChannel
+  text-decoration: underline
+
+.voiceButtons
+  display: flex
+  gap: 8px
+  margin-top: 8px
+
+.voiceButton
+  flex: 1
+  height: 32px
+  display: flex
+  align-items: center
+  justify-content: center
+  gap: 6px
+  border-radius: 4px
+  background-color: var(--bg-modifier-hover)
+  color: var(--interactive-normal)
+  font-size: 13px
+  font-weight: 500
+
+  &:hover
+    background-color: var(--bg-modifier-selected)
+    color: var(--interactive-hover)
+
+.voiceButtonOn
+  background-color: var(--green)
+  color: #fff
+
+  &:hover
+    background-color: var(--green-hover)
+    color: #fff

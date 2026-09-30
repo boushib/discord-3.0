@@ -10,7 +10,9 @@ import ChannelTypeIcon from '../ChannelTypeIcon'
 import MobileNavButton from '../MobileNavButton'
 import Popover from '../Popover'
 import Tooltip from '../Tooltip'
+import { useMedia } from '../Voice'
 import PinnedMessages from './PinnedMessages'
+import { ME } from '../../lib/routes'
 import styles from './Channel.module.sass'
 
 const IconButton = ({
@@ -36,6 +38,12 @@ const ChannelHeader = ({ channelId, context }: { channelId: string; context: Cha
   const memberListOpen = useSelector(s => s.prefs.memberListOpen)
   const search = useSelector(s => s.ui.search)
   const pins = usePopover()
+  const media = useMedia()
+  const inCall = useSelector(s => s.ui.voice?.channelId === channelId)
+  const startCall = async (video: boolean) => {
+    if (!inCall) media.join(ME, channelId)
+    if (video && !media.camera) await media.toggleCamera()
+  }
 
   return (
     <header className={styles.header}>
@@ -66,10 +74,10 @@ const ChannelHeader = ({ channelId, context }: { channelId: string; context: Cha
       <div className={styles.headerTools}>
         {context.kind === 'dm' ? (
           <>
-            <IconButton label="Start Voice Call">
+            <IconButton label="Start Voice Call" active={inCall} onClick={() => startCall(false)}>
               <Phone size={20} />
             </IconButton>
-            <IconButton label="Start Video Call">
+            <IconButton label="Start Video Call" active={inCall && !!media.camera} onClick={() => startCall(true)}>
               <Video size={22} />
             </IconButton>
           </>

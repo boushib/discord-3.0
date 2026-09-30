@@ -1,19 +1,21 @@
 'use client'
 
 import classNames from 'classnames'
-import { CheckCheck, Copy, Link2, MicOff, Settings, UserPlus } from 'lucide-react'
+import { CheckCheck, Copy, Link2, MicOff, Settings, UserPlus, Video } from 'lucide-react'
 import { useState } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { CURRENT_USER_ID } from '../../constants'
 import { useAppDispatch, useSelector } from '../../hooks'
 import { channelHref } from '../../lib/routes'
 import type { Channel, Server } from '../../models'
-import { joinVoice, markRead, openModal, setVoice } from '../../store'
+import { markRead, openModal } from '../../store'
 import { displayNameIn, selectIsUnread, selectMentionCount } from '../../store/selectors'
 import Avatar from '../Avatar'
 import Popover, { Menu, MenuItem, MenuSeparator } from '../Popover'
 import ChannelTypeIcon from '../ChannelTypeIcon'
 import Tooltip from '../Tooltip'
+import { useMedia } from '../Voice'
 import styles from './ChannelSidebar.module.sass'
 
 interface Props {
@@ -25,12 +27,15 @@ interface Props {
 const VoiceUsers = ({ server, userIds }: { server: Server; userIds: string[] }) => {
   const users = useSelector(s => s.users.byId)
   const muted = useSelector(s => s.prefs.muted)
+  const media = useMedia()
   return (
     <ul className={styles.voiceUsers}>
       {userIds.map(id => (
         <li key={id} className={styles.voiceUser}>
           <Avatar user={users[id]} size={24} />
           <span className={styles.voiceUserName}>{displayNameIn(server, users[id])}</span>
+          {id === CURRENT_USER_ID && media.screen && <span className={styles.liveBadge}>LIVE</span>}
+          {id === CURRENT_USER_ID && media.camera && <Video size={16} className={styles.voiceUserIcon} />}
           {id === CURRENT_USER_ID && muted && <MicOff size={16} className={styles.voiceUserIcon} />}
         </li>
       ))}
@@ -40,6 +45,8 @@ const VoiceUsers = ({ server, userIds }: { server: Server; userIds: string[] }) 
 
 const ChannelItem = ({ server, channel, active }: Props) => {
   const dispatch = useAppDispatch()
+  const router = useRouter()
+  const media = useMedia()
   const unread = useSelector(s => !active && selectIsUnread(s, channel.id))
   const mentions = useSelector(s => (active ? 0 : selectMentionCount(s, channel.id)))
   const voiceUserIds = server.voiceStates[channel.id] ?? []
@@ -140,8 +147,8 @@ const ChannelItem = ({ server, channel, active }: Props) => {
           className={className}
           onContextMenu={onContextMenu}
           onClick={() => {
-            dispatch(joinVoice({ serverId: server.id, channelId: channel.id, userId: CURRENT_USER_ID }))
-            dispatch(setVoice({ serverId: server.id, channelId: channel.id }))
+            if (!connected) media.join(server.id, channel.id)
+            router.push(channelHref(server.id, channel.id))
           }}
         >
           {content}

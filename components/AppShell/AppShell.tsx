@@ -7,6 +7,7 @@ import { useAppDispatch, useGlobalShortcuts, useIsClient, useSelector } from '..
 import { setMobileNav } from '../../store'
 import ModalRoot from '../Modals'
 import ServerRail from '../ServerRail'
+import { MediaProvider } from '../Voice'
 import LoadingScreen from './LoadingScreen'
 
 /**
@@ -28,11 +29,13 @@ const AppShell = ({ children }: { children: React.ReactNode }) => {
   if (!isClient) return <LoadingScreen />
 
   return (
-    <div className={classNames('app', mobileNavOpen && 'app--nav-open')}>
-      <ServerRail />
-      {children}
-      <ModalRoot />
-    </div>
+    <MediaProvider>
+      <div className={classNames('app', mobileNavOpen && 'app--nav-open')}>
+        <ServerRail />
+        {children}
+        <ModalRoot />
+      </div>
+    </MediaProvider>
   )
 }
 
