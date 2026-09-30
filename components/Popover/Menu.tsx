@@ -15,7 +15,7 @@ interface ItemProps {
   brand?: boolean
   checked?: boolean
   disabled?: boolean
-  onClick?: () => void
+  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void
 }
 
 export const MenuItem = ({ label, icon, hint, danger, brand, checked, disabled, onClick }: ItemProps) => (

@@ -1,6 +1,7 @@
 'use client'
 
 import { useIsClient } from '../../hooks'
+import ModalRoot from '../Modals'
 import ServerRail from '../ServerRail'
 import LoadingScreen from './LoadingScreen'
 
@@ -16,6 +17,7 @@ const AppShell = ({ children }: { children: React.ReactNode }) => {
     <div className="app">
       <ServerRail />
       {children}
+      <ModalRoot />
     </div>
   )
 }

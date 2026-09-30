@@ -1,0 +1,45 @@
+.button
+  min-width: 96px
+  height: 38px
+  padding: 2px 16px
+  border-radius: 4px
+  color: #fff
+  font-size: 14px
+  font-weight: 500
+  transition: background-color .17s
+
+  &:disabled
+    opacity: .5
+    cursor: not-allowed
+
+.brand
+  background-color: var(--brand)
+
+  &:hover:not(:disabled)
+    background-color: var(--brand-hover)
+
+.success
+  background-color: var(--green)
+
+  &:hover:not(:disabled)
+    background-color: var(--green-hover)
+
+.danger
+  background-color: var(--red)
+
+  &:hover:not(:disabled)
+    background-color: var(--red-hover)
+
+.secondary
+  background-color: var(--bg-accent)
+
+  &:hover:not(:disabled)
+    background-color: #6d6f78
+
+.link
+  min-width: 0
+  background: none
+  color: var(--header-primary)
+
+  &:hover:not(:disabled)
+    text-decoration: underline

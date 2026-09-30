@@ -1,8 +1,8 @@
 'use client'
 
 import classNames from 'classnames'
-import { CornerUpLeft } from 'lucide-react'
-import { memo } from 'react'
+import { CornerUpLeft, Pin } from 'lucide-react'
+import { memo, useState } from 'react'
 import { CURRENT_USER_ID } from '../../constants'
 import { useAppDispatch, useSelector } from '../../hooks'
 import { formatFull, formatTime, formatTimestamp } from '../../lib/format'
@@ -11,13 +11,18 @@ import { toggleReaction } from '../../store'
 import { displayNameIn, isMention, roleColorIn } from '../../store/selectors'
 import Avatar from '../Avatar'
 import Markdown from '../Markdown'
+import Popover from '../Popover'
 import Tooltip from '../Tooltip'
+import { MessageMenu, MessageToolbar } from './MessageActions'
+import MessageEditor from './MessageEditor'
 import styles from './Message.module.sass'
 
 interface Props {
   message: MessageType
   server?: Server
   grouped: boolean
+  /** Static rendering (e.g. inside the delete confirmation) */
+  preview?: boolean
 }
 
 const ReplyPreview = ({ message, server }: { message: MessageType; server?: Server }) => {
@@ -53,8 +58,12 @@ const ReplyPreview = ({ message, server }: { message: MessageType; server?: Serv
   )
 }
 
-const Message = ({ message, server, grouped }: Props) => {
+const Message = ({ message, server, grouped, preview }: Props) => {
   const dispatch = useAppDispatch()
+  const [contextMenu, setContextMenu] = useState<DOMRect | null>(null)
+  const editing = useSelector(
+    s => !preview && s.ui.editing?.messageId === message.id && s.ui.editing.channelId === message.channelId
+  )
   const author = useSelector(s => s.users.byId[message.authorId])
   const users = useSelector(s => s.users.byId)
   const mentioned = useSelector(s => message.authorId !== CURRENT_USER_ID && isMention(s, message))
@@ -63,7 +72,20 @@ const Message = ({ message, server, grouped }: Props) => {
   return (
     <article
       id={`message-${message.id}`}
-      className={classNames(styles.message, grouped && styles.grouped, mentioned && styles.mentioned)}
+      className={classNames(
+        styles.message,
+        grouped && styles.grouped,
+        mentioned && styles.mentioned,
+        (editing || contextMenu) && styles.active
+      )}
+      onContextMenu={
+        preview
+          ? undefined
+          : e => {
+              e.preventDefault()
+              setContextMenu(new DOMRect(e.clientX, e.clientY, 0, 0))
+            }
+      }
     >
       {message.replyToId && <ReplyPreview message={message} server={server} />}
       <div className={styles.row}>
@@ -90,14 +112,25 @@ const Message = ({ message, server, grouped }: Props) => {
               </Tooltip>
             </h3>
           )}
-          <div className={styles.body}>
-            <Markdown content={message.content} />
-            {message.editedAt && (
-              <Tooltip label={formatFull(message.editedAt)}>
-                <span className={styles.edited}>(edited)</span>
-              </Tooltip>
-            )}
-          </div>
+          {editing ? (
+            <MessageEditor message={message} />
+          ) : (
+            <div className={styles.body}>
+              <Markdown content={message.content} />
+              {message.editedAt && (
+                <Tooltip label={formatFull(message.editedAt)}>
+                  <span className={styles.edited}>(edited)</span>
+                </Tooltip>
+              )}
+              {message.pinned && (
+                <Tooltip label="Pinned">
+                  <span className={styles.pinned}>
+                    <Pin size={12} />
+                  </span>
+                </Tooltip>
+              )}
+            </div>
+          )}
           {message.reactions.length > 0 && (
             <div className={styles.reactions}>
               {message.reactions.map(r => {
@@ -133,6 +166,12 @@ const Message = ({ message, server, grouped }: Props) => {
           )}
         </div>
       </div>
+      {!preview && !editing && <MessageToolbar message={message} />}
+      {contextMenu && (
+        <Popover anchor={contextMenu} placement="right-start" offset={0} onClose={() => setContextMenu(null)}>
+          <MessageMenu message={message} onDone={() => setContextMenu(null)} />
+        </Popover>
+      )}
     </article>
   )
 }
