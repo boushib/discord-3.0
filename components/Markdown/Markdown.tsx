@@ -4,6 +4,7 @@ import classNames from 'classnames'
 import { Fragment, useState } from 'react'
 import { useSelector } from '../../hooks'
 import { ProfileTrigger } from '../Profile'
+import CodeBlock from './CodeBlock'
 import styles from './Markdown.module.sass'
 
 const INLINE =
@@ -129,11 +130,7 @@ const Markdown = ({ content }: { content: string }) => {
   for (let i = 0; i < parts.length; i += 3) {
     if (parts[i]) nodes.push(...renderLines(parts[i].replace(/^\n|\n$/g, ''), `t${i}`))
     if (i + 2 < parts.length) {
-      nodes.push(
-        <pre key={`c${i}`} className={styles.codeBlock} data-lang={parts[i + 1]}>
-          <code>{parts[i + 2].replace(/\n$/, '')}</code>
-        </pre>
-      )
+      nodes.push(<CodeBlock key={`c${i}`} code={parts[i + 2].replace(/\n$/, '')} lang={parts[i + 1]} />)
     }
   }
   return <>{nodes}</>

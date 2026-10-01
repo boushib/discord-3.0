@@ -7,6 +7,7 @@
   line-height: 1.125rem
 
 .codeBlock
+  position: relative
   margin: 6px 0 2px
   padding: 8px
   max-width: 90%
@@ -93,3 +94,52 @@ h3.heading
 .jumbo
   font-size: 48px
   line-height: 1.2
+
+.copy
+  position: absolute
+  top: 6px
+  right: 6px
+  display: none
+  padding: 4px
+  border-radius: 4px
+  background-color: var(--bg-tertiary)
+  color: var(--interactive-normal)
+
+  &:hover
+    color: var(--interactive-hover)
+
+  .codeBlock:hover &
+    display: flex
+
+// Syntax highlighting tokens (GitHub-style colors, see globals for the theme values)
+.codeBlock
+  :global(.hljs-keyword), :global(.hljs-selector-tag), :global(.hljs-doctag)
+    color: var(--code-keyword)
+
+  :global(.hljs-string), :global(.hljs-regexp), :global(.hljs-addition)
+    color: var(--code-string)
+
+  :global(.hljs-title), :global(.hljs-section)
+    color: var(--code-function)
+
+  :global(.hljs-number), :global(.hljs-literal), :global(.hljs-symbol), :global(.hljs-attr), :global(.hljs-attribute), :global(.hljs-selector-attr)
+    color: var(--code-number)
+
+  :global(.hljs-comment), :global(.hljs-quote)
+    color: var(--code-comment)
+    font-style: italic
+
+  :global(.hljs-name), :global(.hljs-selector-id), :global(.hljs-selector-class), :global(.hljs-tag)
+    color: var(--code-tag)
+
+  :global(.hljs-built_in), :global(.hljs-type), :global(.hljs-params), :global(.class_), :global(.language_)
+    color: var(--code-type)
+
+  :global(.hljs-deletion)
+    color: var(--code-keyword)
+
+  :global(.hljs-emphasis)
+    font-style: italic
+
+  :global(.hljs-strong)
+    font-weight: 700
