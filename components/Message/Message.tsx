@@ -1,7 +1,7 @@
 'use client'
 
 import classNames from 'classnames'
-import { CornerUpLeft, Pin } from 'lucide-react'
+import { Bookmark, CornerUpLeft, Pin } from 'lucide-react'
 import { memo, useState } from 'react'
 import { CURRENT_USER_ID } from '../../constants'
 import { useAppDispatch, useSelector } from '../../hooks'
@@ -76,6 +76,7 @@ const Message = ({ message, server, grouped: groupedProp, preview }: Props) => {
   const author = useSelector(s => s.users.byId[message.authorId])
   const users = useSelector(s => s.users.byId)
   const compact = useSelector(s => s.prefs.compactMode && !preview)
+  const saved = useSelector(s => !preview && s.prefs.saved.some(x => x.messageId === message.id))
   // Compact mode shows the author on every line
   const grouped = groupedProp && !compact
   const mentioned = useSelector(s => message.authorId !== CURRENT_USER_ID && isMention(s, message))
@@ -149,6 +150,13 @@ const Message = ({ message, server, grouped: groupedProp, preview }: Props) => {
               {message.editedAt && (
                 <Tooltip label={formatFull(message.editedAt)}>
                   <span className={styles.edited}>(edited)</span>
+                </Tooltip>
+              )}
+              {saved && (
+                <Tooltip label="Saved for later">
+                  <span className={styles.pinned}>
+                    <Bookmark size={12} fill="currentColor" />
+                  </span>
                 </Tooltip>
               )}
               {message.pinned && (

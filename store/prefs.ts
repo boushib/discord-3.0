@@ -13,6 +13,8 @@ export interface PrefsState {
   memberListOpen: boolean
   compactMode: boolean
   notificationSounds: boolean
+  /** Messages saved for later, newest first */
+  saved: { channelId: string; messageId: string; savedAt: number }[]
   desktopNotifications: boolean
   theme: 'dark' | 'light'
   muted: boolean
@@ -30,6 +32,7 @@ export const initialPrefs: PrefsState = {
   memberListOpen: true,
   compactMode: false,
   notificationSounds: true,
+  saved: [],
   desktopNotifications: false,
   theme: 'dark',
   muted: false,
@@ -65,6 +68,17 @@ const prefsSlice = createSlice({
     setTheme(state, action: PayloadAction<PrefsState['theme']>) {
       state.theme = action.payload
     },
+    toggleSaved: {
+      reducer(state, action: PayloadAction<{ channelId: string; messageId: string; savedAt: number }>) {
+        const { messageId } = action.payload
+        state.saved = state.saved.some(s => s.messageId === messageId)
+          ? state.saved.filter(s => s.messageId !== messageId)
+          : [action.payload, ...state.saved]
+      },
+      prepare(input: { channelId: string; messageId: string }) {
+        return { payload: { ...input, savedAt: Date.now() } }
+      },
+    },
     setNotificationSounds(state, action: PayloadAction<boolean>) {
       state.notificationSounds = action.payload
     },
@@ -92,6 +106,7 @@ export const {
   toggleChannelMute,
   toggleMemberList,
   setTheme,
+  toggleSaved,
   setNotificationSounds,
   setDesktopNotifications,
   setCompactMode,

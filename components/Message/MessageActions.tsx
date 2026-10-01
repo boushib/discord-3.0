@@ -1,7 +1,7 @@
 'use client'
 
 import classNames from 'classnames'
-import { Copy, Ellipsis, EyeOff, Hash, MessagesSquare, Pencil, Pin, Reply, SmilePlus, Trash } from 'lucide-react'
+import { Bookmark, BookmarkMinus, Copy, Ellipsis, EyeOff, Hash, MessagesSquare, Pencil, Pin, Reply, SmilePlus, Trash } from 'lucide-react'
 import { CURRENT_USER_ID, QUICK_REACTIONS } from '../../constants'
 import { emojiName } from '../../constants/emojis'
 import { useAppDispatch, usePopover, useSelector } from '../../hooks'
@@ -16,6 +16,7 @@ import {
   setReplyTo,
   togglePin,
   toggleReaction,
+  toggleSaved,
 } from '../../store'
 import { selectCustomExpressions } from '../../store/selectors'
 import EmojiPicker from '../EmojiPicker'
@@ -56,6 +57,7 @@ export const useMessageActions = (message: Message) => {
     },
     edit: () => dispatch(setEditing({ channelId, messageId })),
     pin: () => dispatch(togglePin({ channelId, messageId })),
+    save: () => dispatch(toggleSaved({ channelId, messageId })),
     markUnread: () => dispatch(markUnread({ channelId, before: message.createdAt })),
     remove: (skipConfirm = false) =>
       skipConfirm
@@ -66,6 +68,7 @@ export const useMessageActions = (message: Message) => {
 
 export const MessageMenu = ({ message, onDone }: { message: Message; onDone: () => void }) => {
   const actions = useMessageActions(message)
+  const saved = useSelector(s => s.prefs.saved.some(x => x.messageId === message.id))
   const own = message.authorId === CURRENT_USER_ID
   const run = (fn: (e: React.MouseEvent) => void) => (e: React.MouseEvent) => {
     onDone()
@@ -90,6 +93,11 @@ export const MessageMenu = ({ message, onDone }: { message: Message; onDone: () 
           onClick={run(() => actions.thread())}
         />
       )}
+      <MenuItem
+        label={saved ? 'Remove from Saved' : 'Save for Later'}
+        icon={saved ? <BookmarkMinus size={16} /> : <Bookmark size={16} />}
+        onClick={run(() => actions.save())}
+      />
       <MenuItem
         label={message.pinned ? 'Unpin Message' : 'Pin Message'}
         icon={<Pin size={16} />}

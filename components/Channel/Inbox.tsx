@@ -1,13 +1,13 @@
 'use client'
 
 import classNames from 'classnames'
-import { AtSign, CheckCheck, Inbox as InboxIcon } from 'lucide-react'
+import { AtSign, Bookmark, CheckCheck, Inbox as InboxIcon, X } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { useAppDispatch, useSelector } from '../../hooks'
 import { formatTimestamp } from '../../lib/format'
 import { channelHref, dmHref } from '../../lib/routes'
-import { markRead } from '../../store'
+import { markRead, setOpenThread, toggleSaved } from '../../store'
 import { contextLabel, findChannel, selectIsUnread, selectMentionCount, selectRecentMentions } from '../../store/selectors'
 import Avatar from '../Avatar'
 import Markdown from '../Markdown'
@@ -16,7 +16,7 @@ import styles from './Inbox.module.sass'
 const Inbox = ({ onClose }: { onClose: () => void }) => {
   const dispatch = useAppDispatch()
   const router = useRouter()
-  const [tab, setTab] = useState<'mentions' | 'unreads'>('mentions')
+  const [tab, setTab] = useState<'mentions' | 'unreads' | 'saved'>('mentions')
   const state = useSelector(s => s)
   const mentions = selectRecentMentions(state)
 
@@ -25,6 +25,11 @@ const Inbox = ({ onClose }: { onClose: () => void }) => {
     ...state.dms.map(d => d.id),
     ...state.servers.order.flatMap(id => state.servers.byId[id].channels.filter(c => c.type !== 'voice').map(c => c.id)),
   ].filter(id => selectIsUnread(state, id) || selectMentionCount(state, id) > 0)
+
+  // Saved messages that still exist, with their message objects
+  const saved = state.prefs.saved
+    .map(entry => ({ entry, message: state.messages[entry.channelId]?.find(m => m.id === entry.messageId) }))
+    .filter((x): x is { entry: (typeof state.prefs.saved)[number]; message: NonNullable<typeof x.message> } => !!x.message)
 
   const hrefFor = (channelId: string) => {
     const context = findChannel(state, channelId)
@@ -38,8 +43,11 @@ const Inbox = ({ onClose }: { onClose: () => void }) => {
   }
 
   const jump = (channelId: string, messageId?: string) => {
-    const href = hrefFor(channelId)
+    // Thread messages open the parent channel with the thread panel
+    const thread = state.threads[channelId]
+    const href = hrefFor(thread ? thread.parentChannelId : channelId)
     if (!href) return
+    if (thread) setTimeout(() => dispatch(setOpenThread(thread.id)), 0)
     onClose()
     router.push(href)
     if (messageId) {
@@ -66,19 +74,60 @@ const Inbox = ({ onClose }: { onClose: () => void }) => {
         )}
       </header>
       <nav className={styles.tabs}>
-        {(['mentions', 'unreads'] as const).map(t => (
+        {(['mentions', 'unreads', 'saved'] as const).map(t => (
           <button
             key={t}
             type="button"
             className={classNames(styles.tab, tab === t && styles.tabActive)}
             onClick={() => setTab(t)}
           >
-            {t === 'mentions' ? 'Mentions' : `Unreads${unreads.length ? ` (${unreads.length})` : ''}`}
+            {t === 'mentions'
+              ? 'Mentions'
+              : t === 'saved'
+                ? `Saved${saved.length ? ` (${saved.length})` : ''}`
+                : `Unreads${unreads.length ? ` (${unreads.length})` : ''}`}
           </button>
         ))}
       </nav>
       <div className={`${styles.list} scroller`}>
-        {tab === 'mentions' ? (
+        {tab === 'saved' ? (
+          saved.length ? (
+            saved.map(({ entry, message: m }) => {
+              const author = state.users.byId[m.authorId]
+              return (
+                <div key={m.id} className={styles.savedItem}>
+                  <button type="button" className={styles.item} onClick={() => jump(m.channelId, m.id)}>
+                    <div className={styles.where}>{labelFor(m.channelId)}</div>
+                    <div className={styles.message}>
+                      <Avatar user={author} size={32} />
+                      <div className={styles.content}>
+                        <div className={styles.meta}>
+                          <strong>{author.displayName}</strong> <span>{formatTimestamp(m.createdAt)}</span>
+                        </div>
+                        <div className={styles.text}>
+                          {m.content ? <Markdown content={m.content} /> : <em>Attachment</em>}
+                        </div>
+                      </div>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    className={styles.unsave}
+                    aria-label="Remove from Saved"
+                    onClick={() => dispatch(toggleSaved({ channelId: entry.channelId, messageId: entry.messageId }))}
+                  >
+                    <X size={16} />
+                  </button>
+                </div>
+              )
+            })
+          ) : (
+            <div className={styles.empty}>
+              <Bookmark size={40} />
+              <p>Nothing saved yet. Use “Save for Later” in a message’s menu to keep it here.</p>
+            </div>
+          )
+        ) : tab === 'mentions' ? (
           mentions.length ? (
             mentions.map(m => {
               const author = state.users.byId[m.authorId]
