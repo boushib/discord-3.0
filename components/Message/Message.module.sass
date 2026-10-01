@@ -553,3 +553,35 @@
   height: 160px
   object-fit: contain
   animation: sticker-pop .5s cubic-bezier(.3, 1.6, .5, 1)
+
+.forwarded
+  margin: 4px 0 2px
+  white-space: normal
+
+.forwardedLabel
+  display: flex
+  align-items: center
+  gap: 4px
+  margin-bottom: 4px
+  color: var(--text-muted)
+  font-size: 13px
+  font-style: italic
+
+.forwardedBody
+  padding: 2px 0 2px 12px
+  border-left: 4px solid var(--interactive-muted)
+  border-radius: 4px 0 0 4px
+  white-space: pre-wrap
+
+.forwardedMeta
+  margin-top: 4px
+  color: var(--text-muted)
+  font-size: 12px
+  white-space: normal
+
+  button
+    color: var(--text-muted)
+
+    &:hover
+      color: var(--interactive-hover)
+      text-decoration: underline

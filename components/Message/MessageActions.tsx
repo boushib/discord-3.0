@@ -1,7 +1,7 @@
 'use client'
 
 import classNames from 'classnames'
-import { Bookmark, BookmarkMinus, Copy, Ellipsis, EyeOff, Hash, MessagesSquare, Pencil, Pin, Reply, SmilePlus, Trash } from 'lucide-react'
+import { Bookmark, BookmarkMinus, Copy, Forward, Ellipsis, EyeOff, Hash, MessagesSquare, Pencil, Pin, Reply, SmilePlus, Trash } from 'lucide-react'
 import { CURRENT_USER_ID, QUICK_REACTIONS } from '../../constants'
 import { emojiName } from '../../constants/emojis'
 import { useAppDispatch, usePopover, useSelector } from '../../hooks'
@@ -58,6 +58,7 @@ export const useMessageActions = (message: Message) => {
     edit: () => dispatch(setEditing({ channelId, messageId })),
     pin: () => dispatch(togglePin({ channelId, messageId })),
     save: () => dispatch(toggleSaved({ channelId, messageId })),
+    forward: () => dispatch(openModal({ type: 'forward', channelId, messageId })),
     markUnread: () => dispatch(markUnread({ channelId, before: message.createdAt })),
     remove: (skipConfirm = false) =>
       skipConfirm
@@ -93,6 +94,7 @@ export const MessageMenu = ({ message, onDone }: { message: Message; onDone: () 
           onClick={run(() => actions.thread())}
         />
       )}
+      <MenuItem label="Forward" icon={<Forward size={16} />} onClick={run(() => actions.forward())} />
       <MenuItem
         label={saved ? 'Remove from Saved' : 'Save for Later'}
         icon={saved ? <BookmarkMinus size={16} /> : <Bookmark size={16} />}

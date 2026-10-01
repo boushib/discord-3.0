@@ -22,6 +22,7 @@ const messagesSlice = createSlice({
         sticker?: Message['sticker']
         gift?: Message['gift']
         poll?: Message['poll']
+        forwarded?: Message['forwarded']
       }) {
         return {
           payload: {

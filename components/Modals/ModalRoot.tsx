@@ -9,6 +9,7 @@ import CreateServerModal from './CreateServerModal'
 import DeleteMessageModal from './DeleteMessageModal'
 import DownloadModal from './DownloadModal'
 import EditChannelModal from './EditChannelModal'
+import ForwardModal from './ForwardModal'
 import GiftModal from './GiftModal'
 import InviteModal from './InviteModal'
 import LeaveServerModal from './LeaveServerModal'
@@ -29,6 +30,8 @@ const ModalRoot = () => {
       return <EditChannelModal serverId={modal.serverId} channelId={modal.channelId} />
     case 'poll':
       return <PollModal channelId={modal.channelId} />
+    case 'forward':
+      return <ForwardModal channelId={modal.channelId} messageId={modal.messageId} />
     case 'gift':
       return <GiftModal channelId={modal.channelId} />
     case 'invite':

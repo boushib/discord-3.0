@@ -121,6 +121,16 @@ export interface Message {
   sticker?: { id: string; name: string; emoji?: string; url?: string }
   gift?: { plan: 'Nitro' | 'Nitro Basic'; months: number; claimedBy?: string }
   poll?: Poll
+  /** Snapshot of a message forwarded from another conversation */
+  forwarded?: {
+    messageId: string
+    channelId: string
+    authorId: string
+    content: string
+    createdAt: number
+    attachments?: Attachment[]
+    sticker?: { id: string; name: string; emoji?: string; url?: string }
+  }
 }
 
 export type RelationshipType = 'friend' | 'incoming' | 'outgoing' | 'blocked'

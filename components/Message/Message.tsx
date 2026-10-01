@@ -22,6 +22,7 @@ import MessageEditor from './MessageEditor'
 import { GiftEmbed, ImageEmbed, isImageLink, StickerView } from './RichContent'
 import PollView from './PollView'
 import ThreadSummary from './ThreadSummary'
+import ForwardedView from './ForwardedView'
 import LinkPreview, { previewableLinks } from './LinkPreview'
 import YouTubeEmbed, { youtubeIds } from './YouTubeEmbed'
 import styles from './Message.module.sass'
@@ -140,6 +141,7 @@ const Message = ({ message, server, grouped: groupedProp, preview }: Props) => {
                 ))}
               {message.sticker && <StickerView sticker={message.sticker} />}
               {message.gift && <GiftEmbed message={message} />}
+              {message.forwarded && <ForwardedView forwarded={message.forwarded} />}
               {message.poll && <PollView message={message} />}
               {youtubeIds(message.content).map(id => (
                 <YouTubeEmbed key={id} id={id} />
