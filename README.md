@@ -1,4 +1,35 @@
-# Discord 3.0
+<div align="center">
+
+# 💬 Discord 3.0
+
+**A Discord clone with servers, voice and video, threads, polls and link previews.**
+
+[![Next.js](https://img.shields.io/badge/Next.js-16-000000?logo=nextdotjs&logoColor=white)](https://nextjs.org)
+[![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)](https://react.dev)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org)
+[![Redux Toolkit](https://img.shields.io/badge/Redux%20Toolkit-2-764ABC?logo=redux&logoColor=white)](https://redux-toolkit.js.org)
+[![Sass](https://img.shields.io/badge/Sass-CSS%20modules-CC6699?logo=sass&logoColor=white)](https://sass-lang.com)
+[![License: MIT](https://img.shields.io/badge/license-MIT-22C55E)](LICENSE)
+<br />
+[![Last commit](https://img.shields.io/github/last-commit/boushib/discord-clone-3.0)](https://github.com/boushib/discord-clone-3.0/commits/main)
+[![Top language](https://img.shields.io/github/languages/top/boushib/discord-clone-3.0)](https://github.com/boushib/discord-clone-3.0)
+[![Repo size](https://img.shields.io/github/repo-size/boushib/discord-clone-3.0)](https://github.com/boushib/discord-clone-3.0)
+
+<img src="docs/screenshots/channel.png" alt="A server channel with a poll, reactions and the member list" width="900" />
+
+</div>
+
+## Screenshots
+
+**Link previews:** rich embeds for any URL, built by a Next.js route handler
+
+<img src="docs/screenshots/link-preview.png" alt="Channel with a link preview" width="100%" />
+
+**Friends:** online friends, direct messages and Active Now
+
+<img src="docs/screenshots/friends.png" alt="Friends page with Active Now" width="100%" />
+
+## About
 
 A Discord clone built with **Next.js 16** (App Router), **React 19** and **Redux Toolkit**. The app runs in the browser: all data lives in a Redux store saved to `localStorage`, and other users are simulated, so they type, reply, react, vote and claim gifts. The only server-side piece is a route handler that builds link previews.
 
@@ -114,3 +145,7 @@ Planned features, roughly in order of impact.
 - **Uploads and emoji in object storage** instead of data URLs, with size limits enforced server-side.
 - **Push notifications** and unread state synced across devices.
 - Decisions needed first: hosting, database, and the sign-in method.
+
+## License
+
+[MIT](LICENSE) © El Hassane Boushib
