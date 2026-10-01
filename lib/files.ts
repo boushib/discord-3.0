@@ -49,3 +49,26 @@ export const formatBytes = (bytes: number) => {
   if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`
   return `${(bytes / 1024 / 1024).toFixed(2)} MB`
 }
+
+/** Square-ish thumbnail for emoji/stickers; keeps small animated GIFs as-is */
+export const imageToDataURL = async (file: File, maxSide: number) => {
+  if (file.type === 'image/gif' && file.size <= 256 * 1024) return readAsDataURL(file)
+  const bitmap = await createImageBitmap(file)
+  const scale = Math.min(1, maxSide / Math.max(bitmap.width, bitmap.height))
+  const canvas = document.createElement('canvas')
+  canvas.width = Math.round(bitmap.width * scale)
+  canvas.height = Math.round(bitmap.height * scale)
+  canvas.getContext('2d')!.drawImage(bitmap, 0, 0, canvas.width, canvas.height)
+  bitmap.close()
+  return canvas.toDataURL('image/webp', 0.9)
+}
+
+/** "Party Parrot!.png" -> "party_parrot" (Discord emoji name rules: 2–32 of [a-z0-9_]) */
+export const toEmojiName = (raw: string) =>
+  raw
+    .replace(/\.[^.]+$/, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9_]+/g, '_')
+    .replace(/^_+|_+$/g, '')
+    .slice(0, 32)
+    .padEnd(2, '_')

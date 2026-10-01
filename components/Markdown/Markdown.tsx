@@ -3,12 +3,14 @@
 import classNames from 'classnames'
 import { Fragment, useState } from 'react'
 import { useSelector } from '../../hooks'
+import { CUSTOM_EMOJI } from '../../lib/customEmoji'
 import { ProfileTrigger } from '../Profile'
 import CodeBlock from './CodeBlock'
+import CustomEmoji from './CustomEmoji'
 import styles from './Markdown.module.sass'
 
 const INLINE =
-  /\\([*_~`|\\>])|`([^`\n]+)`|\|\|(.+?)\|\||\*\*(.+?)\*\*|__(.+?)__|~~(.+?)~~|\*(?!\s)([^*]+?)\*|(?<![\w])_(?!\s)([^_]+?)_(?![\w])|(https?:\/\/[^\s<]+[^\s<.,:;"')\]])|@([\w.]+)/g
+  /<:([a-z0-9_]{2,32}):([\w-]+)>|\\([*_~`|\\>])|`([^`\n]+)`|\|\|(.+?)\|\||\*\*(.+?)\*\*|__(.+?)__|~~(.+?)~~|\*(?!\s)([^*]+?)\*|(?<![\w])_(?!\s)([^_]+?)_(?![\w])|(https?:\/\/[^\s<]+[^\s<.,:;"')\]])|@([\w.]+)/g
 
 const EMOJI_ONLY = /^(?:\p{Extended_Pictographic}|\p{Emoji_Component}|‍|️|\s)+$/u
 
@@ -48,8 +50,9 @@ const parseInline = (text: string, keyPrefix = ''): React.ReactNode[] => {
     const index = match.index ?? 0
     if (index > last) nodes.push(text.slice(last, index))
     const key = `${keyPrefix}${i++}`
-    const [, escaped, code, spoiler, bold, underline, strike, italic, italic2, url, mention] = match
-    if (escaped !== undefined) nodes.push(escaped)
+    const [, emojiName, emojiId, escaped, code, spoiler, bold, underline, strike, italic, italic2, url, mention] = match
+    if (emojiId !== undefined) nodes.push(<CustomEmoji key={key} id={emojiId} name={emojiName} />)
+    else if (escaped !== undefined) nodes.push(escaped)
     else if (code !== undefined) nodes.push(<code key={key} className={styles.inlineCode}>{code}</code>)
     else if (spoiler !== undefined) nodes.push(<Spoiler key={key}>{parseInline(spoiler, key)}</Spoiler>)
     else if (bold !== undefined) nodes.push(<strong key={key}>{parseInline(bold, key)}</strong>)
@@ -121,8 +124,15 @@ const renderLines = (text: string, keyPrefix: string) => {
 
 /** Renders the subset of Discord markdown used in messages */
 const Markdown = ({ content }: { content: string }) => {
-  if (EMOJI_ONLY.test(content) && [...content.trim()].length <= 27) {
-    return <span className={styles.jumbo}>{content}</span>
+  // Messages made only of emoji (unicode or custom) render large
+  const withoutCustom = content.replace(CUSTOM_EMOJI, '')
+  const customCount = (content.match(CUSTOM_EMOJI) ?? []).length
+  if (
+    content.trim() &&
+    (withoutCustom.trim() === '' || EMOJI_ONLY.test(withoutCustom)) &&
+    [...withoutCustom.trim()].length + customCount <= 27
+  ) {
+    return <span className={styles.jumbo}>{parseInline(content.trim())}</span>
   }
 
   const parts = content.split(/```(?:(\w+)\n)?([\s\S]*?)```/g)

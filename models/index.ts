@@ -66,6 +66,21 @@ export interface Server {
   members: Member[]
   /** User ids connected to each voice channel */
   voiceStates: Record<string, string[]>
+  emojis?: CustomEmoji[]
+  stickers?: CustomSticker[]
+}
+
+export interface CustomEmoji {
+  id: string
+  name: string
+  /** data: URL (uploaded) or a path */
+  url: string
+}
+
+export interface CustomSticker {
+  id: string
+  name: string
+  url: string
 }
 
 export interface DMChannel {
@@ -102,7 +117,8 @@ export interface Message {
   attachments?: Attachment[]
   /** Set on the message a thread was started from */
   threadId?: string
-  sticker?: { id: string; name: string; emoji: string }
+  /** Built-in stickers use an emoji; custom server stickers use an image url */
+  sticker?: { id: string; name: string; emoji?: string; url?: string }
   gift?: { plan: 'Nitro' | 'Nitro Basic'; months: number; claimedBy?: string }
   poll?: Poll
 }

@@ -60,6 +60,18 @@ const migrateSeed = (state: PersistedState, fromVersion: number): PersistedState
     if (byId[id]?.icon === oldIcon) byId[id] = { ...byId[id], ...changes }
   }
 
+  // v13: seeded custom emoji/stickers, and you own your stealth project
+  for (const seed of SEED_SERVERS) {
+    const server = byId[seed.id]
+    if (!server) continue
+    byId[seed.id] = {
+      ...server,
+      emojis: server.emojis ?? seed.emojis,
+      stickers: server.stickers ?? seed.stickers,
+      ownerId: seed.id === 's-halcyon' ? seed.ownerId : server.ownerId,
+    }
+  }
+
   const messages = Object.fromEntries(
     Object.entries(state.messages).filter(([id]) => !prefixes.some(p => id.startsWith(p)))
   )

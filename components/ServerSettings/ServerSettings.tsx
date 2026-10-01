@@ -9,11 +9,12 @@ import { useAppDispatch, useSelector } from '../../hooks'
 import { closeModal, leaveServer } from '../../store'
 import Modal, { Button } from '../Modal'
 import base from '../Settings/Settings.module.sass'
+import ExpressionsSection from './ExpressionsSection'
 import MembersSection from './MembersSection'
 import OverviewSection from './OverviewSection'
 import RolesSection from './RolesSection'
 
-type Section = 'overview' | 'roles' | 'members'
+type Section = 'overview' | 'roles' | 'emoji' | 'stickers' | 'members'
 
 const ServerSettings = ({ serverId }: { serverId: string }) => {
   const dispatch = useAppDispatch()
@@ -34,6 +35,8 @@ const ServerSettings = ({ serverId }: { serverId: string }) => {
   const items: { id: Section; label: string }[] = [
     { id: 'overview', label: 'Overview' },
     { id: 'roles', label: 'Roles' },
+    { id: 'emoji', label: 'Emoji' },
+    { id: 'stickers', label: 'Stickers' },
     { id: 'members', label: 'Members' },
   ]
 
@@ -69,6 +72,8 @@ const ServerSettings = ({ serverId }: { serverId: string }) => {
         <div className={base.contentInner}>
           {section === 'overview' && <OverviewSection server={server} />}
           {section === 'roles' && <RolesSection server={server} />}
+          {section === 'emoji' && <ExpressionsSection key="emoji" server={server} kind="emoji" />}
+          {section === 'stickers' && <ExpressionsSection key="sticker" server={server} kind="sticker" />}
           {section === 'members' && <MembersSection server={server} />}
         </div>
         <div className={base.closeColumn}>

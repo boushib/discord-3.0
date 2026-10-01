@@ -1,6 +1,6 @@
 import { createSelector } from '@reduxjs/toolkit'
 import { CURRENT_USER_ID } from '../constants'
-import type { GroupDM, Message, Server, Thread, User } from '../models'
+import type { CustomEmoji, CustomSticker, GroupDM, Message, Server, Thread, User } from '../models'
 import { groupName } from './groups'
 import type { RootState } from '.'
 
@@ -166,3 +166,29 @@ export const contextLabel = (context: ChannelContext) =>
     : context.kind === 'group'
       ? context.name
       : `#${context.channel.name} · ${context.server.name}`
+
+/** Every custom emoji across your servers, keyed by id (for rendering <:name:id>) */
+export const selectCustomEmojiById = createSelector([(s: RootState) => s.servers.byId], byId => {
+  const map: Record<string, CustomEmoji> = {}
+  for (const server of Object.values(byId)) for (const e of server.emojis ?? []) map[e.id] = e
+  return map
+})
+
+/** Custom emoji/stickers grouped by server, current server first */
+export const selectCustomExpressions = createSelector(
+  [(s: RootState) => s.servers, (_: RootState, currentServerId?: string) => currentServerId],
+  (servers, currentServerId) => {
+    const ids = currentServerId
+      ? [currentServerId, ...servers.order.filter(id => id !== currentServerId)]
+      : servers.order
+    return ids
+      .map(id => servers.byId[id])
+      .filter((server): server is Server => !!server && !!(server.emojis?.length || server.stickers?.length))
+      .map(server => ({
+        serverId: server.id,
+        serverName: server.name,
+        emojis: server.emojis ?? ([] as CustomEmoji[]),
+        stickers: server.stickers ?? ([] as CustomSticker[]),
+      }))
+  }
+)

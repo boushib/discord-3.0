@@ -17,6 +17,7 @@ import {
   togglePin,
   toggleReaction,
 } from '../../store'
+import { selectCustomExpressions } from '../../store/selectors'
 import EmojiPicker from '../EmojiPicker'
 import Popover, { Menu, MenuItem, MenuSeparator } from '../Popover'
 import Tooltip from '../Tooltip'
@@ -117,6 +118,7 @@ export const MessageToolbar = ({ message }: { message: Message }) => {
   const actions = useMessageActions(message)
   const picker = usePopover()
   const more = usePopover()
+  const customGroups = useSelector(s => selectCustomExpressions(s))
   const own = message.authorId === CURRENT_USER_ID
 
   return (
@@ -163,6 +165,7 @@ export const MessageToolbar = ({ message }: { message: Message }) => {
       {picker.anchor && (
         <Popover anchor={picker.anchor} placement="left-start" onClose={picker.close}>
           <EmojiPicker
+            custom={customGroups}
             onSelect={emoji => {
               actions.react(emoji)
               picker.close()

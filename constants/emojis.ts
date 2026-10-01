@@ -74,7 +74,8 @@ const BY_SHORTCODE = new Map(
 
 /** ":fire: nice" -> "🔥 nice" */
 export const replaceShortcodes = (text: string) =>
-  text.replace(/:([a-z0-9_+-]+):/g, (match, code: string) => BY_SHORTCODE.get(code) ?? match)
+  // Skip custom emoji tokens like <:fire:e-123>
+  text.replace(/(?<!<):([a-z0-9_+-]+):(?![\w-]*>)/g, (match, code: string) => BY_SHORTCODE.get(code) ?? match)
 
 export const searchEmojis = (query: string) => {
   const q = query.toLowerCase().replace(/^:/, '')

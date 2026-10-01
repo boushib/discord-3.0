@@ -8,6 +8,7 @@ import type {
   User,
 } from '../models'
 import { CURRENT_USER_ID } from '.'
+import { SEED_EMOJIS, SEED_STICKERS } from './customExpressions'
 
 const MINUTE = 60 * 1000
 
@@ -270,7 +271,7 @@ export const SEED_SERVERS: Server[] = [
     name: 'Project Halcyon',
     icon: '/servers/stealth.svg',
     bannerColor: '#2b2b2b',
-    ownerId: 'u-sarah',
+    ownerId: CURRENT_USER_ID,
     categories: [
       { id: 'cat-hal-project', name: 'Project' },
       { id: 'cat-hal-eng', name: 'Engineering' },
@@ -389,6 +390,12 @@ export const SEED_SERVERS: Server[] = [
   },
 ]
 
+// Attach seeded custom emoji and stickers
+for (const server of SEED_SERVERS) {
+  if (SEED_EMOJIS[server.id]) server.emojis = SEED_EMOJIS[server.id]
+  if (SEED_STICKERS[server.id]) server.stickers = SEED_STICKERS[server.id]
+}
+
 export const SEED_DMS: DMChannel[] = [
   { id: 'dm-sarah', recipientId: 'u-sarah' },
   { id: 'dm-ironman', recipientId: 'u-ironman' },
@@ -421,6 +428,7 @@ const SEED_CONVERSATIONS: Record<string, SeedLine[]> = {
     ['u-leo', 'does anyone have a good iron farm design for 1.21? mine keeps breaking', 60],
     ['u-nina', 'check #redstone, there’s a pinned one that does ~1400/hr', 57],
     ['u-leo', 'legend, ty', 55, { reactions: [{ emoji: '⛏️', userIds: ['u-nina'] }] }],
+    ['u-leo', 'found my first diamonds of the new world <:diamond:e-mc-diamond><:diamond:e-mc-diamond>', 25, { reactions: [{ emoji: '<:creeper:e-mc-creeper>', userIds: ['u-kai', 'u-omar'] }] }],
     ['u-ava', 'who’s hopping on the Survival SMP voice tonight?', 10],
   ],
   'c-mc-builds': [
@@ -537,7 +545,8 @@ const SEED_CONVERSATIONS: Record<string, SeedLine[]> = {
   ],
   'c-hal-infra': [
     ['u-mod', '✅ Deploy `v2.14.0` to production succeeded (4m 12s)', 90],
-    ['u-mod', '✅ All health checks passing', 89],
+    ['u-mod', '✅ All health checks passing', 89, { reactions: [{ emoji: '<:shipit:e-hal-shipit>', userIds: ['u-sarah', 'u-kai', 'u-omar'] }] }],
+    ['u-sarah', '<:lgtm:e-hal-lgtm>', 85],
   ],
   'c-acs-general': [
     ['u-leo', 'Just rolled credits on Shadows. The dual-protagonist thing works way better than I expected', 300],

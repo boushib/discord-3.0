@@ -5,6 +5,7 @@ import { CornerUpLeft, Pin } from 'lucide-react'
 import { memo, useState } from 'react'
 import { CURRENT_USER_ID } from '../../constants'
 import { useAppDispatch, useSelector } from '../../hooks'
+import { parseCustomEmojiToken } from '../../lib/customEmoji'
 import { formatFull, formatTime, formatTimestamp } from '../../lib/format'
 import type { Message as MessageType, Server } from '../../models'
 import { toggleReaction } from '../../store'
@@ -12,6 +13,7 @@ import { displayNameIn, isMention, roleColorIn } from '../../store/selectors'
 import Attachments from '../Attachments'
 import Avatar from '../Avatar'
 import Markdown from '../Markdown'
+import CustomEmoji from '../Markdown/CustomEmoji'
 import Popover from '../Popover'
 import { ProfileTrigger } from '../Profile'
 import Tooltip from '../Tooltip'
@@ -167,10 +169,11 @@ const Message = ({ message, server, grouped: groupedProp, preview }: Props) => {
               {message.reactions.map(r => {
                 const me = r.userIds.includes(CURRENT_USER_ID)
                 const names = r.userIds.map(id => users[id]?.displayName ?? 'Someone')
+                const custom = parseCustomEmojiToken(r.emoji)
                 return (
                   <Tooltip
                     key={r.emoji}
-                    label={`${names.slice(0, 3).join(', ')}${names.length > 3 ? ` and ${names.length - 3} more` : ''} reacted with ${r.emoji}`}
+                    label={`${names.slice(0, 3).join(', ')}${names.length > 3 ? ` and ${names.length - 3} more` : ''} reacted with ${custom ? `:${custom.name}:` : r.emoji}`}
                   >
                     <button
                       type="button"
@@ -187,7 +190,9 @@ const Message = ({ message, server, grouped: groupedProp, preview }: Props) => {
                         )
                       }
                     >
-                      <span className={styles.reactionEmoji}>{r.emoji}</span>
+                      <span className={styles.reactionEmoji}>
+                        {custom ? <CustomEmoji id={custom.id} name={custom.name} className={styles.reactionCustom} /> : r.emoji}
+                      </span>
                       <span className={styles.reactionCount}>{r.userIds.length}</span>
                     </button>
                   </Tooltip>

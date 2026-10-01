@@ -5,7 +5,8 @@ import { ChartBar, CirclePlus, FileText, Trash, Upload, X } from 'lucide-react'
 import { useMemo, useRef, useState } from 'react'
 import { CURRENT_USER_ID } from '../../constants'
 import { replaceShortcodes, searchEmojis } from '../../constants/emojis'
-import { gifUrl, type Gif, type Sticker } from '../../constants/expressions'
+import { gifUrl, type Gif } from '../../constants/expressions'
+import { parseCustomEmojiToken, replaceCustomShortcodes } from '../../lib/customEmoji'
 import { useAppDispatch, useFileUploads, usePopover, useSelector } from '../../hooks'
 import EmojiIcon from '../../icons/Emoji'
 import GIFIcon from '../../icons/GIF'
@@ -13,7 +14,7 @@ import GiftIcon from '../../icons/Gift'
 import StickerIcon from '../../icons/Sticker'
 import { clearUploads, openModal, removeUpload, sendMessage, setEditing, setReplyTo } from '../../store'
 import { simulateReply } from '../../store/simulate'
-import { ChannelContext, displayNameIn, selectMessages } from '../../store/selectors'
+import { ChannelContext, displayNameIn, selectCustomExpressions, selectMessages } from '../../store/selectors'
 import Avatar from '../Avatar'
 import ExpressionPicker, { type ExpressionTab } from '../ExpressionPicker'
 import Popover, { Menu, MenuItem } from '../Popover'
@@ -39,7 +40,7 @@ const applyCommands = (text: string) => {
 
 type Suggestion =
   | { kind: 'user'; id: string; label: string; sub: string; insert: string }
-  | { kind: 'emoji'; id: string; label: string; sub: string; insert: string }
+  | { kind: 'emoji'; id: string; label: string; sub: string; insert: string; image?: string }
   | { kind: 'command'; id: string; label: string; sub: string; insert: string }
 
 interface Props {
@@ -74,6 +75,8 @@ const MessageBox = ({ channelId, context }: Props) => {
   )
 
   const server = context.kind === 'server' ? context.server : undefined
+  const customGroups = useSelector(s => selectCustomExpressions(s, server?.id))
+  const customEmojis = useMemo(() => customGroups.flatMap(g => g.emojis), [customGroups])
   const placeholder =
     context.kind === 'server'
       ? `Message #${context.channel.name}`
@@ -113,9 +116,18 @@ const MessageBox = ({ channelId, context }: Props) => {
     }
     const emojiMatch = /(?:^|\s):([a-z0-9_+-]{2,})$/.exec(before)
     if (emojiMatch) {
-      return searchEmojis(emojiMatch[1])
-        .slice(0, 8)
-        .map(e => ({ kind: 'emoji', id: e.char, label: e.char, sub: `:${e.name.split(',')[0]}:`, insert: `${e.char} ` }))
+      const q = emojiMatch[1]
+      const custom: Suggestion[] = customEmojis
+        .filter(e => e.name.includes(q))
+        .map(e => ({ kind: 'emoji', id: e.id, label: '', image: e.url, sub: `:${e.name}:`, insert: `:${e.name}: ` }))
+      const unicode: Suggestion[] = searchEmojis(q).map(e => ({
+        kind: 'emoji',
+        id: e.char,
+        label: e.char,
+        sub: `:${e.name.split(',')[0]}:`,
+        insert: `${e.char} `,
+      }))
+      return [...custom, ...unicode].slice(0, 8)
     }
     const command = /^\/(\w*)$/.exec(before)
     if (command) {
@@ -124,7 +136,7 @@ const MessageBox = ({ channelId, context }: Props) => {
         .map(name => ({ kind: 'command', id: name, label: `/${name}`, sub: SLASH_COMMANDS[name]('message'), insert: `/${name} ` }))
     }
     return []
-  }, [value, caret, memberIds, users, server])
+  }, [value, caret, memberIds, users, server, customEmojis])
 
   const showSuggestions = suggestions.length > 0 && !dismissed
   const active = Math.min(selected, suggestions.length - 1)
@@ -173,7 +185,7 @@ const MessageBox = ({ channelId, context }: Props) => {
     },
   })
 
-  const sendRich = (extra: { content?: string; sticker?: Sticker }) => {
+  const sendRich = (extra: { content?: string; sticker?: { id: string; name: string; emoji?: string; url?: string } }) => {
     expressions.close()
     const action = dispatch(
       sendMessage({
@@ -189,7 +201,7 @@ const MessageBox = ({ channelId, context }: Props) => {
   }
 
   const submit = () => {
-    const content = replaceShortcodes(applyCommands(value.trim()))
+    const content = replaceShortcodes(replaceCustomShortcodes(applyCommands(value.trim()), customEmojis))
     if ((!content && !uploads?.length) || content.length > MAX_LENGTH) return
     const action = dispatch(
       sendMessage({
@@ -266,6 +278,10 @@ const MessageBox = ({ channelId, context }: Props) => {
               onClick={() => insertSuggestion(s)}
             >
               {s.kind === 'user' && <Avatar user={users[s.id]} size={24} />}
+              {s.kind === 'emoji' && s.image && (
+                // eslint-disable-next-line @next/next/no-img-element -- uploaded emoji
+                <img src={s.image} alt="" className={styles.suggestionImage} />
+              )}
               <span className={classNames(styles.suggestionLabel, s.kind === 'emoji' && styles.suggestionEmoji)}>
                 {s.label}
               </span>
@@ -427,8 +443,11 @@ const MessageBox = ({ channelId, context }: Props) => {
           <ExpressionPicker
             key={expressionTab}
             initialTab={expressionTab}
+            custom={customGroups}
             onEmoji={char => {
-              insertAtCaret(char)
+              // Custom emoji go in as :name: and become tokens when sent
+              const custom = parseCustomEmojiToken(char)
+              insertAtCaret(custom ? `:${custom.name}: ` : char)
               expressions.close()
             }}
             onGif={(gif: Gif) => sendRich({ content: gifUrl(gif.id) })}

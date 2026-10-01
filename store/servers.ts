@@ -1,7 +1,7 @@
 import { createSlice, nanoid, PayloadAction } from '@reduxjs/toolkit'
 import { CURRENT_USER_ID } from '../constants'
 import { SEED_SERVERS } from '../constants/seed'
-import type { Channel, ChannelType, Role, Server, ServerFolder } from '../models'
+import type { Channel, ChannelType, CustomEmoji, CustomSticker, Role, Server, ServerFolder } from '../models'
 
 export interface ServersState {
   byId: Record<string, Server>
@@ -107,6 +107,40 @@ const serversSlice = createSlice({
       member.roleIds = member.roleIds.includes(action.payload.roleId)
         ? member.roleIds.filter(id => id !== action.payload.roleId)
         : [...member.roleIds, action.payload.roleId]
+    },
+    addEmoji: {
+      reducer(state, action: PayloadAction<{ serverId: string; emoji: CustomEmoji }>) {
+        const server = state.byId[action.payload.serverId]
+        if (server) (server.emojis ??= []).push(action.payload.emoji)
+      },
+      prepare(input: { serverId: string; name: string; url: string }) {
+        return { payload: { serverId: input.serverId, emoji: { id: `e-${nanoid(8)}`, name: input.name, url: input.url } } }
+      },
+    },
+    renameEmoji(state, action: PayloadAction<{ serverId: string; emojiId: string; name: string }>) {
+      const emoji = state.byId[action.payload.serverId]?.emojis?.find(e => e.id === action.payload.emojiId)
+      if (emoji) emoji.name = action.payload.name
+    },
+    removeEmoji(state, action: PayloadAction<{ serverId: string; emojiId: string }>) {
+      const server = state.byId[action.payload.serverId]
+      if (server?.emojis) server.emojis = server.emojis.filter(e => e.id !== action.payload.emojiId)
+    },
+    addSticker: {
+      reducer(state, action: PayloadAction<{ serverId: string; sticker: CustomSticker }>) {
+        const server = state.byId[action.payload.serverId]
+        if (server) (server.stickers ??= []).push(action.payload.sticker)
+      },
+      prepare(input: { serverId: string; name: string; url: string }) {
+        return { payload: { serverId: input.serverId, sticker: { id: `st-${nanoid(8)}`, name: input.name, url: input.url } } }
+      },
+    },
+    renameSticker(state, action: PayloadAction<{ serverId: string; stickerId: string; name: string }>) {
+      const sticker = state.byId[action.payload.serverId]?.stickers?.find(s => s.id === action.payload.stickerId)
+      if (sticker) sticker.name = action.payload.name
+    },
+    removeSticker(state, action: PayloadAction<{ serverId: string; stickerId: string }>) {
+      const server = state.byId[action.payload.serverId]
+      if (server?.stickers) server.stickers = server.stickers.filter(s => s.id !== action.payload.stickerId)
     },
     kickMember(state, action: PayloadAction<{ serverId: string; userId: string }>) {
       const server = state.byId[action.payload.serverId]
@@ -234,6 +268,12 @@ export const {
   deleteRole,
   toggleMemberRole,
   kickMember,
+  addEmoji,
+  renameEmoji,
+  removeEmoji,
+  addSticker,
+  renameSticker,
+  removeSticker,
   leaveServer,
   moveServer,
   combineServers,

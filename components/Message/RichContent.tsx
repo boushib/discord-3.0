@@ -16,11 +16,15 @@ export const ImageEmbed = ({ url }: { url: string }) => (
   <img src={url} alt="" className={styles.embedImage} loading="lazy" />
 )
 
-export const StickerView = ({ sticker }: { sticker: NonNullable<Message['sticker']> }) => (
-  <div className={styles.sticker} title={sticker.name} role="img" aria-label={`Sticker: ${sticker.name}`}>
-    {sticker.emoji}
-  </div>
-)
+export const StickerView = ({ sticker }: { sticker: NonNullable<Message['sticker']> }) =>
+  sticker.url ? (
+    // eslint-disable-next-line @next/next/no-img-element -- uploaded sticker
+    <img src={sticker.url} alt={`Sticker: ${sticker.name}`} title={sticker.name} className={styles.stickerImage} />
+  ) : (
+    <div className={styles.sticker} title={sticker.name} role="img" aria-label={`Sticker: ${sticker.name}`}>
+      {sticker.emoji}
+    </div>
+  )
 
 export const GiftEmbed = ({ message }: { message: Message }) => {
   const dispatch = useAppDispatch()
