@@ -96,7 +96,7 @@ export const SEED_SERVERS: Server[] = [
   {
     id: 's-minecraft',
     name: 'Minecraft',
-    icon: '/servers/minecraft.svg',
+    icon: '/servers/minecraft.jpg',
     bannerColor: '#3f7a2a',
     verified: true,
     ownerId: 'u-kai',
