@@ -1,6 +1,6 @@
 'use client'
 
-import { Fragment, useLayoutEffect, useRef, useState } from 'react'
+import { Fragment, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { CURRENT_USER_ID, MESSAGE_GROUP_WINDOW } from '../../constants'
 import { useSelector } from '../../hooks'
 import { formatDateDivider, isSameDay } from '../../lib/format'
@@ -48,6 +48,20 @@ const MessageList = ({ channelId, context }: Props) => {
     }
   }, [messages.length, lastMessage?.authorId])
 
+  // Late-loading content (link previews, images) grows the list; stay pinned
+  // to the bottom if that's where the user was
+  const innerRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    const inner = innerRef.current
+    const el = scrollerRef.current
+    if (!inner || !el) return
+    const observer = new ResizeObserver(() => {
+      if (stickToBottom.current) el.scrollTop = el.scrollHeight
+    })
+    observer.observe(inner)
+    return () => observer.disconnect()
+  }, [])
+
   const onScroll = () => {
     const el = scrollerRef.current
     if (!el) return
@@ -77,7 +91,7 @@ const MessageList = ({ channelId, context }: Props) => {
   return (
     <div className={styles.messagesWrap}>
       <div ref={scrollerRef} className={`${styles.messages} scroller scroller--auto`} onScroll={onScroll}>
-        <div className={styles.messagesInner}>
+        <div ref={innerRef} className={styles.messagesInner}>
           <ChannelWelcome context={context} />
           {visible.map((message, i) => {
             const prev = visible[i - 1]

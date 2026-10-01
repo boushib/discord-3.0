@@ -527,6 +527,7 @@ const SEED_CONVERSATIONS: Record<string, SeedLine[]> = {
   ],
   'c-hal-frontend': [
     ['u-omar', 'Heads up if you’re upgrading: `next lint` is gone, switch to the ESLint CLI with a flat config', 25 * 60],
+    ['u-kai', 'Upgrade guide for anyone doing the migration: https://nextjs.org/docs/app/guides/upgrading/version-16', 24 * 60],
     ['u-leo', 'Getting `Error: Cannot call impure function during render` from the linter, what does that mean?', 5 * 60],
     ['u-omar', 'You’re probably calling `Math.random()` or `Date.now()` in a component body. Move it into an effect or event handler — otherwise server and client renders won’t match.', 5 * 60 - 12, { reactions: [{ emoji: '🙏', userIds: ['u-leo'] }] }],
   ],

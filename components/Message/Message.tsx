@@ -20,6 +20,7 @@ import MessageEditor from './MessageEditor'
 import { GiftEmbed, ImageEmbed, isImageLink, StickerView } from './RichContent'
 import PollView from './PollView'
 import ThreadSummary from './ThreadSummary'
+import LinkPreview, { previewableLinks } from './LinkPreview'
 import YouTubeEmbed, { youtubeIds } from './YouTubeEmbed'
 import styles from './Message.module.sass'
 
@@ -139,6 +140,9 @@ const Message = ({ message, server, grouped: groupedProp, preview }: Props) => {
               {message.poll && <PollView message={message} />}
               {youtubeIds(message.content).map(id => (
                 <YouTubeEmbed key={id} id={id} />
+              ))}
+              {previewableLinks(message.content).map(url => (
+                <LinkPreview key={url} url={url} />
               ))}
               {message.editedAt && (
                 <Tooltip label={formatFull(message.editedAt)}>
